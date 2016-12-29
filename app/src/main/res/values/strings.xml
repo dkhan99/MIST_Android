@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">MISTAndroid</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_first_name">First Name</string>
+    <string name="prompt_last_name">Last Name</string>
+    <string name="prompt_mist_id">MIST Id</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_register">Register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_invalid_mist_id">MIST Id must contain dashes "-"</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_lastName">This last name is invalid</string>
+    <string name="error_invalid_mistId">This mist id is invalid</string>
+    <string name="error_invalid_firstName">This first name is invalid</string>
+
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_login_auth">Sign in</string>
+    <string name="title_activity_register_auth">Register</string>
+</resources>
