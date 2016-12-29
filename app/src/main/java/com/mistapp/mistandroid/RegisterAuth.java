@@ -1,36 +1,17 @@
 package com.mistapp.mistandroid;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,12 +21,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.Manifest.permission.PACKAGE_USAGE_STATS;
-import static android.Manifest.permission.READ_CONTACTS;
-
 /**
  * A login screen that offers login via email/password.
  */
@@ -53,7 +28,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "MISTAPP";
 
 
-    // UI references.
+    // UI references, essentially the elements on the android activity
     private EditText mEmailView;
     private EditText mPasswordView;
     private EditText mFirstNameView;
@@ -86,7 +61,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 // ...
             }
         };
-        // initialize views
+        // initialize views, which were declared earlier
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
         mFirstNameView = (TextInputEditText) findViewById(R.id.first_name);
@@ -104,17 +79,27 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         mtextViewRegister.setOnClickListener(this);
     }
 
+    /**
+     * When the register button is clicked, we check if the filled out form is valid
+     * @param view
+     */
     @Override
     public void onClick(View view) {
         attemptRegister();
     }
 
+    /**
+     * Start Firebase authentication?
+     */
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    /**
+     * End Firebase authentication
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -122,10 +107,11 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
-     * Attempts to register the account specified by the login form.
+     * Attempts to register the account specified by the register form.
      * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * errors are presented and no actual registration attempt is made, and user is notified
      */
     private void attemptRegister() {
         boolean cancel = false;
@@ -164,50 +150,55 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             cancel = true;
         }
 
+        //Check for valid mist id
         if (TextUtils.isEmpty(mistId) && !isMistIdValid(mistId)) {
             mPasswordView.setError(getString(R.string.error_invalid_mistId));
             focusView = mMISTIdView;
             cancel = true;
         }
 
-
+        //Check for valid first name
         if (TextUtils.isEmpty(firstName)) {
             mPasswordView.setError(getString(R.string.error_invalid_firstName));
             focusView = mFirstNameView;
             cancel = true;
         }
 
+        //Check for a valid last name
         if (TextUtils.isEmpty(lastName)) {
             mPasswordView.setError(getString(R.string.error_invalid_lastName));
             focusView = mLastNameView;
             cancel = true;
         }
 
+        //If anythnig was invalid, then this is true
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
+            // There was an error; don't attempt registration and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
-
+            //Register the user
             register();
             //mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
         }
     }
-
+    //Checks if email is valid, we can add more logic here
     private boolean isEmailValid(String email) {
         return email.contains("@");
     }
 
+    //Check if password is valid, we could strengthen passwords here
     private boolean isPasswordValid(String password) {
         return password.length() > 4;
     }
 
+    //Checks if the mist id has a dash and is of length 10
     private boolean isMistIdValid(String mistId) {
         return mistId.charAt(4) == '-' && mistId.length() == 10;
     }
 
-
+    //Registers user's pass and email to firebase
     public void register() {
         mProgressDialog.setMessage("Registering User...");
         mProgressDialog.show();
