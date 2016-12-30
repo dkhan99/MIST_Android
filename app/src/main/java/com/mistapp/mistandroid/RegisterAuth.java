@@ -1,16 +1,13 @@
 package com.mistapp.mistandroid;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,7 +34,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private EditText mMISTIdView;
     private Button mRegisterButton;
     private TextView mtextViewRegister;
-    private ProgressDialog mProgressDialog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -73,8 +69,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
         mtextViewRegister = (TextView)findViewById(R.id.textViewSignin);
 
-        mProgressDialog = new ProgressDialog(this);
-
         //attaching listeners to button and link
         mRegisterButton.setOnClickListener(this);
         mtextViewRegister.setOnClickListener(this);
@@ -88,8 +82,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view == mRegisterButton) {
             attemptRegister();
-            Intent intent = new Intent(view.getContext(), LogInAuth.class);
-            startActivity(intent);
         }
         if (view == mtextViewRegister) {
             Intent intent = new Intent(view.getContext(), LogInAuth.class);
@@ -97,26 +89,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-    /**
-     * Start Firebase authentication?
-     */
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    /**
-     * End Firebase authentication
-     */
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
 
     /**
      * Attempts to register the account specified by the register form.
@@ -161,22 +133,22 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         }
 
         //Check for valid mist id
-        if (TextUtils.isEmpty(mistId) && !isMistIdValid(mistId)) {
-            mPasswordView.setError(getString(R.string.error_invalid_mistId));
+        if (TextUtils.isEmpty(mistId) || !isMistIdValid(mistId)) {
+            mMISTIdView.setError(getString(R.string.error_invalid_mistId));
             focusView = mMISTIdView;
             cancel = true;
         }
 
         //Check for valid first name
         if (TextUtils.isEmpty(firstName)) {
-            mPasswordView.setError(getString(R.string.error_invalid_firstName));
+            mFirstNameView.setError(getString(R.string.error_invalid_firstName));
             focusView = mFirstNameView;
             cancel = true;
         }
 
         //Check for a valid last name
         if (TextUtils.isEmpty(lastName)) {
-            mPasswordView.setError(getString(R.string.error_invalid_lastName));
+            mLastNameView.setError(getString(R.string.error_invalid_lastName));
             focusView = mLastNameView;
             cancel = true;
         }
@@ -186,9 +158,11 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             // There was an error; don't attempt registration and focus the first
             // form field with an error.
             focusView.requestFocus();
+            return;
         } else {
             //Register the user
             register();
+
             //mAuthTask = new UserLoginTask(email, password);
             //mAuthTask.execute((Void) null);
         }
@@ -205,7 +179,12 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
     //Checks if the mist id has a dash and is of length 10
     private boolean isMistIdValid(String mistId) {
-        return mistId.charAt(4) == '-' && mistId.length() == 10;
+        if (mistId.length() == 10) {
+            if (mistId.charAt(4) == '-') {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Registers user's pass and email to firebase
@@ -221,6 +200,8 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                             // we will start the profule activity here
                             // right now lets display a toast
                             Toast.makeText(RegisterAuth.this, "Registered Sucessfully", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getApplicationContext(), LogInAuth.class);
+                            startActivity(intent);
                         } else {
                             Toast.makeText(RegisterAuth.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
                         }
@@ -234,5 +215,25 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     public void goLogIn(View view) {
         Intent intent = new Intent(view.getContext(), LogInAuth.class);
         startActivity(intent);
+    }
+
+    /**
+     * Start Firebase authentication?
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    /**
+     * End Firebase authentication
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }

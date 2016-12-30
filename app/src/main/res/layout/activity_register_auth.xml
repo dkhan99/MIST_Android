@@ -120,9 +120,9 @@
 
             <TextView
                 android:paddingTop="50px"
-                android:textColor= "#fb00"
+                android:textColor= "#FF00"
                 android:textAlignment ="center"
-                android:textSize = "35px"
+                android:textSize = "65px"
                 android:text = "Already registered? Sign in here"
                 android:id = "@+id/textViewSignin"
                 android:layout_width="match_parent"

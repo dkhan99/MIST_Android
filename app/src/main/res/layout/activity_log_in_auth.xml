@@ -78,9 +78,9 @@
 
             <TextView
                 android:paddingTop="50px"
-                android:textColor= "#fb00"
+                android:textColor= "#FF0000"
                 android:textAlignment ="center"
-                android:textSize = "35px"
+                android:textSize = "65px"
                 android:text = "Havn't created an account yet? \n Register here"
                 android:id = "@+id/textViewSignin"
                 android:layout_width="match_parent"
