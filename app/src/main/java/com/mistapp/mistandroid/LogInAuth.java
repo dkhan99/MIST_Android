@@ -1,6 +1,7 @@
 package com.mistapp.mistandroid;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -20,16 +21,16 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LogInAuth extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "MISTAPP";
+    private static final String TAG = LogInAuth.class.getSimpleName();
     private EditText mEmailView;
     private EditText mPasswordView;
 
     private Button mLogInButton;
 
-    private ProgressDialog mProgressDialog;
-
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private TextView mtextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,20 +58,40 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         mEmailView = (TextInputEditText) findViewById(R.id.log_in_email);
         mPasswordView = (TextInputEditText) findViewById(R.id.log_in_password);
         mLogInButton = (Button) findViewById(R.id.email_register_button);
+        mtextView = (TextView) findViewById(R.id.textViewSignin);
         mLogInButton.setOnClickListener(this);
-
+        mtextView.setOnClickListener(this);
     }
 
+    /**
+     * If button or textview is clicked, then we go to the next activity after verifying data
+     * @param view
+     */
     @Override
     public void onClick(View view) {
-        attemptSignIn();
+        if (view == mLogInButton) {
+            attemptSignIn();
+            Intent intent = new Intent(this, Rulebook.class);
+            startActivity(intent);
+        }
+        if (view == mtextView) {
+            Intent intent = new Intent(this, RegisterAuth.class);
+            startActivity(intent);
+        }
     }
+
+    /**
+     * Start firebase auth
+     */
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    /**
+     * Stop firebase auth
+     */
     @Override
     public void onStop() {
         super.onStop();
@@ -79,9 +100,10 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * Checks with firebase if email/password combination is correct
+     */
     public void attemptSignIn() {
-        mProgressDialog.setMessage("Signing in...");
-        mProgressDialog.show();
         String email = mEmailView.getText().toString().trim();
         String password = mPasswordView.getText().toString().trim();
         mAuth.signInWithEmailAndPassword(email, password)
@@ -104,4 +126,21 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 });
     }
 
+    /**
+     * When sign-in button is clicked, this method is executed
+     */
+    public void goRulebook(View view) {
+        Intent intent = new Intent(view.getContext(), Rulebook.class);
+        startActivity(intent);
+
+    }
+
+    /**
+     * When register link is clicked, this method is executed
+     */
+    public void goRegAuth(View view) {
+        Intent intent = new Intent(view.getContext(), RegisterAuth.class);
+        startActivity(intent);
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.mistapp.mistandroid;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
  * A login screen that offers login via email/password.
  */
 public class RegisterAuth extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "MISTAPP";
+    private static final String TAG = RegisterAuth.class.getSimpleName();
 
 
     // UI references, essentially the elements on the android activity
@@ -85,8 +86,17 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View view) {
-        attemptRegister();
+        if (view == mRegisterButton) {
+            attemptRegister();
+            Intent intent = new Intent(view.getContext(), LogInAuth.class);
+            startActivity(intent);
+        }
+        if (view == mtextViewRegister) {
+            Intent intent = new Intent(view.getContext(), LogInAuth.class);
+            startActivity(intent);
+        }
     }
+
 
     /**
      * Start Firebase authentication?
@@ -200,8 +210,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
     //Registers user's pass and email to firebase
     public void register() {
-        mProgressDialog.setMessage("Registering User...");
-        mProgressDialog.show();
         String email = mEmailView.getText().toString().trim();
         String password = mPasswordView.getText().toString().trim();
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -220,4 +228,11 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
+    /**
+     * When register button is clicked, this method is executed
+     */
+    public void goLogIn(View view) {
+        Intent intent = new Intent(view.getContext(), LogInAuth.class);
+        startActivity(intent);
+    }
 }

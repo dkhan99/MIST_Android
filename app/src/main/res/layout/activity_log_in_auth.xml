@@ -73,17 +73,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="goRulebook"/>
 
             <TextView
                 android:paddingTop="50px"
-                android:textColor= "#0000FF"
+                android:textColor= "#fb00"
                 android:textAlignment ="center"
                 android:textSize = "35px"
                 android:text = "Havn't created an account yet? \n Register here"
                 android:id = "@+id/textViewSignin"
                 android:layout_width="match_parent"
-                android:layout_height = "wrap_content" />
+                android:layout_height = "wrap_content"
+                android:onClick="goRegAuth"/>
 
         </LinearLayout>
     </ScrollView>

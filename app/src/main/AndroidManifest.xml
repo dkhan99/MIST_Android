@@ -22,7 +22,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LogInAuth"></activity>
+        <activity android:name=".LogInAuth" />
+        <activity
+            android:name=".Rulebook"
+            android:label="@string/title_activity_rulebook"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

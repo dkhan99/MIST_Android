@@ -115,17 +115,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_register"
-                android:textStyle="bold" />
-                android:onClock = "
+                android:textStyle="bold"
+                android:onClick = "goLogIn" />
+
             <TextView
                 android:paddingTop="50px"
-                android:textColor= "#0000FF"
+                android:textColor= "#fb00"
                 android:textAlignment ="center"
                 android:textSize = "35px"
                 android:text = "Already registered? Sign in here"
                 android:id = "@+id/textViewSignin"
                 android:layout_width="match_parent"
-                android:layout_height = "wrap_content" />
+                android:layout_height = "wrap_content"
+                android:onClick="goLogIn"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

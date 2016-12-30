@@ -25,4 +25,5 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_login_auth">Sign in</string>
     <string name="title_activity_register_auth">Register</string>
+    <string name="title_activity_rulebook">Rulebook</string>
 </resources>
