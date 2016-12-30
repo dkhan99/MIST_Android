@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,6 +11,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.mistapp.mistandroid.LogInAuth">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        app:srcCompat="@mipmap/mist_logo"
+        android:id="@+id/imageView2" />
     <!-- Login progress -->
     <ProgressBar
         android:id="@+id/login_progress"
@@ -22,7 +29,7 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="340dp"
         android:orientation = "vertical">
 
         <LinearLayout
@@ -89,4 +96,6 @@
 
         </LinearLayout>
     </ScrollView>
+
+
 </LinearLayout>

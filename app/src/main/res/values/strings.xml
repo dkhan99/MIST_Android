@@ -10,12 +10,12 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="action_invalid_mist_id">MIST Id must contain dashes "-"</string>
+    <string name="action_invalid_mist_id">MIST Id must contain a dash "-" at the fifth digit place</string>
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password">This password is too short, it must be atleast 5 characters </string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_invalid_lastName">This last name is invalid</string>
-    <string name="error_invalid_mistId">This mist id is invalid</string>
+    <string name="error_invalid_mistId">This MIST Id must be 10 characters including a dash at the fifth digit place</string>
     <string name="error_invalid_firstName">This first name is invalid</string>
 
     <string name="error_field_required">This field is required</string>

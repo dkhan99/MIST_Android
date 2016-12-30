@@ -44,6 +44,8 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
+
+        //User is signed in or not already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -55,9 +57,9 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
+
         // initialize views, which were declared earlier
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
@@ -115,7 +117,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(password) || !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
@@ -209,13 +211,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
-    /**
-     * When register button is clicked, this method is executed
-     */
-    public void goLogIn(View view) {
-        Intent intent = new Intent(view.getContext(), LogInAuth.class);
-        startActivity(intent);
-    }
 
     /**
      * Start Firebase authentication?
