@@ -15,7 +15,7 @@ public class WeekendSched extends AppCompatActivity {
          }
 
     /**
-     * Not the best solution, but definitely the easiest, allows user to download the pdf onto their phone
+     * Allows user to download the pdf onto their phone from the link
      */
     private void copyAssets() {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com/file/d/0B9GG5vxkVHa0Q0tZQjdyRFN0Mmc/view")));

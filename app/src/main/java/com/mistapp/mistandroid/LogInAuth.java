@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LogInAuth extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,8 +39,8 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
-        /**
-        //Firebase listener
+
+        //Firebase listener, checks if user is signed in already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -47,9 +48,6 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    finish();
-                    Intent intent = new Intent(getApplicationContext(), Rulebook.class);
-                    startActivity(intent);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -57,14 +55,14 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 // ...
             }
         };
-         **/
+
         //Initialize views
         mEmailView = (TextInputEditText) findViewById(R.id.log_in_email);
         mPasswordView = (TextInputEditText) findViewById(R.id.log_in_password);
         mLogInButton = (Button) findViewById(R.id.email_sign_in_button);
         mtextView = (TextView) findViewById(R.id.textViewSignin);
 
-
+        //Listen for user clicks on the button and hyperlink
         mLogInButton.setOnClickListener(this);
         mtextView.setOnClickListener(this);
     }
@@ -134,23 +132,4 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 });
     }
 
-    /**
-     * When sign-in button is clicked, this method is executed
-     */
-    public void goRulebook(View view) {
-        finish();
-        Intent intent = new Intent(view.getContext(), Rulebook.class);
-        startActivity(intent);
-
-    }
-
-    /**
-     * When register link is clicked, this method is executed
-     */
-    public void goRegAuth(View view) {
-        finish();
-        Intent intent = new Intent(view.getContext(), RegisterAuth.class);
-        startActivity(intent);
-
-    }
 }
