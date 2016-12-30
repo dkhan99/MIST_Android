@@ -34,4 +34,5 @@ public class Rulebook extends AppCompatActivity {
     private void copyAssets() {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/5862bd9aff7c506c99529c04/1482866208834/MISTRulebook2017.pdf")));
     }
+    //https://drive.google.com/file/d/0B9GG5vxkVHa0Q0tZQjdyRFN0Mmc/view
 }

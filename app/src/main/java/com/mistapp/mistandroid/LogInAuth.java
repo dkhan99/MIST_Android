@@ -126,7 +126,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             finish();
-                            Intent intent = new Intent(getApplicationContext(), Rulebook.class);
+                            Intent intent = new Intent(getApplicationContext(), WeekendSched.class);
                             startActivity(intent);
                         }
                         // ...
