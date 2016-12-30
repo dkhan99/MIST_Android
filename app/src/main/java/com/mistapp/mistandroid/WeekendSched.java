@@ -20,5 +20,4 @@ public class WeekendSched extends AppCompatActivity {
     private void copyAssets() {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com/file/d/0B9GG5vxkVHa0Q0tZQjdyRFN0Mmc/view")));
     }
-    //https://drive.google.com/file/d/0B9GG5vxkVHa0Q0tZQjdyRFN0Mmc/view
 }
