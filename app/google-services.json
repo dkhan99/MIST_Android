@@ -1,79 +1,27 @@
 {
   "project_info": {
-    "project_number": "172704164436",
-    "firebase_url": "https://mist-test-11892.firebaseio.com",
-    "project_id": "mist-test-11892",
-    "storage_bucket": "mist-test-11892.appspot.com"
+    "project_number": "210296281483",
+    "firebase_url": "https://mist-app.firebaseio.com",
+    "project_id": "mist-app",
+    "storage_bucket": "mist-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:172704164436:android:cb5b90f9c44129d7",
-        "android_client_info": {
-          "package_name": "com.mistatl.mistandroid"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "172704164436-7c61l74t7kgdkebgsfmdaqdail19267e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mistatl.mistandroid",
-            "certificate_hash": "DCF8489ED31CC22B0CBE8447D3EEC2E435A0003F"
-          }
-        },
-        {
-          "client_id": "172704164436-a5t38sg1utca1danv7i5tqe5b2jjpu0a.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBm9Wj81Z0qAw_HpAitOXr4WdTSsOKjBb0"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "172704164436-a5t38sg1utca1danv7i5tqe5b2jjpu0a.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:172704164436:android:a08a10a18772aab4",
+        "mobilesdk_app_id": "1:210296281483:android:a08a10a18772aab4",
         "android_client_info": {
           "package_name": "com.mistapp.mistandroid"
         }
       },
       "oauth_client": [
         {
-          "client_id": "172704164436-95pq16o6qa8mrkveq1dk3dhr5eq0a34i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.mistapp.mistandroid",
-            "certificate_hash": "9047B0444F5FA4A20D81B7DFF1CE97BE3C089D74"
-          }
-        },
-        {
-          "client_id": "172704164436-a5t38sg1utca1danv7i5tqe5b2jjpu0a.apps.googleusercontent.com",
+          "client_id": "210296281483-ou5mkm0csjm0hef2dmvgrc0pgosft9eg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBm9Wj81Z0qAw_HpAitOXr4WdTSsOKjBb0"
+          "current_key": "AIzaSyDcT7oNV8WwJObu80vcJLxZlcTkvCYytSE"
         }
       ],
       "services": {
@@ -81,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "172704164436-a5t38sg1utca1danv7i5tqe5b2jjpu0a.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
