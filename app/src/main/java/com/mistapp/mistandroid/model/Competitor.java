@@ -4,7 +4,7 @@ package com.mistapp.mistandroid.model;
  * Created by direwolf on 1/2/17.
  */
 
-public class CompetitorRegistration {
+public class Competitor {
     private String art;
     private String birthDate;
     private String brackets;
@@ -20,7 +20,7 @@ public class CompetitorRegistration {
     private String mistId;
     private String name;
 
-    public CompetitorRegistration(String art, String birthDate, String brackets, String city, String email, String gender, String groupProject, String writing, String team, int phoneNumber, String basketball, String knowledge, String mistId, String name) {
+    public Competitor(String art, String birthDate, String brackets, String city, String email, String gender, String groupProject, String writing, String team, int phoneNumber, String basketball, String knowledge, String mistId, String name) {
         this.art = art;
         this.birthDate = birthDate;
         this.brackets = brackets;

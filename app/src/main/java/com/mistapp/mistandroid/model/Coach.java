@@ -4,7 +4,7 @@ package com.mistapp.mistandroid.model;
  * Created by direwolf on 1/2/17.
  */
 
-public class CoachRegistration {
+public class Coach {
     private String birthDate;
     private String email;
     private String gender;
@@ -13,7 +13,7 @@ public class CoachRegistration {
     private int phoneNumber;
     private String team;
 
-    public CoachRegistration(String birthDate, String email, String team, int phoneNumber, String name, String mistId, String gender) {
+    public Coach(String birthDate, String email, String team, int phoneNumber, String name, String mistId, String gender) {
         this.birthDate = birthDate;
         this.email = email;
         this.team = team;

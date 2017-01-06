@@ -3,6 +3,7 @@
     package="com.mistapp.mistandroid">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -28,7 +29,11 @@
             android:name=".Rulebook"
             android:label="@string/title_activity_rulebook"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".WeekendSched"></activity>
+        <activity android:name=".WeekendSched" />
+        <activity
+            android:name=".HelpDirectory"
+            android:label="@string/title_activity_help_directory"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

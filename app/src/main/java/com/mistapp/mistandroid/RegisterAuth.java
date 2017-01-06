@@ -18,14 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.mistapp.mistandroid.model.User;
-
-import static android.R.attr.value;
 
 /**
  * A login screen that offers login via email/password.
@@ -150,6 +145,14 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             focusView = mMISTIdView;
             cancel = true;
         }
+/**
+ * //TODO Validate mist id is not taken and that it does exist
+
+         if (isMistIdExists(mistId)) {
+             mMISTIdView.setError(getString(R.string.error_invalid_mistId));
+             focusView = mMISTIdView;
+             cancel = true;
+         }
 
         if (isMistIdTaken(mistId)) {
             mMISTIdView.setError(getString(R.string.error_invalid_mistId));
@@ -157,6 +160,9 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             cancel = true;
         }
 
+
+
+*/
 
         //Check for valid first name
         if (TextUtils.isEmpty(firstName)) {
@@ -204,57 +210,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             }
         }
         return false;
-    }
-
-
-    private boolean isMistIdExists(final String mistId) {
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = mDatabase.getReference().child("mistid");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                exists = false;
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.getKey().equals(mistId)) {
-                        exists = true;
-                    }
-                }
-                Log.d(TAG, "Value is: " + value);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });
-        return exists;
-    }
-
-    public boolean isMistIdTaken(final String mistId) {
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = mDatabase.getReference().child("mistprofile");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                taken = false;
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.getKey().equals(mistId)) {
-                        taken = true;
-                    }
-                }
-                Log.d(TAG, "Value is: " + value);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });
-        return taken;
     }
 
     //Registers user's pass and email to firebase
@@ -306,4 +261,57 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+
+/*
+    private boolean isMistIdExists(final String mistId) {
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference ref = mDatabase.getReference().child("mistid");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                exists = false;
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals(mistId)) {
+                        exists = true;
+                    }
+                }
+                Log.d(TAG, "Value is: " + value);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+        return exists;
+    }
+
+    public boolean isMistIdTaken(final String mistId) {
+        mDatabase = FirebaseDatabase.getInstance();
+        final DatabaseReference ref = mDatabase.getReference().child("mistprofile");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                taken = false;
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals(mistId)) {
+                        taken = true;
+                    }
+                }
+                Log.d(TAG, "Value is: " + value);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+        return taken;
+    }
+*/
 }
