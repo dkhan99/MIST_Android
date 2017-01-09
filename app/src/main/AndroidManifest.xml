@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RegisterAuth"
+            android:name=".WelcomeActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,8 @@
             android:name=".Rulebook"
             android:label="@string/title_activity_rulebook"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".WeekendSched"></activity>
+        <activity android:name=".WeekendSched" />
+        <activity android:name=".RegisterAuth" />
     </application>
 
 </manifest>

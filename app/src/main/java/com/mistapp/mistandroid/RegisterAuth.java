@@ -38,8 +38,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     // UI references, essentially the elements on the android activity
     private EditText mEmailView;
     private EditText mPasswordView;
-    private EditText mFirstNameView;
-    private EditText mLastNameView;
     private EditText mMISTIdView;
     private Button mRegisterButton;
     private TextView mtextViewRegister;
@@ -73,8 +71,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         // initialize views, which were declared earlier
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
-        mFirstNameView = (TextInputEditText) findViewById(R.id.first_name);
-        mLastNameView = (TextInputEditText) findViewById(R.id.last_name);
         mMISTIdView = (TextInputEditText) findViewById(R.id.mist_id);
 
         mRegisterButton = (Button) findViewById(R.id.email_register_button);
@@ -113,15 +109,11 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
-        mFirstNameView.setError(null);
-        mLastNameView.setError(null);
         mMISTIdView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString().trim();
         String password = mPasswordView.getText().toString().trim();
-        String firstName = mFirstNameView.getText().toString().trim();
-        String lastName = mLastNameView.getText().toString().trim();
         String mistId = mMISTIdView.getText().toString().trim();
 
         View focusView = null;
@@ -154,21 +146,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         if (isMistIdTaken(mistId)) {
             mMISTIdView.setError(getString(R.string.error_invalid_mistId));
             focusView = mMISTIdView;
-            cancel = true;
-        }
-
-
-        //Check for valid first name
-        if (TextUtils.isEmpty(firstName)) {
-            mFirstNameView.setError(getString(R.string.error_invalid_firstName));
-            focusView = mFirstNameView;
-            cancel = true;
-        }
-
-        //Check for a valid last name
-        if (TextUtils.isEmpty(lastName)) {
-            mLastNameView.setError(getString(R.string.error_invalid_lastName));
-            focusView = mLastNameView;
             cancel = true;
         }
 
@@ -229,6 +206,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
         });
+        Log.d(TAG, "MIST ID EXISTS?: "+ exists);
         return exists;
     }
 
@@ -261,8 +239,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     public void register() {
         final String email = mEmailView.getText().toString().trim();
         final String password = mPasswordView.getText().toString().trim();
-        final String firstName = mFirstNameView.getText().toString().trim();
-        final String lastName = mLastNameView.getText().toString().trim();
         final String mistId = mMISTIdView.getText().toString().trim();
         mDatabase = FirebaseDatabase.getInstance();
         final DatabaseReference ref = mDatabase.getReference();
@@ -275,7 +251,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                             // we will start the profule activity here
                             // right now lets display a toast
                             Toast.makeText(RegisterAuth.this, "Registered Sucessfully", Toast.LENGTH_SHORT).show();
-                            User user = new User(firstName, lastName, mistId, email, password, task.getResult().getUser().getUid());
+                            User user = new User("firstname", "lastname", mistId, email, password, task.getResult().getUser().getUid());
                             ref.child("user").setValue(user);
                             Intent intent = new Intent(getApplicationContext(), LogInAuth.class);
                             startActivity(intent);

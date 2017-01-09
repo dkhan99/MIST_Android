@@ -30,12 +30,18 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private String userType;
+
     private TextView mtextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_auth);
+
+        Intent intent = getIntent();
+        userType = intent.getExtras().getString("userType");
+        Toast.makeText(this, userType, Toast.LENGTH_SHORT).show();
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
