@@ -4,7 +4,9 @@ package com.mistapp.mistandroid.model;
  * Created by direwolf on 1/3/17.
  */
 
-public class GuestRegistration {
+public class Guest {
+
+    private String userType = "guest";
     private String name;
     private String guests;
     private String guests1;
@@ -13,7 +15,11 @@ public class GuestRegistration {
     private String mistId;
     private String team;
 
-    public GuestRegistration(String name, String guests, String guests1, String guests2, String guests3, String mistId, String team) {
+    public Guest(){
+
+    }
+
+    public Guest(String name, String guests, String guests1, String guests2, String guests3, String mistId, String team) {
         this.name = name;
         this.guests = guests;
         this.guests1 = guests1;
@@ -45,6 +51,10 @@ public class GuestRegistration {
 
     public String getMistId() {
         return mistId;
+    }
+
+    public String getUserType() {
+        return userType;
     }
 
     public String getTeam() {
