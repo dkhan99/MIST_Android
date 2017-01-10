@@ -71,6 +71,8 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    startActivity(intent);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -276,8 +278,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         //figure out the type of user, create a respective object, populate its fields from the db, and save to 'registered-user' table
                                         Object currentUser = null;
                                         if (currentUserType.equals("competitor")) {
-                                            currentUser = currentUserSnapshot.getValue(MistData.class);
-                                            //saving to database
+                                            currentUser = currentUserSnapshot.getValue(Competitor.class);
                                         } else if (currentUserType.equals("coach")){
                                             currentUser = currentUserSnapshot.getValue(Coach.class);
                                         } else if (currentUserType.equals("guest")){
@@ -287,7 +288,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 //                                      Competitor currentUser = currentUserSnapshot.getValue(Competitor.class);
                                         Log.d(TAG, "USER RETREIVED: " + currentUser.toString());
                                         String newEmail = email.replaceAll("\\.","*");
-//                                        String newEmail = email.substring(0,dotIndex);
+                                        //Saving to Database
                                         mDatabase.child("registered-user").child(newEmail).setValue(currentUser);
                                         Log.d(TAG, "WHY IS IT NOT PRINTING?: " + currentUser.toString());
 
