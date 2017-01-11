@@ -289,8 +289,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         mDatabase.child("registered-user").child(uid).setValue(currentUser);
-                                        //modifying email to reflect what user typed in
-                                        mDatabase.child("registered-user").child(uid).child("email").setValue(email);
                                         Log.d(TAG, "user added to database: " + currentUser.toString());
 
                                         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
