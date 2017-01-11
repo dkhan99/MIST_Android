@@ -285,17 +285,13 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                             currentUser = currentUserSnapshot.getValue(Guest.class);
                                         }
 
+                                        //Saving to Database
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
                                         mDatabase.child("registered-user").child(uid).setValue(currentUser);
-                                        Log.d(TAG, "WHY IS IT NOT PRINTING?: " + currentUser.toString());
-
-//  Competitor currentUser = currentUserSnapshot.getValue(Competitor.class);
-                                        Log.d(TAG, "USER RETREIVED: " + currentUser.toString());
-//                                        String newEmail = email.replaceAll("\\.","*");
-
-                                        //Saving to Database
-
+                                        //modifying email to reflect what user typed in
+                                        mDatabase.child("registered-user").child(uid).child("email").setValue(email);
+                                        Log.d(TAG, "user added to database: " + currentUser.toString());
 
                                         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                         intent.putExtra("uid", uid);
