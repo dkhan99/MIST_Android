@@ -39,16 +39,24 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        //get uid from intent when starting activity bc sharedPrefs needs time to save. Else the value is loaded as null
-        uid = getIntent().getStringExtra("uid");
         TextView uidText = (TextView) findViewById(R.id.uid);
-        Log.d(TAG, "UID IS THIS: "+uid);
-        uidText.setText(uidText.getText() + uid);
+
+        if (getIntent().hasExtra("uid")){
+            //get uid from intent when starting activity bc sharedPrefs needs time to save. Else the value is loaded as null
+            uid = getIntent().getStringExtra("uid");
+            uidText.setText(uidText.getText() + uid);
+            Log.d(TAG, "UID IS THIS: "+uid);
+        } else {
+            uidText.setText(uidText.getText() + "guest has no uid");
+
+        }
+
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();

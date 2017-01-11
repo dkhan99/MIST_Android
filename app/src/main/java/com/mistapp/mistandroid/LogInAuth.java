@@ -46,7 +46,6 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
 
-    private String userType;
     private TextView mtextView;
 
     private SharedPreferences sharedPref;
@@ -58,8 +57,6 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         setContentView(R.layout.activity_log_in_auth);
 
         Intent intent = getIntent();
-        userType = intent.getExtras().getString("userType");
-        Toast.makeText(this, userType, Toast.LENGTH_SHORT).show();
         context = getApplication();
 
         sharedPref = getPreferences(Context.MODE_PRIVATE);

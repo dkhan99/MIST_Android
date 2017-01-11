@@ -20,7 +20,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
     private static final String TAG = RegisterAuth.class.getSimpleName();
 
-    TextView studentCoachText;
+    TextView studentText;
+    TextView coachText;
     TextView guestText;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -36,7 +37,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
         sharedPref = getPreferences(Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
-        studentCoachText = (TextView)findViewById(R.id.studentCoach);
+        studentText = (TextView)findViewById(R.id.student);
+        coachText = (TextView)findViewById(R.id.coach);
         guestText = (TextView)findViewById(R.id.guest);
 
         mAuth = FirebaseAuth.getInstance();
@@ -68,7 +70,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
     protected void onStart(){
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        studentCoachText.setOnTouchListener(this);
+        studentText.setOnTouchListener(this);
+        coachText.setOnTouchListener(this);
         guestText.setOnTouchListener(this);
     }
     /**
@@ -90,24 +93,22 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
     public boolean onTouch(View view, MotionEvent event) {
 
         //pressed any of the three options
-        if (view == studentCoachText || view == guestText) {
+        if (view == studentText || view == coachText || view == guestText) {
             if (event.ACTION_UP == 1) {
-                TextView pressedItem = (TextView)view;
-                Intent intent = new Intent(this, LogInAuth.class);
-                intent.putExtra("userType", pressedItem.getText());
+                Intent intent;
+                if (view == guestText){
+                    intent = new Intent(this, DashboardActivity.class);
+                }
+                else{
+                    intent = new Intent(this, LogInAuth.class);
+                }
+
                 startActivity(intent);
                 view.setOnTouchListener(null);
             }
         }
         return true;
-//
-//        if (view == mRegisterButton) {
-//            attemptRegister();
-//        }
-//        if (view == mtextViewRegister) {
-//            Intent intent = new Intent(view.getContext(), LogInAuth.class);
-//            startActivity(intent);
-//        }
+
     }
 
 }

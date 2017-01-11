@@ -117,7 +117,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             attemptRegister();
         }
         if (view == mtextViewRegister) {
-            Intent intent = new Intent(view.getContext(), LogInAuth.class);
+            Intent intent = new Intent(this, LogInAuth.class);
             startActivity(intent);
         }
     }

@@ -32,23 +32,33 @@
 
 
     <TextView
-        android:text="Student/Coach"
+        android:text="Student"
         android:textSize="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/i_am_a"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="35dp"
-        android:id="@+id/studentCoach" />
+        android:id="@+id/student" />
+
+    <TextView
+        android:text="Coach"
+        android:textSize="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/student"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:id="@+id/coach" />
 
     <TextView
         android:text="Guest"
         android:textSize="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/studentCoach"
+        android:layout_below="@+id/coach"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:id="@+id/guest" />
 
 </RelativeLayout>
