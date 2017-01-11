@@ -2,6 +2,7 @@ package com.mistapp.mistandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,13 +54,17 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDatabase;
     private Context context;
 
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_auth);
 
         context = getApplicationContext();
-
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
 
@@ -68,14 +73,22 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+                sharedPref = getPreferences(Context.MODE_PRIVATE);
+                editor = sharedPref.edit();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "register onAuthStateChanged:signed_in:" + user.getUid());
+                    //save user's uid in shared preferences
+                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.commit();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    intent.putExtra("uid", user.getUid());
                     startActivity(intent);
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                } else {  // User is signed out
+                    Log.d(TAG, "register onAuthStateChanged:signed_out");
+                    //remove user's uid from shared preferences
+                    editor.remove(getString(R.string.user_uid));
+                    editor.commit();
                 }
             }
         };
@@ -285,6 +298,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
 
                                         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                                        intent.putExtra("uid", uid);
                                         startActivity(intent);
                                     }
                                     // ...

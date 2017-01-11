@@ -1,6 +1,8 @@
 package com.mistapp.mistandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -42,9 +44,13 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private Context context;
 
     private String userType;
     private TextView mtextView;
+
+    private SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,10 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         Intent intent = getIntent();
         userType = intent.getExtras().getString("userType");
         Toast.makeText(this, userType, Toast.LENGTH_SHORT).show();
+        context = getApplication();
+
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
@@ -63,14 +73,22 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                // User is signed in
                 if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "login onAuthStateChanged:signed_in:" + user.getUid());
+                    //save user's uid in shared preferences
+                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.commit();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    intent.putExtra("uid", user.getUid());
                     startActivity(intent);
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:sig`ned_out");
+                } else {  // User is signed out
+                    Log.d(TAG, "login onAuthStateChanged:signed_out");
+                    //remove user's uid from shared preferences
+                    editor.remove(getString(R.string.user_uid));
+                    editor.commit();
+
                 }
                 // ...
             }
@@ -177,7 +195,11 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         }
                                         Log.d(TAG, "Login success");
                                         Log.d(TAG, currentUser.toString());
+                                        editor.putString(getString(R.string.user_uid), uid);
+                                        editor.commit();
+
                                         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                                        intent.putExtra("uid", uid);
                                         startActivity(intent);
 
                                     } else{

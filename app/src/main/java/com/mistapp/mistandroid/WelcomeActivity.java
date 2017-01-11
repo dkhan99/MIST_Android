@@ -1,6 +1,8 @@
 package com.mistapp.mistandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,10 +25,16 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         studentCoachText = (TextView)findViewById(R.id.studentCoach);
         guestText = (TextView)findViewById(R.id.guest);
@@ -41,7 +49,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.commit();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    intent.putExtra("uid", user.getUid());
                     startActivity(intent);
                 } else {
                     // User is signed out
