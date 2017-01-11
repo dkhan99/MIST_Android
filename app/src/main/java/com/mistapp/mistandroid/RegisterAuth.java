@@ -155,21 +155,13 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             cancel = true;
         }
 
-//        if (isMistIdTaken(mistId)) {
-//            mMISTIdView.setError(getString(R.string.error_invalid_mistId));
-//            focusView = mMISTIdView;
-//            cancel = true;
-//        }
-
         //If anythnig was invalid, then this is true
         if (cancel) {
             // There was an error; don't attempt registration and focus the first
             // form field with an error.
-            Log.d(TAG, "11111");
             focusView.requestFocus();
             return;
         } else {
-            Log.d(TAG, "2222");
             //Register the user
             register();
 
@@ -199,7 +191,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
 
 
-
+    //not in use -> This method of returning value wouldn't work because onDataChange happens asynchronously(taken=always default)
     public boolean isMistIdTaken(final String mistId) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final DatabaseReference ref = mDatabase.child("mistprofile");
@@ -226,13 +218,10 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         return taken;
     }
 
-    //Registers user's pass and email to firebase
-
-
     /*
      * Checks Firebase's User DB to see if th MIST ID exists
      * Creates Authenticated user with email + password
-     * [TODO] Creates an entry in the RegisteredUser DB
+     * Creates an entry in the RegisteredUser DB
      */
     private void register() {
 
@@ -246,7 +235,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 exists = false;
-                Log.d(TAG, "333333");
                 // This method is called only once
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     if (child.getKey().equals(mistId)) {
@@ -255,7 +243,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                         currentUserSnapshot = child;
                     }
                 }
-                Log.d(TAG, "4444");
                 if (exists){
 
                     //create auth user
@@ -285,12 +272,17 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                             currentUser = currentUserSnapshot.getValue(Guest.class);
                                         }
 
-//                                      Competitor currentUser = currentUserSnapshot.getValue(Competitor.class);
-                                        Log.d(TAG, "USER RETREIVED: " + currentUser.toString());
-                                        String newEmail = email.replaceAll("\\.","*");
-                                        //Saving to Database
-                                        mDatabase.child("registered-user").child(newEmail).setValue(currentUser);
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        String uid = user.getUid();
+                                        mDatabase.child("registered-user").child(uid).setValue(currentUser);
                                         Log.d(TAG, "WHY IS IT NOT PRINTING?: " + currentUser.toString());
+
+//  Competitor currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                        Log.d(TAG, "USER RETREIVED: " + currentUser.toString());
+//                                        String newEmail = email.replaceAll("\\.","*");
+
+                                        //Saving to Database
+
 
                                         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                         startActivity(intent);

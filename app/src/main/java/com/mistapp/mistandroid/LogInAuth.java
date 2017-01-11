@@ -70,7 +70,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                     startActivity(intent);
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d(TAG, "onAuthStateChanged:sig`ned_out");
                 }
                 // ...
             }
@@ -145,7 +145,9 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Log.w(TAG, "signInWithEmail PASSED");
-                            final String newEmail = email.replaceAll("\\.", "*");
+
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            final String uid = user.getUid();
                             mDatabase = FirebaseDatabase.getInstance().getReference();
                             final DatabaseReference ref = mDatabase.child("registered-user");
 
@@ -154,8 +156,8 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
                                     for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                        if (child.getKey().equals(newEmail)) {
-                                            Log.d(TAG, "EMAIL EXISTS!!!!");
+                                        if (child.getKey().equals(uid)) {
+                                            Log.d(TAG, "UID EXISTS!!!!"+uid);
                                             exists = true;
                                             currentUserSnapshot = child;
                                             break;
