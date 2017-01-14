@@ -97,7 +97,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             if (event.ACTION_UP == 1) {
                 Intent intent;
                 if (view == guestText){
-                    intent = new Intent(this, DashboardActivity.class);
+                    intent = new Intent(this, MyMistActivity.class);
                 }
                 else{
                     intent = new Intent(this, LogInAuth.class);
