@@ -9,7 +9,7 @@
         android:text="Testing Dashboard View"/>
     <!-- This could be your fragment container, or something -->
     <FrameLayout
-        android:id="@+id/contentContainer"
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomBar" />
@@ -19,6 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
-        app:bb_tabXmlResource="@xml/bottombar_tabs" />
+        app:bb_tabXmlResource="@xml/bottombar_tabs"
+        />
 
 </RelativeLayout>
