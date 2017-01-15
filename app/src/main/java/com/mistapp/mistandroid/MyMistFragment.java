@@ -1,5 +1,8 @@
 package com.mistapp.mistandroid;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -7,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mistapp.mistandroid.model.Teammate;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,12 +40,23 @@ public class MyMistFragment extends Fragment {
     private DatabaseReference mDatabase;
     private DatabaseReference ref;
     View view;
+    ListView coaches_lv;
+    ListView teammates_lv;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_my_mist, container, false);
+
+        coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
+        teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
+
+        AdapterView.OnItemClickListener listener = createItemClickListener();
+
+        coaches_lv.setOnItemClickListener(listener);
+        teammates_lv.setOnItemClickListener(listener);
 
         //get from currentUser's information in shared prefs
         final String teamName = "FoCo - South Forsyth";
@@ -97,6 +114,26 @@ public class MyMistFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public AdapterView.OnItemClickListener createItemClickListener(){
+        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ProgressDialog progress = new ProgressDialog(getActivity());
+                progress.setMessage("Opening call :) ");
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setIndeterminate(true);
+                Log.d(TAG, "Clicked a teammate");
+                Teammate clickedTeammate = (Teammate)parent.getItemAtPosition(position);
+                long phoneNumber = clickedTeammate.getPhoneNumber();
+                Uri number = Uri.parse("tel:"+phoneNumber);
+                Log.d(TAG, "phonenumber: " + phoneNumber);
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+                getActivity().startActivity(callIntent);
+            }
+        };
+        return listener;
     }
 
 
