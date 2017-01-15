@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.BooleanResult;
@@ -37,104 +39,45 @@ import static com.mistapp.mistandroid.R.id.uid;
 public class MyMistFragment extends Fragment {
 
     private static final String TAG = LogInAuth.class.getSimpleName();
-    private DatabaseReference mDatabase;
-    private DatabaseReference ref;
-    View view;
     ListView coaches_lv;
     ListView teammates_lv;
+    FragmentTransaction transaction;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_my_mist, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_mist, container, false);
 
-        coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
-        teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
+        RadioButton myTeamButton = (RadioButton) view.findViewById(R.id.my_team_button);
+        RadioButton myScheduleButton = (RadioButton) view.findViewById(R.id.my_schedule_button);
+        final MyTeamFragment myTeamFragment = new MyTeamFragment();
+        final MyScheduleFragment myScheduleFragment = new MyScheduleFragment();
 
-        AdapterView.OnItemClickListener listener = createItemClickListener();
-
-        coaches_lv.setOnItemClickListener(listener);
-        teammates_lv.setOnItemClickListener(listener);
-
-        //get from currentUser's information in shared prefs
-        final String teamName = "FoCo - South Forsyth";
-        final String userMistId = "3198-35252";
-
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        ref = mDatabase.child("team");
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        myTeamButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean teamExists = false;
-                ArrayList<Teammate> coachList = new ArrayList<Teammate>();
-                ArrayList<Teammate> teammateList = new ArrayList<Teammate>();
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                DataSnapshot currentTeammateSnapshot = dataSnapshot.child(teamName);
-                HashMap<String, HashMap> teamMap = (HashMap<String, HashMap>) currentTeammateSnapshot.getValue();
-                Iterator it = teamMap.entrySet().iterator();
+                if (isChecked == true){
+                    transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
+                    transaction.replace(R.id.my_mist_frame_layout, myTeamFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
 
-                //go through each teammate in the current team
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
-                    String mistId = (String)pair.getKey();
-
-                    //if current teammate is not the current user that is logged in...
-                    //create a Teammate object and add to corresponding list (coaches or teammates)
-                    if (!mistId.equals(userMistId)){
-                        Teammate currentMate = currentTeammateSnapshot.child((String)pair.getKey()).getValue(Teammate.class);
-
-                        if (currentMate.getIsCompetitor() == 1){
-                            teammateList.add(currentMate);
-                        }
-                        else{
-                            coachList.add(currentMate);
-                        }
-                        Log.d(TAG, "Adding Teammate with mistid: " + mistId + " name: " + currentMate.getName() + " phone: " + currentMate.getPhoneNumber() + " iscompetitor: " + currentMate.getIsCompetitor());
-                    }
-                    it.remove(); // avoids a ConcurrentModificationException
+                }else{
+                    transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
+                    transaction.replace(R.id.my_mist_frame_layout, myScheduleFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 }
-
-                MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
-                MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
-                ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
-                ListView teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
-                coaches_lv.setAdapter(coachesAdapter);
-                teammates_lv.setAdapter(teammatesAdapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
             }
         });
-
         return view;
     }
 
-    public AdapterView.OnItemClickListener createItemClickListener(){
-        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ProgressDialog progress = new ProgressDialog(getActivity());
-                progress.setMessage("Opening call :) ");
-                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progress.setIndeterminate(true);
-                Log.d(TAG, "Clicked a teammate");
-                Teammate clickedTeammate = (Teammate)parent.getItemAtPosition(position);
-                long phoneNumber = clickedTeammate.getPhoneNumber();
-                Uri number = Uri.parse("tel:"+phoneNumber);
-                Log.d(TAG, "phonenumber: " + phoneNumber);
-                Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
-                getActivity().startActivity(callIntent);
-            }
-        };
-        return listener;
-    }
 
 
 
