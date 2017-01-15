@@ -65,8 +65,13 @@ public class MyMistFragment extends Fragment {
                     transaction.replace(R.id.my_mist_frame_layout, myTeamFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
-
-                }else{
+                }
+            }
+        });
+        myScheduleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked == true) {
                     transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
                     transaction.replace(R.id.my_mist_frame_layout, myScheduleFragment);
