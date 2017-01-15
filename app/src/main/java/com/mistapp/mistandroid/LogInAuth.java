@@ -195,7 +195,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         editor.putString(getString(R.string.user_uid), uid);
                                         editor.commit();
 
-                                        Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra("uid", uid);
                                         startActivity(intent);
 
