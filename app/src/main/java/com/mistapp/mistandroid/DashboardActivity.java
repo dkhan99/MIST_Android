@@ -66,19 +66,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                sharedPref = getPreferences(Context.MODE_PRIVATE);
+                sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
                 editor = sharedPref.edit();
 
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "dash onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.putString(getString(R.string.user_uid_key), user.getUid());
                     editor.commit();
                 } else { // User is signed out
                     Log.d(TAG, "dash onAuthStateChanged:signed_out");
                     //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid));
+                    editor.remove(getString(R.string.user_uid_key));
                     editor.commit();
                 }
             }
@@ -93,7 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         orientationVidButton = (Button) findViewById(R.id.orientation_video);
         socialMediaButton = (Button) findViewById(R.id.social_media);
         bracketsButton = (Button) findViewById(R.id.brackets);
-        logoutButton = (Button) findViewById(R.id.logout);
+        logoutButton = (Button) findViewById(R.id.logoutOld);
 
         //Listen for user clicks on the button and hyperlink
         myTeamButton.setOnClickListener(this);

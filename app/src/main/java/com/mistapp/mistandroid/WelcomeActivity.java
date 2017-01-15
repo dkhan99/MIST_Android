@@ -34,7 +34,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
         studentText = (TextView)findViewById(R.id.student);
@@ -49,12 +49,15 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    String json = sharedPref.getString(getString(R.string.current_user_key), "asdf");
+                    Log.d(TAG, "current user: " + json);
+
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.putString(getString(R.string.user_uid_key), user.getUid());
                     editor.commit();
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                    intent.putExtra("uid", user.getUid());
+                    Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                    intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {
                     // User is signed out
@@ -97,6 +100,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             if (event.ACTION_UP == 1) {
                 Intent intent;
                 if (view == guestText){
+                    //testing for now
                     intent = new Intent(this, MyMistActivity.class);
                 }
                 else{

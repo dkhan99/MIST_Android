@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Guest;
@@ -63,7 +64,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_register_auth);
 
         context = getApplicationContext();
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
@@ -73,21 +74,20 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                sharedPref = getPreferences(Context.MODE_PRIVATE);
-                editor = sharedPref.edit();
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "register onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.putString(getString(R.string.user_uid_key), user.getUid());
                     editor.commit();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                    intent.putExtra("uid", user.getUid());
+                    intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
                     Log.d(TAG, "register onAuthStateChanged:signed_out");
                     //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid));
+                    editor.remove(getString(R.string.user_uid_key));
+                    editor.remove(getString(R.string.current_user_key));
                     editor.commit();
                 }
             }
@@ -291,8 +291,11 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         mDatabase.child("registered-user").child(uid).setValue(currentUser);
                                         Log.d(TAG, "user added to database: " + currentUser.toString());
 
-                                        Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                                        intent.putExtra("uid", uid);
+                                        cacheUserFields(currentUser, uid, currentUserType);
+
+                                        Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                                        intent.putExtra(getString(R.string.user_uid_key), uid);
+                                        intent.putExtra(getString(R.string.current_user_type), currentUserType);
                                         startActivity(intent);
                                     }
                                     // ...
@@ -308,31 +311,16 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
         });
-
     }
 
-    public void shit(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(context, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            finish();
-                            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
-                            startActivity(intent);
-                        }
-                        // ...
-                    }
-                });
+    //saves the current user's fields and UID to shared preferences
+    public void cacheUserFields(Object currentUser, String uid, String userType){
+        Gson gson = new Gson();
+        String json = gson.toJson(currentUser);
+        editor.putString(getString(R.string.current_user_key), json);
+        editor.putString(getString(R.string.current_user_type), userType);
+        editor.putString(getString(R.string.user_uid_key), uid);
+        editor.commit();
     }
 
     /**

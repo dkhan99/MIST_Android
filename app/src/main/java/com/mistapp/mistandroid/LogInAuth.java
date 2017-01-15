@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Guest;
@@ -59,7 +60,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         Intent intent = getIntent();
         context = getApplication();
 
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
         //Initialize firebase auth object
@@ -75,15 +76,16 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 if (user != null) {
                     Log.d(TAG, "login onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid), user.getUid());
+                    editor.putString(getString(R.string.user_uid_key), user.getUid());
                     editor.commit();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                    intent.putExtra("uid", user.getUid());
+                    intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
                     Log.d(TAG, "login onAuthStateChanged:signed_out");
                     //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid));
+                    editor.remove(getString(R.string.user_uid_key));
+                    editor.remove(getString(R.string.current_user_key));
                     editor.commit();
 
                 }
@@ -192,11 +194,12 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         }
                                         Log.d(TAG, "Login success");
                                         Log.d(TAG, currentUser.toString());
-                                        editor.putString(getString(R.string.user_uid), uid);
-                                        editor.commit();
+
+                                        cacheUserFields(currentUser, uid, currentUserType);
 
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
-                                        intent.putExtra("uid", uid);
+                                        intent.putExtra(getString(R.string.user_uid_key), uid);
+                                        intent.putExtra(getString(R.string.current_user_type), currentUserType);
                                         startActivity(intent);
 
                                     } else{
@@ -217,7 +220,15 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                         }
                     }
          });
+    }
 
-
+    //saves the current user's fields and UID to shared preferences
+    public void cacheUserFields(Object currentUser, String uid, String userType){
+        Gson gson = new Gson();
+        String json = gson.toJson(currentUser);
+        editor.putString(getString(R.string.current_user_key), json);
+        editor.putString(getString(R.string.current_user_type), userType);
+        editor.putString(getString(R.string.user_uid_key), uid);
+        editor.commit();
     }
 }
