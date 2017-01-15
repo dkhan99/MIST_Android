@@ -32,7 +32,11 @@
         <activity android:name=".WeekendSched" />
         <activity android:name=".RegisterAuth" />
         <activity android:name=".DashboardActivity" />
-        <activity android:name=".MyMistActivity"></activity>
+        <activity android:name=".MyMistActivity" />
+        <activity
+            android:name=".HelpDirectory"
+            android:label="@string/title_activity_help_directory"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
