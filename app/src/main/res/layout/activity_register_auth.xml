@@ -9,9 +9,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@android:color/white"
-    android:elevation="10dp"
-    android:clipToPadding="false"
     tools:context="com.mistapp.mistandroid.RegisterAuth">
 
     <!-- Login progress -->
@@ -19,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="100dp"
-        app:srcCompat="@mipmap/original_logo"
+        app:srcCompat="@mipmap/mist_logo"
         android:id="@+id/imageView2" />
 
     <ProgressBar
@@ -46,40 +43,11 @@
                 android:layout_height="wrap_content">
 
                 <android.support.design.widget.TextInputEditText
-                    android:id="@+id/first_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_first_name"
-                    android:imeActionId="@+id/register_first_name"
-                    android:imeOptions="actionUnspecified"
-                    android:maxLines="1" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/last_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_last_name"
-                    android:imeActionId="@+id/register_last_name"
-                    android:imeOptions="actionUnspecified"
-                    android:maxLines="1" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
                     android:id="@+id/mist_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_mist_id"
+                    android:inputType="phone"
                     android:imeActionId="@+id/register_mist_id"
                     android:imeOptions="actionUnspecified"
                     android:maxLines="1" />
@@ -127,11 +95,10 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/action_register"
                 android:textStyle="bold"
-                android:background= "@drawable/button"
-                android:onClick = "goLogIn" />
+                />
 
             <TextView
-                android:paddingTop="75px"
+                android:paddingTop="50px"
                 android:textColor= "#FF00"
                 android:textAlignment ="center"
                 android:textSize = "65px"
@@ -139,7 +106,7 @@
                 android:id = "@+id/textViewSignin"
                 android:layout_width="match_parent"
                 android:layout_height = "wrap_content"
-                android:onClick="goLogIn"/>
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.mistapp.mistandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -18,9 +21,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Coach;
+import com.mistapp.mistandroid.model.Competitor;
+import com.mistapp.mistandroid.model.Guest;
+import com.mistapp.mistandroid.model.MistData;
 import com.mistapp.mistandroid.model.User;
+
+import static android.R.attr.value;
 
 /**
  * A login screen that offers login via email/password.
@@ -30,23 +43,29 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
     private boolean exists;
     private boolean taken;
+    private DataSnapshot currentUserSnapshot;
     // UI references, essentially the elements on the android activity
     private EditText mEmailView;
     private EditText mPasswordView;
-    private EditText mFirstNameView;
-    private EditText mLastNameView;
     private EditText mMISTIdView;
     private Button mRegisterButton;
     private TextView mtextViewRegister;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabase;
+    private Context context;
+
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_auth);
 
+        context = getApplicationContext();
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
 
@@ -57,10 +76,19 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d(TAG, "register onAuthStateChanged:signed_in:" + user.getUid());
+                    //save user's uid in shared preferences
+                    editor.putString(getString(R.string.user_uid_key), user.getUid());
+                    editor.commit();
+                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    intent.putExtra(getString(R.string.user_uid_key), user.getUid());
+                    startActivity(intent);
+                } else {  // User is signed out
+                    Log.d(TAG, "register onAuthStateChanged:signed_out");
+                    //remove user's uid from shared preferences
+                    editor.remove(getString(R.string.user_uid_key));
+                    editor.remove(getString(R.string.current_user_key));
+                    editor.commit();
                 }
             }
         };
@@ -68,8 +96,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         // initialize views, which were declared earlier
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
-        mFirstNameView = (TextInputEditText) findViewById(R.id.first_name);
-        mLastNameView = (TextInputEditText) findViewById(R.id.last_name);
         mMISTIdView = (TextInputEditText) findViewById(R.id.mist_id);
 
         mRegisterButton = (Button) findViewById(R.id.email_register_button);
@@ -91,7 +117,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             attemptRegister();
         }
         if (view == mtextViewRegister) {
-            Intent intent = new Intent(view.getContext(), LogInAuth.class);
+            Intent intent = new Intent(this, LogInAuth.class);
             startActivity(intent);
         }
     }
@@ -108,15 +134,11 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
-        mFirstNameView.setError(null);
-        mLastNameView.setError(null);
         mMISTIdView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString().trim();
         String password = mPasswordView.getText().toString().trim();
-        String firstName = mFirstNameView.getText().toString().trim();
-        String lastName = mLastNameView.getText().toString().trim();
         String mistId = mMISTIdView.getText().toString().trim();
 
         View focusView = null;
@@ -143,38 +165,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         if (TextUtils.isEmpty(mistId) || !isMistIdValid(mistId)) {
             mMISTIdView.setError(getString(R.string.error_invalid_mistId));
             focusView = mMISTIdView;
-            cancel = true;
-        }
-/**
- * //TODO Validate mist id is not taken and that it does exist
-
-         if (isMistIdExists(mistId)) {
-             mMISTIdView.setError(getString(R.string.error_invalid_mistId));
-             focusView = mMISTIdView;
-             cancel = true;
-         }
-
-        if (isMistIdTaken(mistId)) {
-            mMISTIdView.setError(getString(R.string.error_invalid_mistId));
-            focusView = mMISTIdView;
-            cancel = true;
-        }
-
-
-
-*/
-
-        //Check for valid first name
-        if (TextUtils.isEmpty(firstName)) {
-            mFirstNameView.setError(getString(R.string.error_invalid_firstName));
-            focusView = mFirstNameView;
-            cancel = true;
-        }
-
-        //Check for a valid last name
-        if (TextUtils.isEmpty(lastName)) {
-            mLastNameView.setError(getString(R.string.error_invalid_lastName));
-            focusView = mLastNameView;
             cancel = true;
         }
 
@@ -212,35 +202,126 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
-    //Registers user's pass and email to firebase
-    public void register() {
-        final String email = mEmailView.getText().toString().trim();
-        final String password = mPasswordView.getText().toString().trim();
-        final String firstName = mFirstNameView.getText().toString().trim();
-        final String lastName = mLastNameView.getText().toString().trim();
-        final String mistId = mMISTIdView.getText().toString().trim();
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = mDatabase.getReference();
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //User is successufully registered and logged in
-                            // we will start the profule activity here
-                            // right now lets display a toast
-                            Toast.makeText(RegisterAuth.this, "Registered Sucessfully", Toast.LENGTH_SHORT).show();
-                            User user = new User(firstName, lastName, mistId, email, password, task.getResult().getUser().getUid());
-                            ref.child("user").setValue(user);
-                            Intent intent = new Intent(getApplicationContext(), LogInAuth.class);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(RegisterAuth.this, "Could not register, please try again", Toast.LENGTH_SHORT).show();
-                        }
+
+
+    //not in use -> This method of returning value wouldn't work because onDataChange happens asynchronously(taken=always default)
+    public boolean isMistIdTaken(final String mistId) {
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference ref = mDatabase.child("mistprofile");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                taken = false;
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals(mistId)) {
+                        taken = true;
                     }
-                });
+                }
+                Log.d(TAG, "Value is: " + value);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+        Log.w(TAG, "MIST ID TAKEN: " + taken);
+        return taken;
     }
 
+    /*
+     * Checks Firebase's User DB to see if th MIST ID exists
+     * Creates Authenticated user with email + password
+     * Creates an entry in the RegisteredUser DB
+     */
+    private void register() {
+
+        final String email = mEmailView.getText().toString().trim();
+        final String password = mPasswordView.getText().toString().trim();
+        final String mistId = mMISTIdView.getText().toString().trim();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        final DatabaseReference ref = mDatabase.child("user");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                exists = false;
+                // This method is called only once
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    if (child.getKey().equals(mistId)) {
+                        Log.d(TAG, "EXISTS!!!!");
+                        exists = true;
+                        currentUserSnapshot = child;
+                    }
+                }
+                if (exists){
+
+                    //create auth user
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(RegisterAuth.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+
+                                    // Sign in failed- display a message to the user
+                                    if (!task.isSuccessful()) {
+                                        Log.d(TAG, "CreateUserWithEmailAndPass failed", task.getException());
+                                        Toast.makeText(context, "Technical error or user exists... please try again or contact support",
+                                                Toast.LENGTH_SHORT).show();
+                                    // Sucessful sign in. Add user to registered-users database
+                                    } else {
+                                        Log.d(TAG, "createUserWithEmailAndPass succeeded", task.getException());
+                                        String currentUserType = (String)currentUserSnapshot.child("userType").getValue();
+
+                                        //figure out the type of user, create a respective object, populate its fields from the db, and save to 'registered-user' table
+                                        Object currentUser = null;
+                                        if (currentUserType.equals("competitor")) {
+                                            currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                        } else if (currentUserType.equals("coach")){
+                                            currentUser = currentUserSnapshot.getValue(Coach.class);
+                                        } else if (currentUserType.equals("guest")){
+                                            currentUser = currentUserSnapshot.getValue(Guest.class);
+                                        }
+
+                                        //Saving to Database
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        String uid = user.getUid();
+                                        mDatabase.child("registered-user").child(uid).setValue(currentUser);
+                                        Log.d(TAG, "user added to database: " + currentUser.toString());
+
+                                        cacheUserFields(currentUser, uid, currentUserType);
+
+                                        Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                                        intent.putExtra(getString(R.string.user_uid_key), uid);
+                                        intent.putExtra(getString(R.string.current_user_type), currentUserType);
+                                        startActivity(intent);
+                                    }
+                                    // ...
+                                }
+                            });
+                }
+
+                Log.d(TAG, "Value is: " + value);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", databaseError.toException());
+            }
+        });
+    }
+
+    //saves the current user's fields and UID to shared preferences
+    public void cacheUserFields(Object currentUser, String uid, String userType){
+        Gson gson = new Gson();
+        String json = gson.toJson(currentUser);
+        editor.putString(getString(R.string.current_user_key), json);
+        editor.putString(getString(R.string.current_user_type), userType);
+        editor.putString(getString(R.string.user_uid_key), uid);
+        editor.commit();
+    }
 
     /**
      * Start Firebase authentication?
@@ -261,57 +342,4 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
-
-/*
-    private boolean isMistIdExists(final String mistId) {
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = mDatabase.getReference().child("mistid");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                exists = false;
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.getKey().equals(mistId)) {
-                        exists = true;
-                    }
-                }
-                Log.d(TAG, "Value is: " + value);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });
-        return exists;
-    }
-
-    public boolean isMistIdTaken(final String mistId) {
-        mDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference ref = mDatabase.getReference().child("mistprofile");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                taken = false;
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    if (child.getKey().equals(mistId)) {
-                        taken = true;
-                    }
-                }
-                Log.d(TAG, "Value is: " + value);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", databaseError.toException());
-            }
-        });
-        return taken;
-    }
-*/
 }

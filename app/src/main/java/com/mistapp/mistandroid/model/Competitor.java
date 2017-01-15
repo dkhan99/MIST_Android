@@ -1,10 +1,14 @@
 package com.mistapp.mistandroid.model;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by direwolf on 1/2/17.
  */
 
 public class Competitor {
+
+    private String userType = "competitor";
     private String art;
     private String birthDate;
     private String brackets;
@@ -14,13 +18,18 @@ public class Competitor {
     private String groupProject;
     private String writing;
     private String team;
-    private int phoneNumber;
+    private long phoneNumber;
     private String basketball;
     private String knowledge;
     private String mistId;
     private String name;
 
-    public Competitor(String art, String birthDate, String brackets, String city, String email, String gender, String groupProject, String writing, String team, int phoneNumber, String basketball, String knowledge, String mistId, String name) {
+    public Competitor(){
+
+    }
+
+
+    public Competitor(String art, String birthDate, String brackets, String city, String email, String gender, String groupProject, String writing, String team, long phoneNumber, String basketball, String knowledge, String mistId, String name) {
         this.art = art;
         this.birthDate = birthDate;
         this.brackets = brackets;
@@ -73,7 +82,7 @@ public class Competitor {
         return team;
     }
 
-    public int getPhoneNumber() {
+    public long getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -92,4 +101,42 @@ public class Competitor {
     public String getName() {
         return name;
     }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    /*
+     * Prints all the fields of the object nicely
+     */
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        String newLine = System.getProperty("line.separator");
+
+        result.append( this.getClass().getName() );
+        result.append( " Object {" );
+        result.append(newLine);
+
+        //determine fields declared in this class only (no fields of superclass)
+        Field[] fields = this.getClass().getDeclaredFields();
+
+        //print field names paired with their values
+        for ( Field field : fields  ) {
+            result.append("  ");
+            try {
+                result.append( field.getName() );
+                result.append(": ");
+                //requires access to private field:
+                result.append( field.get(this) );
+            } catch ( IllegalAccessException ex ) {
+                System.out.println(ex);
+            }
+            result.append(newLine);
+        }
+        result.append("}");
+
+        return result.toString();
+    }
+
 }

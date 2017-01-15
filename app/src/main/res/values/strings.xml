@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MIST Atlanta</string>
+    <string name="app_name">MISTAndroid</string>
 
     <!-- Strings related to login -->
     <string name="prompt_first_name">First Name</string>
@@ -15,24 +15,22 @@
     <string name="error_invalid_password">This password is too short, it must be atleast 5 characters </string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_invalid_lastName">This last name is invalid</string>
-    <string name="error_invalid_mistId">This MIST Id must be 10 or 9 characters including a dash at the fifth digit place</string>
-    <string name="error_invalid2_mistId">This MIST Id is already registered</string>
-    <string name="error_invalid3_mistId">This MIST Id does not exist</string>
-
+    <string name="error_invalid_mistId">This MIST Id must be 10 characters including a dash at the fifth digit place</string>
     <string name="error_invalid_firstName">This first name is invalid</string>
 
     <string name="error_field_required">This field is required</string>
-
-    <string name="text_mist_hotline">MIST Atlanta Help Line \n 6789004806</string>
-    <string name="text_campus_police">Campus Police \n 6789004805</string>
-
-
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_login_auth">Sign in</string>
     <string name="title_activity_register_auth">Register</string>
     <string name="title_activity_rulebook">Rulebook</string>
-    <string name="title_activity_help_directory">HelpDirectory</string>
-    <string name="title_activity_team">Team</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="user_uid_key">current_user_uid</string>
+    <string name="current_user_key">current_user</string>
+    <string name="current_user_type">current_user_type</string>
+    <string name="app_package_name">com.mistapp.mistandroid</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

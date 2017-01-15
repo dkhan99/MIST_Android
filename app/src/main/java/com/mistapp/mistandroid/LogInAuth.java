@@ -1,6 +1,8 @@
 package com.mistapp.mistandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -18,6 +20,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Coach;
+import com.mistapp.mistandroid.model.Competitor;
+import com.mistapp.mistandroid.model.Guest;
+import com.mistapp.mistandroid.model.MistData;
 
 public class LogInAuth extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,17 +37,31 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private EditText mEmailView;
     private EditText mPasswordView;
 
+    private DataSnapshot currentUserSnapshot;
+    private boolean exists;
+
     private Button mLogInButton;
 
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private Context context;
 
     private TextView mtextView;
+
+    private SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_auth);
+
+        Intent intent = getIntent();
+        context = getApplication();
+
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
@@ -45,12 +71,23 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                // User is signed in
                 if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d(TAG, "login onAuthStateChanged:signed_in:" + user.getUid());
+                    //save user's uid in shared preferences
+                    editor.putString(getString(R.string.user_uid_key), user.getUid());
+                    editor.commit();
+                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    intent.putExtra(getString(R.string.user_uid_key), user.getUid());
+                    startActivity(intent);
+                } else {  // User is signed out
+                    Log.d(TAG, "login onAuthStateChanged:signed_out");
+                    //remove user's uid from shared preferences
+                    editor.remove(getString(R.string.user_uid_key));
+                    editor.remove(getString(R.string.current_user_key));
+                    editor.commit();
+
                 }
                 // ...
             }
@@ -76,6 +113,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         if (view == mLogInButton) {
             attemptSignIn();
         }
+
         if (view == mtextView) {
             finish();
             Intent intent = new Intent(this, RegisterAuth.class);
@@ -87,8 +125,8 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
      * Checks with firebase if email/password combination is correct
      */
     public void attemptSignIn() {
-        String email = mEmailView.getText().toString().trim();
-        String password = mPasswordView.getText().toString().trim();
+        final String email = mEmailView.getText().toString().trim();
+        final String password = mPasswordView.getText().toString().trim();
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
@@ -123,13 +161,74 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                             Toast.makeText(LogInAuth.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            finish();
-                            Intent intent = new Intent(getApplicationContext(), HelpDirectory.class);
-                            startActivity(intent);
+                            Log.w(TAG, "signInWithEmail PASSED");
+
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            final String uid = user.getUid();
+                            mDatabase = FirebaseDatabase.getInstance().getReference();
+                            final DatabaseReference ref = mDatabase.child("registered-user");
+
+                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                        if (child.getKey().equals(uid)) {
+                                            Log.d(TAG, "UID EXISTS!!!!"+uid);
+                                            exists = true;
+                                            currentUserSnapshot = child;
+                                            break;
+                                        }
+                                    }
+
+                                    if (exists){
+                                        // Get User object from db
+                                        String currentUserType = (String)currentUserSnapshot.child("userType").getValue();
+                                        Object currentUser = null;
+                                        if (currentUserType.equals("competitor")) {
+                                            currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                        } else if (currentUserType.equals("coach")){
+                                            currentUser = currentUserSnapshot.getValue(Coach.class);
+                                        } else if (currentUserType.equals("guest")) {
+                                            currentUser = currentUserSnapshot.getValue(Guest.class);
+                                        }
+                                        Log.d(TAG, "Login success");
+                                        Log.d(TAG, currentUser.toString());
+
+                                        cacheUserFields(currentUser, uid, currentUserType);
+
+                                        Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                                        intent.putExtra(getString(R.string.user_uid_key), uid);
+                                        intent.putExtra(getString(R.string.current_user_type), currentUserType);
+                                        startActivity(intent);
+
+                                    } else{
+                                        Log.d(TAG, "Login failure");
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Getting Post failed, log a message
+                                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    // ...
+                                }
+                            });
+                            // ...
                         }
-                        // ...
                     }
-                });
+         });
     }
 
+    //saves the current user's fields and UID to shared preferences
+    public void cacheUserFields(Object currentUser, String uid, String userType){
+        Gson gson = new Gson();
+        String json = gson.toJson(currentUser);
+        editor.putString(getString(R.string.current_user_key), json);
+        editor.putString(getString(R.string.current_user_type), userType);
+        editor.putString(getString(R.string.user_uid_key), uid);
+        editor.commit();
+    }
 }
