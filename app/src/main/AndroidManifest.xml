@@ -27,16 +27,14 @@
         <activity android:name=".LogInAuth" />
         <activity
             android:name=".Rulebook"
-            android:label="@string/title_activity_rulebook"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_rulebook" />
         <activity android:name=".WeekendSched" />
         <activity android:name=".RegisterAuth" />
         <activity android:name=".DashboardActivity" />
         <activity android:name=".MyMistActivity" />
         <activity
             android:name=".HelpDirectory"
-            android:label="@string/title_activity_help_directory"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_help_directory"></activity>
     </application>
 
 </manifest>

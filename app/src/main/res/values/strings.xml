@@ -6,6 +6,11 @@
     <string name="prompt_mist_id">MIST Id</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+
+    <string name="choose_competition">Choose Competition</string>
+    <string name="view_rules">View Rules</string>
+    <string name="view_brackets">View Brackets</string>
+
     <string name="action_sign_in">Sign in</string>
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>

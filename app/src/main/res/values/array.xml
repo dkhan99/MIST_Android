@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="competitions">
+        <item>Knowledge Test - Book 1</item>
+        <item>Knowledge Test - Book 2</item>
+        <item>Knowledge Test - Book 3</item>
+        <item>Knowledge Test - Book 4</item>
+        <item>Sister’s Quran Level 1</item>
+        <item>Sister’s Quran Level 2</item>
+        <item>Sister’s Quran Level 3</item>
+        <item>Brother’s Quran Level 1</item>
+        <item>Brother’s Quran Level 2</item>
+        <item>Brother’s Quran Level 3</item>
+
+        <item>2D Art</item>
+        <item>3D Art</item>
+        <item>Fashion Design</item>
+        <item>Graphic Design</item>
+        <item>Photography</item>
+        <item>Culinary Arts</item>
+
+        <item>Extemporaneous Essay</item>
+        <item>Extemporaneous Speaking</item>
+        <item>Original Oratory</item>
+        <item>Poetry</item>
+        <item>Prepared Essay</item>
+        <item>Short Fiction</item>
+        <item>Spoken Word</item>
+
+        <item>Debate</item>
+        <item>Math Olympics</item>
+        <item>MIST Quiz Bowl</item>
+        <item>Sister’s Improv</item>
+        <item>Brother’s Improv</item>
+
+        <item>Business Venture</item>
+        <item>Nasheed/Rap</item>
+        <item>Community Service</item>
+        <item>Science Fair</item>
+        <item>Short Film</item>
+        <item>Social Media</item>
+        <item> Mobile Applications</item>
+
+        <item>*Sister’s Basketball</item>
+        <item>*Brother’s Basketball</item>
+    </array>
+
+
+</resources>
