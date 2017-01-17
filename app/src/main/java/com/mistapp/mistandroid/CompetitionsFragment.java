@@ -88,12 +88,14 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
             String competitionPicked = competitionPicker.getSelectedItem().toString();
             String url = bracketUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
+            // add code to view the pdf
         }
 
         if (view == viewRulebookButton) {
             String competitionPicked = competitionPicker.getSelectedItem().toString();
             String url = rulebookUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
+            // add code to view the pdf
         }
     }
 
