@@ -33,6 +33,9 @@ import com.mistapp.mistandroid.model.MistData;
 
 public class LogInAuth extends AppCompatActivity implements View.OnClickListener {
 
+    //changed when the activity changes states - onPause() and onResume(). Used to correctly show notifications
+    public static boolean isInForeground;
+
     private static final String TAG = LogInAuth.class.getSimpleName();
     private EditText mEmailView;
     private EditText mPasswordView;
@@ -230,5 +233,18 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         editor.putString(getString(R.string.current_user_type), userType);
         editor.putString(getString(R.string.user_uid_key), uid);
         editor.commit();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInForeground =true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInForeground = false;
     }
 }

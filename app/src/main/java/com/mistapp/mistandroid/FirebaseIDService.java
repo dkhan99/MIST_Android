@@ -1,7 +1,10 @@
 package com.mistapp.mistandroid;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -10,6 +13,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  */
 
 public class FirebaseIDService extends FirebaseInstanceIdService {
+
     private static final String TAG = "FirebaseIDService";
 
     @Override
@@ -31,6 +35,6 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
-        // Add custom implementation, as needed.
+        //[TODO] Add custom implementation, as needed.
     }
 }

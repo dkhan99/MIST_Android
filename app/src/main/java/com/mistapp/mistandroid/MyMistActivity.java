@@ -54,8 +54,13 @@ import static com.mistapp.mistandroid.R.id.uid;
  */
 
 public class MyMistActivity extends AppCompatActivity {
-    private BottomBar bottomBar;
+
+    //changed when the activity changes states - onPause() and onResume(). Used to correctly show notifications
+    public static boolean isInForeground;
+
     private static final String TAG = LogInAuth.class.getSimpleName();
+
+    private BottomBar bottomBar;
     private Bundle args;
     private MapFragment mapFragment;
     private CompetitionsFragment competitionsFragment;
@@ -144,8 +149,6 @@ public class MyMistActivity extends AppCompatActivity {
                     transaction.replace(R.id.fragment_container, notificationsFragment);
                     editor.putInt("numUnreadNotifications", 0);
                     editor.commit();
-//                    notificationTab.removeBadge();
-                    Log.d(TAG, "setting unread count = 0");
                 }
 
                 transaction.addToBackStack(null);
@@ -166,19 +169,27 @@ public class MyMistActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
-        super.onStart();
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "ACTIVITY HAS Resumed!");
+        //Any time the activity is started from a hidden state, check for updates in notifications
         updateBottomBarNotifications();
-        Log.d(TAG, "ACTIVITY HAS STARTED!");
+        isInForeground =true;
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInForeground = false;
     }
 
 
+    //at this time, the actual new notification will have been added to shared preferences
     public void updateBottomBarNotifications(){
-        //only update bottombar if there's a new notification
         int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0);
         BottomBarTab notificationTab = bottomBar.getTabAtPosition(4);
 
+        //remove badge if there are no new notifications. Set the badge count appropriately if there are
         if (numUnreadNotifications == 0){
             notificationTab.removeBadge();
             Log.d(TAG, "No notifications to show -> remove badge");

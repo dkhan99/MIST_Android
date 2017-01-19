@@ -15,10 +15,16 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Notification;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnTouchListener{
 
     private static final String TAG = RegisterAuth.class.getSimpleName();
+
+    //changed when the activity changes states - onPause() and onResume(). Used to correctly show notifications
+    public static boolean isInForeground;
 
     TextView studentText;
     TextView coachText;
@@ -43,16 +49,20 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
         mAuth = FirebaseAuth.getInstance();
 
+        //gets the user's token
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "User's token: " + token);
+
         //User is signed in or not already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    String json = sharedPref.getString(getString(R.string.current_user_key), "asdf");
+                    String json = sharedPref.getString(getString(R.string.current_user_key), "");
                     Log.d(TAG, "current user: " + json);
 
-                    // User is signed in
+                    // put uid in cache
                     editor.putString(getString(R.string.user_uid_key), user.getUid());
                     editor.commit();
                     Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
@@ -85,6 +95,19 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Any time the activity is started from a hidden state, check for updates in notifications
+        isInForeground =true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInForeground = false;
     }
 
     /**

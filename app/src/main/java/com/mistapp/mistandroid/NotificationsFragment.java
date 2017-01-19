@@ -50,9 +50,8 @@ public class NotificationsFragment extends Fragment {
         if (sharedPref.contains("notifications")){
             Gson gson = new Gson();
             String jsonList = sharedPref.getString("notifications", "");
-            Log.d(TAG, "retreived json list: " +jsonList);
             ArrayList<Notification> notificationArray = gson.fromJson(jsonList, new TypeToken<ArrayList<Notification>>() {}.getType());
-            Log.d(TAG, "size of object list: " +notificationArray.size());
+            Log.d(TAG, "Showing x notifications: " +notificationArray.size() );
 
             //set all notifications seen = true
             for (Notification notification : notificationArray){

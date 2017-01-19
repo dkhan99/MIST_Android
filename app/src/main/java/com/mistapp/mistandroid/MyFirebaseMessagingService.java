@@ -1,7 +1,14 @@
 package com.mistapp.mistandroid;
 
+import android.app.ActivityManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -17,8 +24,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static android.R.attr.smallIcon;
 
 /**
  * Created by aadil on 1/17/17.
@@ -42,14 +52,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // If the application is in the foreground handle both data and notification messages here.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
-        remoteMessage.getNotification().getTitle();
+        Map dataMap = remoteMessage.getData();
+        String title = (String)dataMap.get("title");
+        String body = (String)dataMap.get("body");
+        Long time = Long.valueOf((String)dataMap.get("time"));
 
-        //create notification and add to shared preferences
-        String title = remoteMessage.getNotification().getTitle();
-        String body = remoteMessage.getNotification().getBody();
-        long currentTime = System.currentTimeMillis();
-        Notification newNotification = new Notification(title, body, currentTime ,false);
+        if (appIsInForeground()){
+            Log.d(TAG, "APP IS IN FOREGROUND");
+            createNotification(title, body, time);
+        }
+        else{
+            Log.d(TAG, "APP IS IN BACKGROUND");
+            createNotification(title, body, time);
+            showNotificationPopup(title, body, time);
+        }
+
+    }
+
+    //creates a notification and adds it as well as the total unread notifications to shared preferences.
+    //These values are then retrieved by MyMistActivity
+    public void createNotification(String title, String body, Long time){
+        Notification newNotification = new Notification(title, body, time ,false);
 
         //if shared preferences doesnt contain notifications
         if (sharedPref.contains("notifications")){
@@ -83,6 +106,47 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0) + 1;
 
         editor.putInt("numUnreadNotifications", numUnreadNotifications);
+        Log.d("Num unread notifs: " , Integer.toString(numUnreadNotifications));
         editor.commit();
+    }
+
+    //shows the actual popup notification. Notification click is handled as well, and the user is taken to the mist-app.
+    public void showNotificationPopup(String title, String body, Long time){
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setSmallIcon(R.drawable.original_logo)
+                        .setContentTitle(title)
+                        .setContentText(body);
+
+
+        //creating the intent that will be triggered when user clicks the notification
+        //title, body, and time of the notification is passed to the intent
+        Intent resultIntent = new Intent(this, WelcomeActivity.class);
+        resultIntent.putExtra("title",title);
+        resultIntent.putExtra("body",body);
+        resultIntent.putExtra("time",time);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(WelcomeActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        //when user clicks the notification, the popup dissapears from the tray
+        mBuilder.setAutoCancel(true);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(2, mBuilder.build());
+    }
+
+    private boolean appIsInForeground() {
+        return MyMistActivity.isInForeground || WelcomeActivity.isInForeground || LogInAuth.isInForeground || RegisterAuth.isInForeground;
+
     }
 }

@@ -41,6 +41,9 @@ import static android.R.attr.value;
 public class RegisterAuth extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = RegisterAuth.class.getSimpleName();
 
+    //changed when the activity changes states - onPause() and onResume(). Used to correctly show notifications
+    public static boolean isInForeground;
+
     private boolean exists;
     private boolean taken;
     private DataSnapshot currentUserSnapshot;
@@ -341,5 +344,17 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInForeground =true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInForeground = false;
     }
 }
