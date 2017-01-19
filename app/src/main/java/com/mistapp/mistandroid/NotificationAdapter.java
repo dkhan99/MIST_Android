@@ -48,8 +48,8 @@ public class NotificationAdapter extends ArrayAdapter {
         }
         // Populate the data from the data object via the viewHolder object
         // into the template view.
-        viewHolder.text.setText(current_notification.getText());
-        viewHolder.time.setText(current_notification.getTime());
+        viewHolder.text.setText(current_notification.getTitle());
+        viewHolder.time.setText(Long.toString(current_notification.getTime()));
         // Return the completed view to render on screen
         return convertView;
     }

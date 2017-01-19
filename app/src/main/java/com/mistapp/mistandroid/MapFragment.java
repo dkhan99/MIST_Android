@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
+
 
 public class MapFragment extends Fragment {
     @Override
@@ -32,6 +35,8 @@ public class MapFragment extends Fragment {
                 //getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com/file/d/0B9GG5vxkVHa0Q0tZQjdyRFN0Mmc/view")));
             }
         });
+        
+
         return view;
     }
 }

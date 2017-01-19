@@ -29,7 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.mistapp.mistandroid.model.Notification;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarTab;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -42,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static com.mistapp.mistandroid.R.id.bottom;
 import static com.mistapp.mistandroid.R.id.uid;
 
 /*
@@ -70,6 +75,9 @@ public class MyMistActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_mist);
+
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
         //User is signed in or not already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -110,13 +118,14 @@ public class MyMistActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
 
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setDefaultTabPosition(2);
 
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
                 Log.d(TAG, "Tab selected: "+ tabId);
+                updateBottomBarNotifications();
                 transaction = getSupportFragmentManager().beginTransaction();
 
                 if (tabId == R.id.tab_map) {
@@ -133,6 +142,10 @@ public class MyMistActivity extends AppCompatActivity {
                 }
                 if (tabId == R.id.tab_notifications) {
                     transaction.replace(R.id.fragment_container, notificationsFragment);
+                    editor.putInt("numUnreadNotifications", 0);
+                    editor.commit();
+//                    notificationTab.removeBadge();
+                    Log.d(TAG, "setting unread count = 0");
                 }
 
                 transaction.addToBackStack(null);
@@ -152,6 +165,29 @@ public class MyMistActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        updateBottomBarNotifications();
+        Log.d(TAG, "ACTIVITY HAS STARTED!");
+
+    }
+
+
+    public void updateBottomBarNotifications(){
+        //only update bottombar if there's a new notification
+        int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0);
+        BottomBarTab notificationTab = bottomBar.getTabAtPosition(4);
+
+        if (numUnreadNotifications == 0){
+            notificationTab.removeBadge();
+            Log.d(TAG, "No notifications to show -> remove badge");
+        } else{
+            notificationTab.setBadgeCount(numUnreadNotifications);
+            Log.d(TAG, "Adding notification badges: " +numUnreadNotifications);
+        }
+
+    }
 
 
 }

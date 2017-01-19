@@ -53,7 +53,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                     Log.d(TAG, "current user: " + json);
 
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     editor.putString(getString(R.string.user_uid_key), user.getUid());
                     editor.commit();
                     Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);

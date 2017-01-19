@@ -6,27 +6,36 @@ package com.mistapp.mistandroid.model;
 
 public class Notification {
 
-    private String text;
-    private String time;
+    private String title;
+    private String body;
+    private long time;
     private boolean seen;
 
     public Notification(){
 
     }
-    public Notification(String text, String time, boolean seen){
-        this.text = text;
+    public Notification(String title, String body, long time, boolean seen){
+        this.title = title;
+        this.body = body;
         this.time = time;
         this.seen = seen;
     }
 
-    public String getText(){
-        return text;
+    public String getTitle(){
+        return title;
     }
-    public String getTime(){
+    public String getBody(){
+        return body;
+    }
+    public long getTime(){
         return time;
     }
     public boolean getSeen(){
         return seen;
+    }
+
+    public void setSeen(boolean seen){
+        this.seen = seen;
     }
 
 }
