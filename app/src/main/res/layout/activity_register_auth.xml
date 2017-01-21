@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="100dp"
-        app:srcCompat="@mipmap/mist_logo"
+        app:srcCompat="@mipmap/original_logo"
         android:id="@+id/imageView2" />
 
     <ProgressBar
@@ -98,7 +98,7 @@
                 />
 
             <TextView
-                android:paddingTop="50px"
+                android:paddingTop="75px"
                 android:textColor= "#FF00"
                 android:textAlignment ="center"
                 android:textSize = "65px"
