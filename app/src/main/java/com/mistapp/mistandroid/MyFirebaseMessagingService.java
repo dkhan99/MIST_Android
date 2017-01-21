@@ -85,7 +85,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             ArrayList<Notification> notificationArray = gson.fromJson(jsonList, new TypeToken <ArrayList<Notification>>() {}.getType());
             Log.d(TAG, "size of object list: " +notificationArray.size());
             //adding new notification to array and saving to shared preferences
-            notificationArray.add(newNotification);
+            notificationArray.add(0,newNotification);
             String jsonArray = gson.toJson(notificationArray);
             editor.putString("notifications", jsonArray);
             Log.d(TAG, "pushing notifications to editor - exist");

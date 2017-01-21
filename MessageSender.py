@@ -1,5 +1,7 @@
 
 '''
+***https://firebase.google.com/docs/cloud-messaging/android/send-multiple
+
 Sample script that can be used to send notifications. Script sends post request to google's
 	firebase server to send notifications. This works for when the app is in the foreground as 
 	well as the background., and the code-handling can be done in the same "onMessageReceived" method.
@@ -24,8 +26,8 @@ payload = {
 		"to":"c3KQTieWX-g:APA91bHDNSTP2wGFycE9zYkPskRoS12fjhemrUYXVe0dkIDccAcV0VoJ_7tjaRMquzYeYKokY5o2JnmdoZStKPBcBby5mOt3xBnLLpTBqpfINWAzd86u6_XxAcGb5BPyRGZ4FVa4HlxD",
     "Content-Type": "application/json",
 		"data": {
-		        "title": "I'm loving this...",
-		        "body" : "Location: clough commons. Time: NOW!",
+		        "title": "Ok Les goo",
+		        "body" : "This is the body and shouldnt show up on main page",
 		        "time" : millis
 		     }
 }
@@ -33,3 +35,19 @@ payload = {
 headers = {"Authorization":"key=AAAAMPaimYs:APA91bFNaUuMoj5a7hNj-JhIQXIR6SOtygzO7n1JTQxm5xd2fGHFsoXaDZV0J3OP_DKq-GUTIgbYsAa8pGDm0245BfOGLdp9-WMnYAkvn_c8Y80mzaZuzK0h56E_tzt98GfswtDiKCWpfarRNGB2agGGJ-yBE4hULg","Content-Type":"application/json"}
 r = requests.post(url, data=json.dumps(payload), headers=headers)
 print(r.content)
+
+
+'''
+Topics To send to:
+	-coach
+	-competitor
+	-guest
+	-all
+	-school_team_name
+	-spirit_team_name
+
+'''
+
+
+def sendToTopic():
+	pass

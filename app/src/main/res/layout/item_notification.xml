@@ -3,8 +3,18 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:weightSum="2"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
     android:layout_height="match_parent" >
 
+    <ImageView
+        android:id="@+id/notification_star"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_star_black_24dp"
+        android:visibility="invisible"
+        android:paddingRight="10dp"
+        />
 
     <TextView
         android:id="@+id/notification_text"
