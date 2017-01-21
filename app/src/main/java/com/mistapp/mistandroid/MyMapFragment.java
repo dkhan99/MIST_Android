@@ -14,9 +14,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mGoogleMap;
@@ -36,7 +39,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initMap() {
-        googleMapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.mapFragment);
+        googleMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
         googleMapFragment.getMapAsync(this);
     }
 
@@ -57,7 +60,21 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
+        goToLocationZoom(33.9480, -83.3773, 16);
     }
+
+    private void goToLocation(double lat, double lng) {
+        LatLng ll = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
+        mGoogleMap.moveCamera(update);
+    }
+
+    private void goToLocationZoom(double lat, double lng, float zoom) {
+        LatLng ll = new LatLng(lat, lng);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
+        mGoogleMap.moveCamera(update);
+    }
+
 }
 
 
