@@ -5,33 +5,9 @@
     android:layout_centerHorizontal="true">
 
 
-    <TextView
-        android:id="@+id/mist_atl_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MIST Atlanta 2017"
-        android:textSize="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_centerHorizontal="true"/>
-
-    <TextView
-        android:id="@+id/campus_map_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="UGA Campus Map"
-        android:layout_below="@id/mist_atl_title"
-        android:layout_marginTop="20dp"
-        android:textSize="30dp"
-        android:layout_centerHorizontal="true"/>
-
-    <Button
-        android:id="@+id/map_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/campus_map_text"
-        android:layout_marginTop="40dp"
-        android:layout_centerHorizontal="true"
-        android:text="Map"/>
-
-
+    <com.google.android.gms.maps.MapView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/mapFragment" />
 </RelativeLayout>

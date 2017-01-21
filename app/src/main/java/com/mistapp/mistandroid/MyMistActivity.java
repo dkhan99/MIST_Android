@@ -1,48 +1,20 @@
 package com.mistapp.mistandroid;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.DataSetObserver;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
-
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import static com.mistapp.mistandroid.R.id.uid;
 
 /*
  * Actual My Mist Activity (Will contain my_team, my_schedule views)
@@ -52,7 +24,7 @@ public class MyMistActivity extends AppCompatActivity {
     private BottomBar bottomBar;
     private static final String TAG = LogInAuth.class.getSimpleName();
     private Bundle args;
-    private MapFragment mapFragment;
+    private MyMapFragment myMapFragment;
     private CompetitionsFragment competitionsFragment;
     private MyMistFragment myMistFragment;
     private HelpFragment helpFragment;
@@ -96,7 +68,7 @@ public class MyMistActivity extends AppCompatActivity {
         };
 
 
-        mapFragment = new MapFragment();
+        myMapFragment = new MyMapFragment();
         competitionsFragment = new CompetitionsFragment();
         myMistFragment = new MyMistFragment();
         helpFragment = new HelpFragment();
@@ -120,7 +92,7 @@ public class MyMistActivity extends AppCompatActivity {
                 transaction = getSupportFragmentManager().beginTransaction();
 
                 if (tabId == R.id.tab_map) {
-                    transaction.replace(R.id.fragment_container, mapFragment);
+                    transaction.replace(R.id.fragment_container, myMapFragment);
                 }
                 if (tabId == R.id.tab_competitions) {
                     transaction.replace(R.id.fragment_container, competitionsFragment);

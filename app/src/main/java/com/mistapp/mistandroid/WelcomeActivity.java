@@ -3,15 +3,13 @@ package com.mistapp.mistandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.LoginFilter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +31,14 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
+        /**FirebaseAuth.getInstance().signOut();
+        Toast.makeText(this, "peace out ", Toast.LENGTH_LONG).show();
+        sharedPref = this.getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        editor.remove(getString(R.string.user_uid_key));
+        editor.remove(getString(R.string.current_user_key));
+        editor.commit();
+**/
         sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
