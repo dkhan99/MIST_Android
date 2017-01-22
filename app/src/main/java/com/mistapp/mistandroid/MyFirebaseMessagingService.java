@@ -83,7 +83,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String jsonList = sharedPref.getString("notifications", "");
             Log.d(TAG, "retreived json list: " +jsonList);
             ArrayList<Notification> notificationArray = gson.fromJson(jsonList, new TypeToken <ArrayList<Notification>>() {}.getType());
-            Log.d(TAG, "size of object list: " +notificationArray.size());
+
             //adding new notification to array and saving to shared preferences
             notificationArray.add(0,newNotification);
             String jsonArray = gson.toJson(notificationArray);
@@ -106,7 +106,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0) + 1;
 
         editor.putInt("numUnreadNotifications", numUnreadNotifications);
-        Log.d("Num unread notifs: " , Integer.toString(numUnreadNotifications));
+        Log.d("Num unread notifs: " , " lkj "+numUnreadNotifications);
         editor.commit();
     }
 

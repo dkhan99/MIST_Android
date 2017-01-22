@@ -44,9 +44,6 @@ public class NotificationAdapter extends ArrayAdapter {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.item_notification, parent, false);
-            viewHolder.text = (TextView) convertView.findViewById(R.id.notification_text);
-            viewHolder.time = (TextView) convertView.findViewById(R.id.notification_time);
-            viewHolder.notificaiton_star = (ImageView) convertView.findViewById(R.id.notification_star);
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
         } else {
@@ -54,6 +51,9 @@ public class NotificationAdapter extends ArrayAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        viewHolder.text = (TextView) convertView.findViewById(R.id.notification_text);
+        viewHolder.time = (TextView) convertView.findViewById(R.id.notification_time);
+        viewHolder.notificaiton_star = (ImageView) convertView.findViewById(R.id.notification_star);
         setText(viewHolder, current_notification);
         setTime(viewHolder, current_notification);
         setStar(viewHolder, current_notification);
@@ -110,7 +110,7 @@ public class NotificationAdapter extends ArrayAdapter {
             formattedTime = formattedTime.replace("s ago", " ago");
         }
 
-        Log.d(TAG,"d: "+days + " h:" + hours + " m:"+minutes + " s:"+seconds);
+//        Log.d(TAG,"d: "+days + " h:" + hours + " m:"+minutes + " s:"+seconds);
         viewHolder.time.setText(formattedTime);
     }
 

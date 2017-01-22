@@ -27,6 +27,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Coach;
+import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Teammate;
 
 import org.w3c.dom.Text;
@@ -113,15 +117,76 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
         if (view == logoutText) {
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(getActivity(), "peace out ", Toast.LENGTH_LONG).show();
+
+            //remove user, user uid, user's type, and notifications from the cache
             sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
             editor = sharedPref.edit();
             editor.remove(getString(R.string.user_uid_key));
             editor.remove(getString(R.string.current_user_key));
+            editor.remove(getString(R.string.current_user_type));
+            editor.remove("notifications");
+            editor.remove("numUnreadNotifications");
             editor.commit();
+
+            Gson gson = new Gson();
+            String json = sharedPref.getString(getString(R.string.current_user_key), "");
+            String currentUserType = sharedPref.getString(getString(R.string.current_user_type), "");
+
+            //unsibscribing from topics that were previously subscribed to when logged in
+            if (currentUserType.equals("coach")){
+                Coach currentUser = gson.fromJson(json, Coach.class);
+                unSubscribeFromCoachTopics(currentUser);
+            }
+            else if(currentUserType.equals("competitor")){
+                Competitor currentUser = gson.fromJson(json, Competitor.class);
+                unSubscribeFromCompetitorTopics(currentUser);
+            }
 
             Intent intent = new Intent(getActivity(), WelcomeActivity.class);
             startActivity(intent);
         }
+    }
+
+
+    //subscribe to team name, competitions, and "competitor"
+    public void unSubscribeFromCompetitorTopics(Competitor currentUser){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentUser.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(underScoreTeamName);
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("competitor");
+
+        String[] compArray = {
+                (currentUser).getGroupProject(),
+                (currentUser).getArt(),
+                (currentUser).getSports(),
+                (currentUser).getBrackets(),
+                (currentUser).getKnowledge()
+        };
+
+        //subscribe to user's competitions (replaces spaces with underscores in competition name)
+        for (String competition: compArray){
+            if (!competition.equals("")) {
+                String underScoreCompName = competition.replaceAll(" ", "_");
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(underScoreCompName);
+            }
+        }
+    }
+
+    //suscribes to team name and "coach"
+    public void unSubscribeFromCoachTopics(Coach currentCoach){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentCoach.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(underScoreTeamName);
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("coach");
+
     }
 
 

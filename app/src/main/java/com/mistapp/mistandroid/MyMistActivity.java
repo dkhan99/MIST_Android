@@ -147,8 +147,6 @@ public class MyMistActivity extends AppCompatActivity {
                 }
                 if (tabId == R.id.tab_notifications) {
                     transaction.replace(R.id.fragment_container, notificationsFragment);
-                    editor.putInt("numUnreadNotifications", 0);
-                    editor.commit();
                 }
 
                 transaction.addToBackStack(null);
@@ -187,6 +185,17 @@ public class MyMistActivity extends AppCompatActivity {
     //at this time, the actual new notification will have been added to shared preferences
     public void updateBottomBarNotifications(){
         int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0);
+
+        Gson gson = new Gson();
+        String jsonList = sharedPref.getString("notifications", "");
+//        ArrayList<Notification> notificationArray = gson.fromJson(jsonList, new TypeToken<ArrayList<Notification>>() {}.getType());
+//        int numUnread = 0;
+//        for (Notification current : notificationArray){
+//            if (current.getSeen()== false){
+//                numUnread ++;
+//            }
+//        }
+
         BottomBarTab notificationTab = bottomBar.getTabAtPosition(4);
 
         //remove badge if there are no new notifications. Set the badge count appropriately if there are

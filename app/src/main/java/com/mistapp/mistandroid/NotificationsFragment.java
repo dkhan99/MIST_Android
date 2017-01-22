@@ -45,13 +45,6 @@ public class NotificationsFragment extends Fragment {
         notifications_lv = (ListView)view.findViewById(R.id.notification_list);
         sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        popupView = inflater.inflate(R.layout.fragment_notification_detail, container, false);
-
-
-        ArrayList<Notification> notificationList = new ArrayList<Notification>();
-
-        AdapterView.OnItemClickListener listener = createItemClickListener();
-
 
         //retreive notifications from shared preferences
         if (sharedPref.contains("notifications")){
@@ -65,6 +58,7 @@ public class NotificationsFragment extends Fragment {
             //Set listview's adapter and set onClickListener
             NotificationAdapter listAdapter = new NotificationAdapter(getActivity(), notificationArray);
             notifications_lv.setAdapter(listAdapter);
+            AdapterView.OnItemClickListener listener = createItemClickListener();
             notifications_lv.setOnItemClickListener(listener);
 
         }
@@ -85,12 +79,18 @@ public class NotificationsFragment extends Fragment {
                 Log.d(TAG, "Clicked a Notification");
                 Notification clickedNotification = (Notification)parent.getItemAtPosition(position);
 
-                removeNotificationHighlighting(view);
 
                 //[TODO]add code to display detailed notificaiton view (show title and the body)
 
-                //Set notification = seen and update shared preferences to reflect the seen = true
-                clickedNotification.setSeen(true);
+                //if new notificaiton -> Set notification = seen and update shared preferences to reflect the seen = true
+                if (!clickedNotification.getSeen()) {
+                    clickedNotification.setSeen(true);
+                    //set numUnreadNotifications to one less than before
+                    int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 1);
+                    editor.putInt("numUnreadNotifications", numUnreadNotifications - 1);
+                    removeNotificationHighlighting(view);
+                }
+
                 Gson gson = new Gson();
                 String jsonArray = gson.toJson(notificationArray);
                 editor.putString("notifications", jsonArray);

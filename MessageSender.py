@@ -23,11 +23,12 @@ millis = int(round(time.time() * 1000))
 
 url = 'https://fcm.googleapis.com/fcm/send'
 payload = {
-		"to":"c3KQTieWX-g:APA91bHDNSTP2wGFycE9zYkPskRoS12fjhemrUYXVe0dkIDccAcV0VoJ_7tjaRMquzYeYKokY5o2JnmdoZStKPBcBby5mOt3xBnLLpTBqpfINWAzd86u6_XxAcGb5BPyRGZ4FVa4HlxD",
+		"to": "/topics/Fashion_Design",
+		# "to":"c3KQTieWX-g:APA91bHDNSTP2wGFycE9zYkPskRoS12fjhemrUYXVe0dkIDccAcV0VoJ_7tjaRMquzYeYKokY5o2JnmdoZStKPBcBby5mOt3xBnLLpTBqpfINWAzd86u6_XxAcGb5BPyRGZ4FVa4HlxD",
     "Content-Type": "application/json",
 		"data": {
-		        "title": "Ok Les goo",
-		        "body" : "This is the body and shouldnt show up on main page",
+		        "title": "testing competions real",
+		        "body" : "testing competitions real",
 		        "time" : millis
 		     }
 }
@@ -47,6 +48,7 @@ Topics To send to:
 	-spirit_team_name
 
 '''
+
 
 
 def sendToTopic():

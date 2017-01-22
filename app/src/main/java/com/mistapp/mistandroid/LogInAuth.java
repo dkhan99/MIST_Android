@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
@@ -184,17 +185,24 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         }
                                     }
 
+                                    //if exists, caches user fields in database, and sets notification topics
                                     if (exists){
                                         // Get User object from db
                                         String currentUserType = (String)currentUserSnapshot.child("userType").getValue();
                                         Object currentUser = null;
+
                                         if (currentUserType.equals("competitor")) {
                                             currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                            subscribeToCompetitorTopics((Competitor)currentUser);
+
                                         } else if (currentUserType.equals("coach")){
                                             currentUser = currentUserSnapshot.getValue(Coach.class);
+                                            subscribeToCoachTopics((Coach)currentUser);
+
                                         } else if (currentUserType.equals("guest")) {
                                             currentUser = currentUserSnapshot.getValue(Guest.class);
                                         }
+
                                         Log.d(TAG, "Login success");
                                         Log.d(TAG, currentUser.toString());
 
@@ -203,6 +211,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra(getString(R.string.user_uid_key), uid);
                                         intent.putExtra(getString(R.string.current_user_type), currentUserType);
+
                                         startActivity(intent);
 
                                     } else{
@@ -223,6 +232,50 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                         }
                     }
          });
+    }
+
+    //subscribe to team name, competitions, and "competitor"
+    public void subscribeToCompetitorTopics(Competitor currentUser){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentUser.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic(underScoreTeamName);
+        Log.d(TAG, "TEAM NAME: "+underScoreTeamName);
+
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().subscribeToTopic("competitor");
+
+        String[] compArray = {
+                (currentUser).getGroupProject(),
+                (currentUser).getArt(),
+                (currentUser).getSports(),
+                (currentUser).getBrackets(),
+                (currentUser).getKnowledge()
+        };
+
+        //subscribe to user's competitions (replaces spaces with underscores in competition name)
+        for (String competition: compArray){
+            if (!competition.equals("")) {
+                Log.d(TAG, "COMP NAME: "+competition);
+                String underScoreCompName = competition.replaceAll(" ", "_");
+                FirebaseMessaging.getInstance().subscribeToTopic(underScoreCompName);
+            }
+        }
+    }
+
+    //suscribes to team name and "coach"
+    public void subscribeToCoachTopics(Coach currentCoach){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentCoach.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic(underScoreTeamName);
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().subscribeToTopic("coach");
+
     }
 
     //saves the current user's fields and UID to shared preferences

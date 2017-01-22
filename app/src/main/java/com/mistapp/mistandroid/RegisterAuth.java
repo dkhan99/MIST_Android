@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
@@ -299,6 +300,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra(getString(R.string.user_uid_key), uid);
                                         intent.putExtra(getString(R.string.current_user_type), currentUserType);
+                                        FirebaseMessaging.getInstance().subscribeToTopic(currentUserType);
                                         startActivity(intent);
                                     }
                                     // ...

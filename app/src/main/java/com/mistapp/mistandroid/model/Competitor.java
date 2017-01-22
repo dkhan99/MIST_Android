@@ -19,7 +19,7 @@ public class Competitor {
     private String writing;
     private String team;
     private long phoneNumber;
-    private String basketball;
+    private String sports;
     private String knowledge;
     private String mistId;
     private String name;
@@ -29,7 +29,7 @@ public class Competitor {
     }
 
 
-    public Competitor(String art, String birthDate, String brackets, String city, String email, String gender, String groupProject, String writing, String team, long phoneNumber, String basketball, String knowledge, String mistId, String name) {
+    public Competitor(String art, String birthDate, String brackets, String city, String email, String gender, String groupProject, String writing, String team, long phoneNumber, String sports, String knowledge, String mistId, String name) {
         this.art = art;
         this.birthDate = birthDate;
         this.brackets = brackets;
@@ -40,7 +40,7 @@ public class Competitor {
         this.writing = writing;
         this.team = team;
         this.phoneNumber = phoneNumber;
-        this.basketball = basketball;
+        this.sports = sports;
         this.knowledge = knowledge;
         this.mistId = mistId;
         this.name = name;
@@ -86,8 +86,8 @@ public class Competitor {
         return phoneNumber;
     }
 
-    public String getBasketball() {
-        return basketball;
+    public String getSports() {
+        return sports;
     }
 
     public String getKnowledge() {

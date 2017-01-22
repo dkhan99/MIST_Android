@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Notification;
 
@@ -49,6 +50,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
         mAuth = FirebaseAuth.getInstance();
 
+        //NOTIFICATION SUBSCRIPTION: everyone gets subscribed to "user"
+        FirebaseMessaging.getInstance().subscribeToTopic("user");
+
+
         //gets the user's token
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "User's token: " + token);
@@ -61,6 +66,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                 if (user != null) {
                     String json = sharedPref.getString(getString(R.string.current_user_key), "");
                     Log.d(TAG, "current user: " + json);
+
+                    String userType = sharedPref.getString(getString(R.string.current_user_type), "");
 
                     // put uid in cache
                     editor.putString(getString(R.string.user_uid_key), user.getUid());
@@ -124,6 +131,7 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                 if (view == guestText){
                     //testing for now
                     intent = new Intent(this, MyMistActivity.class);
+                    FirebaseMessaging.getInstance().subscribeToTopic("guest");
                 }
                 else{
                     intent = new Intent(this, LogInAuth.class);
