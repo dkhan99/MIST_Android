@@ -16,8 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.BooleanResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,8 +51,7 @@ public class MyTeamFragment extends Fragment {
     private TextView teamNameText;
     private TextView emailText;
     private TextView mistIdText;
-    private SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
+    private CacheHandler cacheHandler;
 
     private String userTeamName;
     private String userMistId;
@@ -66,10 +67,9 @@ public class MyTeamFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_my_team, container, false);
 
-        sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
-
-
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
         coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
         teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
 
@@ -167,11 +167,11 @@ public class MyTeamFragment extends Fragment {
     public void setUserProfile(){
 
         Gson gson = new Gson();
-        String userType = sharedPref.getString(getString(R.string.current_user_type), "competitor");
+
+        String userType = cacheHandler.getUserType();
 
         if (userType.equals("competitor")){
-            String json = sharedPref.getString(getString(R.string.current_user_key), "asdf");
-
+            String json = cacheHandler.getUserJson();
             Log.d(TAG, "CurrentUser from cache: " + json);
             Competitor currentUser = gson.fromJson(json, Competitor.class);
             nameText.setText(currentUser.getName());
@@ -184,7 +184,22 @@ public class MyTeamFragment extends Fragment {
         }
 
         else if (userType.equals("coach")){
-            String json = sharedPref.getString(getString(R.string.current_user_key), "");
+            String json = cacheHandler.getUserJson();
+            Log.d(TAG, "CurrentUser from cache: " + json);
+            if (json == null){
+                Log.d(TAG, "LOGGING USER OUT");
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getActivity(), "peace out ", Toast.LENGTH_LONG).show();
+
+                //remove user, user uid, user's type, teammates, and notifications from the cache
+                cacheHandler.removeCachedUserFields();
+                cacheHandler.removeCachedNotificationFields();
+                cacheHandler.removeCachedTeammates();
+                cacheHandler.commitToCache();
+                Intent i= new Intent(getActivity().getApplicationContext(), WelcomeActivity.class);
+                getActivity().startActivity(i);
+                return;
+            }
             Coach currentUser = gson.fromJson(json, Coach.class);
             nameText.setText(currentUser.getName());
             teamNameText.setText(currentUser.getTeam());

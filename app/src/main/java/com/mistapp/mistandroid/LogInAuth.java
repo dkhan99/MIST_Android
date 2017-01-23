@@ -50,22 +50,23 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
+    private CacheHandler cacheHandler;
 
     private TextView mtextView;
 
-    private SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_auth);
+        SharedPreferences sharedPref;
+        SharedPreferences.Editor editor;
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
 
         Intent intent = getIntent();
         context = getApplication();
-
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
@@ -80,18 +81,18 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 if (user != null) {
                     Log.d(TAG, "login onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+
+
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
                     Log.d(TAG, "login onAuthStateChanged:signed_out");
-                    //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid_key));
-                    editor.remove(getString(R.string.current_user_key));
-                    editor.commit();
-
+                    //remove user's fields from shared preferences
+                    cacheHandler.removeCachedUserFields();
+                    cacheHandler.commitToCache();
                 }
                 // ...
             }
@@ -206,7 +207,10 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         Log.d(TAG, "Login success");
                                         Log.d(TAG, currentUser.toString());
 
-                                        cacheUserFields(currentUser, uid, currentUserType);
+                                        cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
+                                        cacheHandler.commitToCache();
+
+
 
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra(getString(R.string.user_uid_key), uid);
@@ -277,17 +281,6 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         FirebaseMessaging.getInstance().subscribeToTopic("coach");
 
     }
-
-    //saves the current user's fields and UID to shared preferences
-    public void cacheUserFields(Object currentUser, String uid, String userType){
-        Gson gson = new Gson();
-        String json = gson.toJson(currentUser);
-        editor.putString(getString(R.string.current_user_key), json);
-        editor.putString(getString(R.string.current_user_type), userType);
-        editor.putString(getString(R.string.user_uid_key), uid);
-        editor.commit();
-    }
-
 
     @Override
     public void onResume() {

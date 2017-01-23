@@ -23,7 +23,7 @@ millis = int(round(time.time() * 1000))
 
 url = 'https://fcm.googleapis.com/fcm/send'
 payload = {
-		"to": "/topics/Fashion_Design",
+		"to": "/topics/FoCo_-_South_Forsythd",
 		# "to":"c3KQTieWX-g:APA91bHDNSTP2wGFycE9zYkPskRoS12fjhemrUYXVe0dkIDccAcV0VoJ_7tjaRMquzYeYKokY5o2JnmdoZStKPBcBby5mOt3xBnLLpTBqpfINWAzd86u6_XxAcGb5BPyRGZ4FVa4HlxD",
     "Content-Type": "application/json",
 		"data": {

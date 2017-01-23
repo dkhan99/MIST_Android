@@ -32,12 +32,11 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
     private Button socialMediaButton;
     private Button bracketsButton;
     private Button logoutButton;
+    private CacheHandler cacheHandler;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
 
 
     @Override
@@ -45,6 +44,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
         TextView uidText = (TextView) findViewById(R.id.uid);
 
         if (getIntent().hasExtra("uid")){
@@ -66,20 +68,19 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-                editor = sharedPref.edit();
 
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "dash onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
+
                 } else { // User is signed out
                     Log.d(TAG, "dash onAuthStateChanged:signed_out");
                     //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid_key));
-                    editor.commit();
+                    cacheHandler.removeCachedUserFields();
+                    cacheHandler.commitToCache();
                 }
             }
         };

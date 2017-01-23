@@ -47,12 +47,11 @@ import static com.mistapp.mistandroid.R.id.uid;
 public class MyMistFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = LogInAuth.class.getSimpleName();
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
     ListView coaches_lv;
     ListView teammates_lv;
     FragmentTransaction transaction;
     private TextView logoutText;
+    private CacheHandler cacheHandler;
 
 
 
@@ -61,6 +60,10 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_my_mist, container, false);
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
 
         logoutText = (TextView) view.findViewById(R.id.logout);
         logoutText.setOnClickListener(this);
@@ -118,19 +121,15 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
             FirebaseAuth.getInstance().signOut();
             Toast.makeText(getActivity(), "peace out ", Toast.LENGTH_LONG).show();
 
-            //remove user, user uid, user's type, and notifications from the cache
-            sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-            editor = sharedPref.edit();
-            editor.remove(getString(R.string.user_uid_key));
-            editor.remove(getString(R.string.current_user_key));
-            editor.remove(getString(R.string.current_user_type));
-            editor.remove("notifications");
-            editor.remove("numUnreadNotifications");
-            editor.commit();
-
             Gson gson = new Gson();
-            String json = sharedPref.getString(getString(R.string.current_user_key), "");
-            String currentUserType = sharedPref.getString(getString(R.string.current_user_type), "");
+            String json = cacheHandler.getUserJson();
+            String currentUserType = cacheHandler.getUserType();
+
+            //remove user, user uid, user's type, teammates, and notifications from the cache
+            cacheHandler.removeCachedUserFields();
+            cacheHandler.removeCachedNotificationFields();
+            cacheHandler.removeCachedTeammates();
+            cacheHandler.commitToCache();
 
             //unsibscribing from topics that were previously subscribed to when logged in
             if (currentUserType.equals("coach")){

@@ -59,17 +59,20 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private DatabaseReference mDatabase;
     private Context context;
 
-    private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
+
+    private CacheHandler cacheHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_auth);
 
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
+
         context = getApplicationContext();
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
+
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
 
@@ -82,17 +85,16 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                     // User is signed in
                     Log.d(TAG, "register onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
                     Log.d(TAG, "register onAuthStateChanged:signed_out");
-                    //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid_key));
-                    editor.remove(getString(R.string.current_user_key));
-                    editor.commit();
+                    //remove user's fields from shared preferences
+                    cacheHandler.removeCachedUserFields();
+                    cacheHandler.commitToCache();
                 }
             }
         };
@@ -295,7 +297,8 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         mDatabase.child("registered-user").child(uid).setValue(currentUser);
                                         Log.d(TAG, "user added to database: " + currentUser.toString());
 
-                                        cacheUserFields(currentUser, uid, currentUserType);
+                                        cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
+                                        cacheHandler.commitToCache();
 
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra(getString(R.string.user_uid_key), uid);
@@ -316,16 +319,6 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
         });
-    }
-
-    //saves the current user's fields and UID to shared preferences
-    public void cacheUserFields(Object currentUser, String uid, String userType){
-        Gson gson = new Gson();
-        String json = gson.toJson(currentUser);
-        editor.putString(getString(R.string.current_user_key), json);
-        editor.putString(getString(R.string.current_user_type), userType);
-        editor.putString(getString(R.string.user_uid_key), uid);
-        editor.commit();
     }
 
     /**

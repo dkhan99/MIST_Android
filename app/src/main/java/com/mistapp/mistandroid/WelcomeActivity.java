@@ -35,17 +35,16 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
     TextView guestText;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
+    private CacheHandler cacheHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
 
         studentText = (TextView)findViewById(R.id.student);
         coachText = (TextView)findViewById(R.id.coach);
@@ -55,7 +54,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
         //NOTIFICATION SUBSCRIPTION: everyone gets subscribed to "user"
         FirebaseMessaging.getInstance().subscribeToTopic("user");
-
 
         //gets the user's token
         String token = FirebaseInstanceId.getInstance().getToken();
@@ -67,14 +65,26 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    String json = sharedPref.getString(getString(R.string.current_user_key), "");
+
+                    String json = cacheHandler.getUserJson();
                     Log.d(TAG, "current user: " + json);
 
-                    String userType = sharedPref.getString(getString(R.string.current_user_type), "");
+                    //error catching -> if for some reason, If shared preferences are null, log user out, and delete topics
+                    //even if the user is still logged in
+                    if (json == null) {
+                        FirebaseAuth.getInstance().signOut();
+                        cacheHandler.removeCachedTeammates();
+                        cacheHandler.removeCachedNotificationFields();
+                        cacheHandler.removeCachedUserFields();
+                        Log.d(TAG,"SIGNING OUTTTT");
+                        return;
+                    }
+
+                    String userType = cacheHandler.getUserType();
 
                     // put uid in cache
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
                     Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);

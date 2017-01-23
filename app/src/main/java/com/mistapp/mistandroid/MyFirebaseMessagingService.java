@@ -38,16 +38,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FCM Service";
     private BottomBar bottomBar;
-    private SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
+    private CacheHandler cacheHandler;
 
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        boolean sendingKeyValPairs = false;
 
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
+        SharedPreferences sharedPref = getApplication().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
+        boolean sendingKeyValPairs = false;
 
         // If the application is in the foreground handle both data and notification messages here.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
@@ -74,20 +74,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void createNotification(String title, String body, Long time){
         Notification newNotification = new Notification(title, body, time ,false);
 
+        String jsonArray;
+
         //if shared preferences doesnt contain notifications
-        if (sharedPref.contains("notifications")){
+        if (cacheHandler.cacheContains(getString(R.string.notifications))){
             Log.d(TAG, "Notification prefs exist");
             Gson gson = new Gson();
 
             //retrieving notification list
-            String jsonList = sharedPref.getString("notifications", "");
+            String jsonList = cacheHandler.getUserUid();
             Log.d(TAG, "retreived json list: " +jsonList);
             ArrayList<Notification> notificationArray = gson.fromJson(jsonList, new TypeToken <ArrayList<Notification>>() {}.getType());
 
             //adding new notification to array and saving to shared preferences
             notificationArray.add(0,newNotification);
-            String jsonArray = gson.toJson(notificationArray);
-            editor.putString("notifications", jsonArray);
+            jsonArray = gson.toJson(notificationArray);
             Log.d(TAG, "pushing notifications to editor - exist");
         }
         //shared preferences contain notifications
@@ -97,17 +98,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             ArrayList<Notification> newNotificationArray = new ArrayList<Notification>();
             newNotificationArray.add(newNotification);
             Gson gson = new Gson();
-            String jsonArray = gson.toJson(newNotificationArray);
-            Log.d(TAG, "converted gson to json");
-            editor.putString("notifications", jsonArray);
+            jsonArray = gson.toJson(newNotificationArray);
             Log.d(TAG, "pushing notifications to editor - didnt exist");
         }
-        //add one to whatever the number of original unread notifications were. default = 0
-        int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0) + 1;
 
-        editor.putInt("numUnreadNotifications", numUnreadNotifications);
+        //add one to whatever the number of original unread notifications were. default = 0
+        int numUnreadNotifications = cacheHandler.getNumUnreadNotifications(0) + 1;
+
+        cacheHandler.cacheNotifications(jsonArray);
+        cacheHandler.cacheNumUnreadNotifications(numUnreadNotifications);
+        cacheHandler.commitToCache();
+
         Log.d("Num unread notifs: " , " lkj "+numUnreadNotifications);
-        editor.commit();
     }
 
     //shows the actual popup notification. Notification click is handled as well, and the user is taken to the mist-app.

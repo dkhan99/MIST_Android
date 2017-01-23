@@ -33,29 +33,30 @@ public class NotificationsFragment extends Fragment {
 
     private static final String TAG = LogInAuth.class.getSimpleName();
     ListView notifications_lv;
-    private SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
     BottomBar bottomBar;
     ArrayList<Notification> notificationArray;
     View popupView;
     LayoutInflater currentInflater;
     ViewGroup currentContainer;
+    private CacheHandler cacheHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
+        
         currentInflater = inflater;
         currentContainer = container;
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         notifications_lv = (ListView)view.findViewById(R.id.notification_list);
-        sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
 
         //retreive notifications from shared preferences
-        if (sharedPref.contains("notifications")){
+        if (cacheHandler.cacheContains(getString(R.string.notifications))){
             Gson gson = new Gson();
-            String jsonList = sharedPref.getString("notifications", "");
+            String jsonList = cacheHandler.getNotificationsJson();
             notificationArray = gson.fromJson(jsonList, new TypeToken<ArrayList<Notification>>() {}.getType());
 
             Log.d(TAG, "Showing x notifications: " +notificationArray.size() );
@@ -92,8 +93,9 @@ public class NotificationsFragment extends Fragment {
                 if (!clickedNotification.getSeen()) {
                     clickedNotification.setSeen(true);
                     //set numUnreadNotifications to one less than before
-                    int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 1);
-                    editor.putInt("numUnreadNotifications", numUnreadNotifications - 1);
+                    int numUnreadNotifications = cacheHandler.getNumUnreadNotifications(1);
+                    cacheHandler.cacheNumUnreadNotifications(numUnreadNotifications - 1);
+                    cacheHandler.commitToCache();
                     removeNotificationHighlighting(view);
                 }
 
@@ -103,8 +105,8 @@ public class NotificationsFragment extends Fragment {
 
                 Gson gson = new Gson();
                 String jsonArray = gson.toJson(notificationArray);
-                editor.putString("notifications", jsonArray);
-                editor.commit();
+                cacheHandler.cacheNotifications(jsonArray);
+                cacheHandler.commitToCache();
 
             }
         };

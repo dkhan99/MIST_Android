@@ -73,37 +73,35 @@ public class MyMistActivity extends AppCompatActivity {
 
     private FragmentTransaction transaction;
     private DatabaseReference mDatabase;
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
+    private CacheHandler cacheHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_mist);
 
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
 
         //User is signed in or not already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-                editor = sharedPref.edit();
 
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "dash onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
+
                 } else { // User is signed out
                     Log.d(TAG, "dash onAuthStateChanged:signed_out");
                     //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid_key));
-                    editor.remove(getString(R.string.current_user_key));
-                    editor.commit();
+                    cacheHandler.removeCachedUserFields();
+                    cacheHandler.commitToCache();
                 }
             }
         };
@@ -184,18 +182,8 @@ public class MyMistActivity extends AppCompatActivity {
 
     //at this time, the actual new notification will have been added to shared preferences
     public void updateBottomBarNotifications(){
-        int numUnreadNotifications = sharedPref.getInt("numUnreadNotifications", 0);
-
+        int numUnreadNotifications = cacheHandler.getNumUnreadNotifications(0);
         Gson gson = new Gson();
-        String jsonList = sharedPref.getString("notifications", "");
-//        ArrayList<Notification> notificationArray = gson.fromJson(jsonList, new TypeToken<ArrayList<Notification>>() {}.getType());
-//        int numUnread = 0;
-//        for (Notification current : notificationArray){
-//            if (current.getSeen()== false){
-//                numUnread ++;
-//            }
-//        }
-
         BottomBarTab notificationTab = bottomBar.getTabAtPosition(4);
 
         //remove badge if there are no new notifications. Set the badge count appropriately if there are
