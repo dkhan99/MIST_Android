@@ -53,6 +53,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private CacheHandler cacheHandler;
 
     private TextView mtextView;
+    private TextView switchUserText;
 
 
     @Override
@@ -103,8 +104,10 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         mPasswordView = (TextInputEditText) findViewById(R.id.log_in_password);
         mLogInButton = (Button) findViewById(R.id.email_sign_in_button);
         mtextView = (TextView) findViewById(R.id.textViewSignin);
+        switchUserText = (TextView) findViewById(R.id.textViewSwitchUser);
 
         //Listen for user clicks on the button and hyperlink
+        switchUserText.setOnClickListener(this);
         mLogInButton.setOnClickListener(this);
         mtextView.setOnClickListener(this);
     }
@@ -122,6 +125,10 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         if (view == mtextView) {
             finish();
             Intent intent = new Intent(this, RegisterAuth.class);
+            startActivity(intent);
+        }
+        if (view == switchUserText){
+            Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
         }
     }
@@ -207,10 +214,11 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         Log.d(TAG, "Login success");
                                         Log.d(TAG, currentUser.toString());
 
+                                        //in case user was guest originally, remove the guest's notifications
+                                        cacheHandler.removeCachedNotificationFields();
+
                                         cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
                                         cacheHandler.commitToCache();
-
-
 
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra(getString(R.string.user_uid_key), uid);

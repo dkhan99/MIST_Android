@@ -65,8 +65,10 @@ public class MyMistActivity extends AppCompatActivity {
     private MapFragment mapFragment;
     private CompetitionsFragment competitionsFragment;
     private MyMistFragment myMistFragment;
+    private GuestMistFragment guestMistFragment;
     private HelpFragment helpFragment;
     private NotificationsFragment notificationsFragment;
+    private String currentUserType;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -83,6 +85,11 @@ public class MyMistActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
+
+        //sets the current user type - when guest is clicked , it equals guest, when register/login, it equals coach or competitor
+        currentUserType = (String)getIntent().getExtras().get(getString(R.string.current_user_type));
+        Log.d(TAG, "CURRENT USER IS A : " + currentUserType);
+
 
         //User is signed in or not already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -110,6 +117,7 @@ public class MyMistActivity extends AppCompatActivity {
         mapFragment = new MapFragment();
         competitionsFragment = new CompetitionsFragment();
         myMistFragment = new MyMistFragment();
+        guestMistFragment = new GuestMistFragment();
         helpFragment = new HelpFragment();
         notificationsFragment = new NotificationsFragment();
 
@@ -117,7 +125,12 @@ public class MyMistActivity extends AppCompatActivity {
 
         transaction = getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.fragment_container, myMistFragment);
+        if (currentUserType.equals("guest")){
+            transaction.replace(R.id.fragment_container, guestMistFragment);
+        }
+        else{
+            transaction.replace(R.id.fragment_container, myMistFragment);
+        }
         transaction.addToBackStack(null);
         transaction.commit();
 
@@ -138,7 +151,12 @@ public class MyMistActivity extends AppCompatActivity {
                     transaction.replace(R.id.fragment_container, competitionsFragment);
                 }
                 if (tabId == R.id.tab_my_mist) {
-                    transaction.replace(R.id.fragment_container, myMistFragment);
+                    if (currentUserType .equals("guest")){
+                        transaction.replace(R.id.fragment_container, guestMistFragment);
+                    }
+                    else{
+                        transaction.replace(R.id.fragment_container, myMistFragment);
+                    }
                 }
                 if (tabId == R.id.tab_help) {
                     transaction.replace(R.id.fragment_container, helpFragment);

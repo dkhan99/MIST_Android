@@ -54,6 +54,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private EditText mMISTIdView;
     private Button mRegisterButton;
     private TextView mtextViewRegister;
+    private TextView switchUserText;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
@@ -103,12 +104,13 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
         mMISTIdView = (TextInputEditText) findViewById(R.id.mist_id);
-
+        switchUserText = (TextView) findViewById(R.id.textViewSwitchUser);
         mRegisterButton = (Button) findViewById(R.id.email_register_button);
 
         mtextViewRegister = (TextView)findViewById(R.id.textViewSignin);
 
         //attaching listeners to button and link
+        switchUserText.setOnClickListener(this);
         mRegisterButton.setOnClickListener(this);
         mtextViewRegister.setOnClickListener(this);
     }
@@ -124,6 +126,10 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         }
         if (view == mtextViewRegister) {
             Intent intent = new Intent(this, LogInAuth.class);
+            startActivity(intent);
+        }
+        if (view == switchUserText){
+            Intent intent = new Intent(this, WelcomeActivity.class);
             startActivity(intent);
         }
     }

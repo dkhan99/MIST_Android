@@ -143,7 +143,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                 Intent intent;
                 if (view == guestText){
                     //testing for now
+                    Log.d(TAG, "guest was pressed - going to Guest mist activity");
                     intent = new Intent(this, MyMistActivity.class);
+                    intent.putExtra(getString(R.string.current_user_type), "guest");
                     FirebaseMessaging.getInstance().subscribeToTopic("guest");
                 }
                 else{

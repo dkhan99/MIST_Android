@@ -107,6 +107,18 @@
                 android:layout_width="match_parent"
                 android:layout_height = "wrap_content"
                 />
+
+            <TextView
+                android:paddingTop="10px"
+                android:textColor= "#FF00"
+                android:textAlignment ="center"
+                android:textSize = "50px"
+                android:text = "Switch User"
+                android:clickable="true"
+                android:id = "@+id/textViewSwitchUser"
+                android:layout_width="match_parent"
+                android:layout_height = "wrap_content"
+                />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
