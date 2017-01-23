@@ -9,14 +9,16 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -36,10 +38,14 @@ public class NotificationsFragment extends Fragment {
     BottomBar bottomBar;
     ArrayList<Notification> notificationArray;
     View popupView;
+    LayoutInflater currentInflater;
+    ViewGroup currentContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        currentInflater = inflater;
+        currentContainer = container;
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
         notifications_lv = (ListView)view.findViewById(R.id.notification_list);
@@ -91,6 +97,10 @@ public class NotificationsFragment extends Fragment {
                     removeNotificationHighlighting(view);
                 }
 
+                String titleText = clickedNotification.getTitle();
+                String bodyText = clickedNotification.getBody();
+                initiatePopupWindow(titleText, bodyText);
+
                 Gson gson = new Gson();
                 String jsonArray = gson.toJson(notificationArray);
                 editor.putString("notifications", jsonArray);
@@ -110,6 +120,34 @@ public class NotificationsFragment extends Fragment {
         time.setTypeface(null, Typeface.NORMAL);
         star.setVisibility(View.INVISIBLE);
     }
+
+    private void initiatePopupWindow(String title, String body) {
+        try {
+// We need to get the instance of the LayoutInflater
+            View layout = currentInflater.inflate(R.layout.notification_detail,null, false);
+            final PopupWindow pwindo = new PopupWindow(layout, 750, 950, true);
+            pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+            Button btnClosePopup = (Button) layout.findViewById(R.id.dismiss);
+            TextView titleTextView = (TextView)layout.findViewById(R.id.popup_title);
+            TextView bodyTextView = (TextView)layout.findViewById(R.id.popup_body);
+
+            titleTextView.setText(title);
+            bodyTextView.setText(body);
+            Log.d(TAG, "Values should change: "+ title + " "+body);
+            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "dismissing notification detail");
+                    pwindo.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
 

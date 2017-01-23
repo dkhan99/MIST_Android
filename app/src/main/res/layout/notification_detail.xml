@@ -5,8 +5,8 @@
     android:orientation="vertical"
     android:background="@android:color/background_light">
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:orientation="vertical"
         android:layout_margin="1dp"
         android:background="@android:color/darker_gray">
@@ -19,11 +19,12 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:scaleX=".8"
-                android:scaleY=".8"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
                 android:src="@mipmap/original_logo" />
             <TextView
                 android:id="@+id/popup_title"
+                android:layout_marginTop="20dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Title" />
@@ -34,6 +35,7 @@
                 android:text="body"/>
             <Button
                 android:id="@+id/dismiss"
+                android:layout_marginTop="20dp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Dismiss" />

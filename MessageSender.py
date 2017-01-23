@@ -27,8 +27,8 @@ payload = {
 		# "to":"c3KQTieWX-g:APA91bHDNSTP2wGFycE9zYkPskRoS12fjhemrUYXVe0dkIDccAcV0VoJ_7tjaRMquzYeYKokY5o2JnmdoZStKPBcBby5mOt3xBnLLpTBqpfINWAzd86u6_XxAcGb5BPyRGZ4FVa4HlxD",
     "Content-Type": "application/json",
 		"data": {
-		        "title": "testing competions real",
-		        "body" : "testing competitions real",
+		        "title": "Lunch will be served at 2:00pm",
+		        "body" : "Proceed with your team to the designated area for lunch (herty field)",
 		        "time" : millis
 		     }
 }
