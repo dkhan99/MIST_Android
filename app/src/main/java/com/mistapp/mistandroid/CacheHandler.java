@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Teammate;
+
+import java.util.ArrayList;
 
 /**
  * Created by aadil on 1/22/17.
@@ -92,13 +95,19 @@ public class CacheHandler {
         cacheNumUnreadNotifications(unread);
     }
 
-    public void cacheTeammates(String jsonArray){
+    public void cacheTeammates(ArrayList<Teammate> teammates){
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(teammates);
         editor.putString(context.getString(R.string.teammates), jsonArray);
     }
 
     public void removeCachedTeammates(){
         editor.remove(context.getString(R.string.teammates));
         editor.commit();
+    }
+
+    public String getCachedTeammatesJson(){
+        return sharedPref.getString(context.getString(R.string.teammates), "");
     }
 
     public void removeCachedUserFields(){

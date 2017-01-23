@@ -26,8 +26,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
+import com.mistapp.mistandroid.model.Notification;
 import com.mistapp.mistandroid.model.Teammate;
 import com.mistapp.mistandroid.model.User;
 
@@ -85,61 +87,95 @@ public class MyTeamFragment extends Fragment {
 
         setUserProfile();
 
+        String teammates = cacheHandler.getCachedTeammatesJson();
 
-        //get from currentUser's information in shared prefs
-//        final String teamName1 = "FoCo - South Forsyth";
-//        final String userMistId1 = "3198-35252";
+        Gson gson = new Gson();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        ref = mDatabase.child("team");
+        //teammates are not cached already
+        if (teammates.equals("")){
+            Log.d(TAG, "teammates are not cached. getting from db, and adding to cache");
+            //get teammates from database -> populate view, and add to cache
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            ref = mDatabase.child("team");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean teamExists = false;
-                ArrayList<Teammate> coachList = new ArrayList<Teammate>();
-                ArrayList<Teammate> teammateList = new ArrayList<Teammate>();
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    boolean teamExists = false;
+                    DataSnapshot currentTeammateSnapshot = dataSnapshot.child(userTeamName);
+                    HashMap<String, HashMap> teamMap = (HashMap<String, HashMap>) currentTeammateSnapshot.getValue();
+                    Iterator it = teamMap.entrySet().iterator();
+                    ArrayList<Teammate> coachList = new ArrayList<Teammate>();
+                    ArrayList<Teammate> teammateList = new ArrayList<Teammate>();
+                    //go through each teammate in the current team
+                    while (it.hasNext()) {
+                        Map.Entry pair = (Map.Entry)it.next();
+                        String mistId = (String)pair.getKey();
 
-                DataSnapshot currentTeammateSnapshot = dataSnapshot.child(userTeamName);
-                HashMap<String, HashMap> teamMap = (HashMap<String, HashMap>) currentTeammateSnapshot.getValue();
-                Iterator it = teamMap.entrySet().iterator();
+                        //if current teammate is not the current user that is logged in...
+                        //create a Teammate object and add to corresponding list (coaches or teammates)
+                        if (!mistId.equals(userMistId)){
+                            Teammate currentMate = currentTeammateSnapshot.child((String)pair.getKey()).getValue(Teammate.class);
 
-                //go through each teammate in the current team
-                while (it.hasNext()) {
-                    Map.Entry pair = (Map.Entry)it.next();
-                    String mistId = (String)pair.getKey();
-
-                    //if current teammate is not the current user that is logged in...
-                    //create a Teammate object and add to corresponding list (coaches or teammates)
-                    if (!mistId.equals(userMistId)){
-                        Teammate currentMate = currentTeammateSnapshot.child((String)pair.getKey()).getValue(Teammate.class);
-
-                        if (currentMate.getIsCompetitor() == 1){
-                            teammateList.add(currentMate);
+                            if (currentMate.getIsCompetitor() == 1){
+                                teammateList.add(currentMate);
+                            }
+                            else{
+                                coachList.add(currentMate);
+                            }
+                            Log.d(TAG, "Adding Teammate with mistid: " + mistId + " name: " + currentMate.getName() + " phone: " + currentMate.getPhoneNumber() + " iscompetitor: " + currentMate.getIsCompetitor());
                         }
-                        else{
-                            coachList.add(currentMate);
-                        }
-                        Log.d(TAG, "Adding Teammate with mistid: " + mistId + " name: " + currentMate.getName() + " phone: " + currentMate.getPhoneNumber() + " iscompetitor: " + currentMate.getIsCompetitor());
+                        it.remove(); // avoids a ConcurrentModificationException
                     }
-                    it.remove(); // avoids a ConcurrentModificationException
+
+                    ArrayList<Teammate> allTeammates = new ArrayList<Teammate>();
+                    allTeammates.addAll(coachList);
+                    allTeammates.addAll(teammateList);
+
+                    cacheHandler.cacheTeammates(allTeammates);
+                    cacheHandler.commitToCache();
+
+                    MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
+                    MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
+                    ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
+                    ListView teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
+                    coaches_lv.setAdapter(coachesAdapter);
+                    teammates_lv.setAdapter(teammatesAdapter);
                 }
 
-                MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
-                MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
-                ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
-                ListView teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
-                coaches_lv.setAdapter(coachesAdapter);
-                teammates_lv.setAdapter(teammatesAdapter);
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    // ...
+                }
+            });
+        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
+        //teammates were cached - need to retreive
+        else{
+            Log.d(TAG, "teammates are cached. Getting from cache");
+            cacheHandler.getCachedTeammatesJson();
+            String jsonList = cacheHandler.getCachedTeammatesJson();
+            ArrayList<Teammate> coachList = new ArrayList<Teammate>();
+            ArrayList<Teammate> teammateList = new ArrayList<Teammate>();
+            ArrayList<Teammate> allTeammates = gson.fromJson(jsonList, new TypeToken<ArrayList<Teammate>>() {}.getType());
+            for (Teammate currentTeammate : allTeammates){
+                if (currentTeammate.getIsCompetitor() == 1){
+                    teammateList.add(currentTeammate);
+                }
+                else{
+                    coachList.add(currentTeammate);
+                }
             }
-        });
+            MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
+            MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
+            ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
+            ListView teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
+            coaches_lv.setAdapter(coachesAdapter);
+            teammates_lv.setAdapter(teammatesAdapter);
+        }
+
 
         return view;
     }
