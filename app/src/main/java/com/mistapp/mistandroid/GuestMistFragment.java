@@ -40,7 +40,8 @@ public class GuestMistFragment extends Fragment implements View.OnClickListener{
 
             FirebaseMessaging.getInstance().unsubscribeFromTopic("guest");
             //goes to login activity
-            Intent intent = new Intent(getActivity(), LogInAuth.class);
+            Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+            intent.putExtra("guest_sign_in", "guest_sign_in");
             startActivity(intent);
 
         }

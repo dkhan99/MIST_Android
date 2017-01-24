@@ -89,7 +89,26 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {
-                    // User is signed out
+                    Log.d(TAG, "NOT FAIL");
+                    // if user is guest, go to guest's page
+                    if (cacheHandler.getUserType().equals("guest")){
+                        //if we got to this page because guest clicked sign-in
+                        if (getIntent().hasExtra("guest_sign_in")){
+//                        if (getIntent().getExtras().containsKey("guest_sign_in")){
+                            Log.d(TAG, "guest has clicked sign in");
+                            //do nothing - stay on welcome activity page
+                        }
+                        //if we got to the page because use opened app, go to my mist activity page
+                        else{
+                            Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                            intent.putExtra(getString(R.string.current_user_type), "guest");
+                            startActivity(intent);
+                        }
+
+                    }
+                    else{
+                        Log.d(TAG, "FAIL");
+                    }
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
@@ -142,7 +161,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             if (event.ACTION_UP == 1) {
                 Intent intent;
                 if (view == guestText){
-                    //testing for now
+                    cacheHandler.cacheUserType("guest");
+                    cacheHandler.commitToCache();
                     Log.d(TAG, "guest was pressed - going to Guest mist activity");
                     intent = new Intent(this, MyMistActivity.class);
                     intent.putExtra(getString(R.string.current_user_type), "guest");

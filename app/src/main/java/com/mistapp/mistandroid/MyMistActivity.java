@@ -87,7 +87,18 @@ public class MyMistActivity extends AppCompatActivity {
         cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
 
         //sets the current user type - when guest is clicked , it equals guest, when register/login, it equals coach or competitor
-        currentUserType = (String)getIntent().getExtras().get(getString(R.string.current_user_type));
+
+        //if current user type was passed off in intent, get it
+        if (getIntent().getExtras().containsKey(getString(R.string.current_user_type))) {
+            currentUserType = (String) getIntent().getExtras().get(getString(R.string.current_user_type));
+            Log.d(TAG,"usertype was passed in intent: " + currentUserType);
+        }
+        else{
+            //otherwise get the currentUserType from cache
+            currentUserType = cacheHandler.getUserType();
+            Log.d(TAG,"usertype was not passed in intent. getting from cache: " + currentUserType);
+        }
+
         Log.d(TAG, "CURRENT USER IS A : " + currentUserType);
 
 
