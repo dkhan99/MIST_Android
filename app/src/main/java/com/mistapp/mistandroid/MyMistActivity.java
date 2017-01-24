@@ -66,7 +66,7 @@ public class MyMistActivity extends AppCompatActivity {
     private CompetitionsFragment competitionsFragment;
     private MyMistFragment myMistFragment;
     private GuestMistFragment guestMistFragment;
-    private HelpFragment helpFragment;
+    private ProgramFragment programFragment;
     private NotificationsFragment notificationsFragment;
     private String currentUserType;
 
@@ -129,7 +129,7 @@ public class MyMistActivity extends AppCompatActivity {
         competitionsFragment = new CompetitionsFragment();
         myMistFragment = new MyMistFragment();
         guestMistFragment = new GuestMistFragment();
-        helpFragment = new HelpFragment();
+        programFragment = new ProgramFragment();
         notificationsFragment = new NotificationsFragment();
 
         args = new Bundle();
@@ -169,8 +169,8 @@ public class MyMistActivity extends AppCompatActivity {
                         transaction.replace(R.id.fragment_container, myMistFragment);
                     }
                 }
-                if (tabId == R.id.tab_help) {
-                    transaction.replace(R.id.fragment_container, helpFragment);
+                if (tabId == R.id.tab_program) {
+                    transaction.replace(R.id.fragment_container, programFragment);
                 }
                 if (tabId == R.id.tab_notifications) {
                     transaction.replace(R.id.fragment_container, notificationsFragment);
