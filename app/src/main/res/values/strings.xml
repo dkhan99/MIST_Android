@@ -11,7 +11,7 @@
     <string name="view_rules">View Rules</string>
     <string name="view_brackets">View Brackets</string>
 
-    <string name="action_sign_in">Sign in</string>
+    <string name="action_login">Login</string>
     <string name="action_register">Register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="action_invalid_mist_id">MIST Id must contain a dash "-" at the fifth digit place</string>
