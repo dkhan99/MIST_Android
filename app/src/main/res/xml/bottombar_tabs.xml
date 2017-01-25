@@ -12,9 +12,9 @@
         icon="@drawable/ic_person_black_24dp"
         title="My Mist" />
     <tab
-        id="@+id/tab_help"
-        icon="@drawable/ic_live_help_black_24dp"
-        title="Help" />
+        id="@+id/tab_program"
+        icon="@drawable/ic_view_list_black_24dp"
+        title="Program" />
     <tab
         id="@+id/tab_notifications"
         icon="@drawable/ic_notifications_active_black_24dp"

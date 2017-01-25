@@ -1,46 +1,50 @@
 package com.mistapp.mistandroid;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Notification;
 
 public class WelcomeActivity extends AppCompatActivity implements View.OnTouchListener{
 
     private static final String TAG = RegisterAuth.class.getSimpleName();
+
+    //changed when the activity changes states - onPause() and onResume(). Used to correctly show notifications
+    public static boolean isInForeground;
 
     TextView studentText;
     TextView coachText;
     TextView guestText;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
+    private CacheHandler cacheHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        /**FirebaseAuth.getInstance().signOut();
-        Toast.makeText(this, "peace out ", Toast.LENGTH_LONG).show();
-        sharedPref = this.getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
-        editor.remove(getString(R.string.user_uid_key));
-        editor.remove(getString(R.string.current_user_key));
-        editor.commit();
-**/
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
+
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
 
         studentText = (TextView)findViewById(R.id.student);
         coachText = (TextView)findViewById(R.id.coach);
@@ -48,24 +52,63 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
         mAuth = FirebaseAuth.getInstance();
 
+        //NOTIFICATION SUBSCRIPTION: everyone gets subscribed to "user"
+        FirebaseMessaging.getInstance().subscribeToTopic("user");
+
+        //gets the user's token
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "User's token: " + token);
+
         //User is signed in or not already
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    String json = sharedPref.getString(getString(R.string.current_user_key), "asdf");
+
+                    String json = cacheHandler.getUserJson();
                     Log.d(TAG, "current user: " + json);
 
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+                    //error catching -> if for some reason, If shared preferences are null, log user out, and delete topics
+                    //even if the user is still logged in
+                    if (json == null) {
+                        FirebaseAuth.getInstance().signOut();
+                        cacheHandler.removeCachedTeammates();
+                        cacheHandler.removeCachedNotificationFields();
+                        cacheHandler.removeCachedUserFields();
+                        Log.d(TAG,"SIGNING OUTTTT");
+                        return;
+                    }
+
+                    String userType = cacheHandler.getUserType();
+
+                    // put uid in cache
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
                     Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {
-                    // User is signed out
+                    Log.d(TAG, "NOT FAIL");
+                    // if user is guest, go to guest's page
+                    if (cacheHandler.getUserType().equals("guest")){
+                        //if we got to this page because guest clicked sign-in
+                        if (getIntent().hasExtra("guest_sign_in")){
+//                        if (getIntent().getExtras().containsKey("guest_sign_in")){
+                            Log.d(TAG, "guest has clicked sign in");
+                            //do nothing - stay on welcome activity page
+                        }
+                        //if we got to the page because use opened app, go to my mist activity page
+                        else{
+                            Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                            intent.putExtra(getString(R.string.current_user_type), "guest");
+                            startActivity(intent);
+                        }
+
+                    }
+                    else{
+                        Log.d(TAG, "FAIL");
+                    }
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
@@ -93,6 +136,19 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //Any time the activity is started from a hidden state, check for updates in notifications
+        isInForeground =true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInForeground = false;
+    }
+
     /**
      * When the register button is clicked, we check if the filled out form is valid
      * @param view
@@ -105,8 +161,12 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             if (event.ACTION_UP == 1) {
                 Intent intent;
                 if (view == guestText){
-                    //testing for now
+                    cacheHandler.cacheUserType("guest");
+                    cacheHandler.commitToCache();
+                    Log.d(TAG, "guest was pressed - going to Guest mist activity");
                     intent = new Intent(this, MyMistActivity.class);
+                    intent.putExtra(getString(R.string.current_user_type), "guest");
+                    FirebaseMessaging.getInstance().subscribeToTopic("guest");
                 }
                 else{
                     intent = new Intent(this, LogInAuth.class);
@@ -119,5 +179,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
         return true;
 
     }
+
 
 }

@@ -1,31 +1,32 @@
 package com.mistapp.mistandroid;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 
-public class HelpFragment extends Fragment implements View.OnClickListener {
+public class ProgramFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = "DEBUG";
     private Button mHelpButton;
     private Button mCampusButton;
+    private Button fridayProgramButton;
+    private Button saturdayProgramButton;
+    private Button sundayProgramButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_help, container, false);
+        View view = inflater.inflate(R.layout.fragment_program, container, false);
 
         //define and set toolbar. Removed this because of error I was getting... need to look into it
 //        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -33,10 +34,16 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
 
         mHelpButton = (Button) view.findViewById(R.id.helpLine);
         mCampusButton = (Button) view.findViewById(R.id.campusPolice);
+        fridayProgramButton = (Button) view.findViewById(R.id.friday_schedule_button);
+        saturdayProgramButton = (Button) view.findViewById(R.id.saturday_schedule_button);
+        sundayProgramButton = (Button) view.findViewById(R.id.sunday_schedule_button);
 
         //attaching listeners to button and link
         mHelpButton.setOnClickListener(this);
         mCampusButton.setOnClickListener(this);
+        fridayProgramButton.setOnClickListener(this);
+        saturdayProgramButton.setOnClickListener(this);
+        sundayProgramButton.setOnClickListener(this);
 
         return view;
 
@@ -60,8 +67,6 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
             Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
             startActivity(callIntent);
 
-
-
         } else if (view == mCampusButton) {
             Log.d(TAG, "campus");
 
@@ -69,6 +74,24 @@ public class HelpFragment extends Fragment implements View.OnClickListener {
             Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
             startActivity(callIntent);
 
+        }
+        else if (view == fridayProgramButton) {
+            Log.d(TAG, "friday program");
+            Toast.makeText(getActivity(), "need friday program", Toast.LENGTH_SHORT);
+//            String fridayProgramUri = "";
+//            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fridayProgramUri)));
+        }
+        else if (view == saturdayProgramButton) {
+            Log.d(TAG, "saturday program");
+            Toast.makeText(getActivity(), "need saturday program", Toast.LENGTH_SHORT);
+//            String saturdayProgramUri = "";
+//            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(saturdayProgramUri)));
+        }
+        else if (view == sundayProgramButton) {
+            Log.d(TAG, "sunday program");
+            Toast.makeText(getActivity(), "need sunday program", Toast.LENGTH_SHORT);
+//            String sundayProgramUri = "";
+//            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sundayProgramUri)));
         }
     }
 }

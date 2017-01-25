@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@android:color/background_light">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:layout_margin="1dp"
+        android:background="@android:color/darker_gray">
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="20dp">
+            <ImageView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scaleX="1.2"
+                android:scaleY="1.2"
+                android:src="@mipmap/original_logo" />
+            <TextView
+                android:id="@+id/popup_title"
+                android:layout_marginTop="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Title" />
+            <TextView
+                android:id="@+id/popup_body"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="body"/>
+            <Button
+                android:id="@+id/dismiss"
+                android:layout_marginTop="20dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Dismiss" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

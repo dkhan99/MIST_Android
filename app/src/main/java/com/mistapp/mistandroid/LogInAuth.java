@@ -25,12 +25,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Guest;
 
 public class LogInAuth extends AppCompatActivity implements View.OnClickListener {
+
+    //changed when the activity changes states - onPause() and onResume(). Used to correctly show notifications
+    public static boolean isInForeground;
 
     private static final String TAG = LogInAuth.class.getSimpleName();
     private EditText mEmailView;
@@ -45,22 +49,23 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private Context context;
+    private CacheHandler cacheHandler;
 
     private TextView mtextView;
 
-    private SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in_auth);
+        SharedPreferences sharedPref;
+        SharedPreferences.Editor editor;
+        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
 
         Intent intent = getIntent();
         context = getApplication();
-
-        sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
 
         //Initialize firebase auth object
         mAuth = FirebaseAuth.getInstance();
@@ -75,18 +80,18 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 if (user != null) {
                     Log.d(TAG, "login onAuthStateChanged:signed_in:" + user.getUid());
                     //save user's uid in shared preferences
-                    editor.putString(getString(R.string.user_uid_key), user.getUid());
-                    editor.commit();
+
+
+                    cacheHandler.cacheUserUid(user.getUid());
+                    cacheHandler.commitToCache();
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
                     Log.d(TAG, "login onAuthStateChanged:signed_out");
-                    //remove user's uid from shared preferences
-                    editor.remove(getString(R.string.user_uid_key));
-                    editor.remove(getString(R.string.current_user_key));
-                    editor.commit();
-
+                    //remove user's fields from shared preferences
+                    cacheHandler.removeCachedUserFields();
+                    cacheHandler.commitToCache();
                 }
                 // ...
             }
@@ -180,25 +185,37 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         }
                                     }
 
+                                    //if exists, caches user fields in database, and sets notification topics
                                     if (exists){
                                         // Get User object from db
                                         String currentUserType = (String)currentUserSnapshot.child("userType").getValue();
                                         Object currentUser = null;
+
                                         if (currentUserType.equals("competitor")) {
                                             currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                            subscribeToCompetitorTopics((Competitor)currentUser);
+
                                         } else if (currentUserType.equals("coach")){
                                             currentUser = currentUserSnapshot.getValue(Coach.class);
+                                            subscribeToCoachTopics((Coach)currentUser);
+
                                         } else if (currentUserType.equals("guest")) {
                                             currentUser = currentUserSnapshot.getValue(Guest.class);
                                         }
+
                                         Log.d(TAG, "Login success");
                                         Log.d(TAG, currentUser.toString());
 
-                                        cacheUserFields(currentUser, uid, currentUserType);
+                                        //in case user was guest originally, remove the guest's notifications
+                                        cacheHandler.removeCachedNotificationFields();
+
+                                        cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
+                                        cacheHandler.commitToCache();
 
                                         Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                                         intent.putExtra(getString(R.string.user_uid_key), uid);
                                         intent.putExtra(getString(R.string.current_user_type), currentUserType);
+
                                         startActivity(intent);
 
                                     } else{
@@ -221,13 +238,59 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
          });
     }
 
-    //saves the current user's fields and UID to shared preferences
-    public void cacheUserFields(Object currentUser, String uid, String userType){
-        Gson gson = new Gson();
-        String json = gson.toJson(currentUser);
-        editor.putString(getString(R.string.current_user_key), json);
-        editor.putString(getString(R.string.current_user_type), userType);
-        editor.putString(getString(R.string.user_uid_key), uid);
-        editor.commit();
+    //subscribe to team name, competitions, and "competitor"
+    public void subscribeToCompetitorTopics(Competitor currentUser){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentUser.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic(underScoreTeamName);
+        Log.d(TAG, "TEAM NAME: "+underScoreTeamName);
+
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().subscribeToTopic("competitor");
+
+        String[] compArray = {
+                (currentUser).getGroupProject(),
+                (currentUser).getArt(),
+                (currentUser).getSports(),
+                (currentUser).getBrackets(),
+                (currentUser).getKnowledge()
+        };
+
+        //subscribe to user's competitions (replaces spaces with underscores in competition name)
+        for (String competition: compArray){
+            if (!competition.equals("")) {
+                Log.d(TAG, "COMP NAME: "+competition);
+                String underScoreCompName = competition.replaceAll(" ", "_");
+                FirebaseMessaging.getInstance().subscribeToTopic(underScoreCompName);
+            }
+        }
+    }
+
+    //suscribes to team name and "coach"
+    public void subscribeToCoachTopics(Coach currentCoach){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentCoach.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic(underScoreTeamName);
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().subscribeToTopic("coach");
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isInForeground =true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isInForeground = false;
     }
 }

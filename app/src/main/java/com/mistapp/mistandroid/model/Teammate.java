@@ -3,7 +3,7 @@ package com.mistapp.mistandroid.model;
 /**
  * Created by aadil on 1/14/17.
  *
- * This class is used to model a teammate in the my-team page
+ * This class is used to model a teammate in the my-team page (both teammates and coaches are modeled)
  */
 
 public class Teammate {
