@@ -45,7 +45,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             view = inflater.inflate(R.layout.fragment_map, container, false);
         }
         if (googleServicesAvailable()) {
-            Toast.makeText(getActivity(), "Zooming in on current location", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
             initMap();
         } else {
             //No Google Maps Layout
