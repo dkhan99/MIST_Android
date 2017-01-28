@@ -70,6 +70,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
         if (googleServicesAvailable()) {
             Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
             initMap();
         } else {
             //No Google Maps Layout
@@ -123,7 +124,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
         mGoogleApiClient.connect();
         //double lat = 33.955466;
         //double lng = -83.374311;
@@ -176,10 +176,12 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         chapelMarker = mGoogleMap.addMarker(Chapel);
         northHallMarker = mGoogleMap.addMarker(NorthHall);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
+        /**
         heartyMarker.showInfoWindow();
         chapelMarker.showInfoWindow();
         northHallMarker.showInfoWindow();
         caldwellMarker.showInfoWindow();
+         */
     }
 
     /**
@@ -226,18 +228,20 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
                 mGoogleApiClient);
         if (mLastLocation != null) {
             //place marker at current position
-            //mGoogleMap.clear();
+            mGoogleMap.clear();
             latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latLng);
             markerOptions.title("Current Position");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
             currLocationMarker = mGoogleMap.addMarker(markerOptions);
+            /**
             currLocationMarker.showInfoWindow();
             heartyMarker.showInfoWindow();
             chapelMarker.showInfoWindow();
             northHallMarker.showInfoWindow();
             caldwellMarker.showInfoWindow();
+             */
 
         }
 
@@ -284,7 +288,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 16);
             mGoogleMap.animateCamera(update);
         }  //place marker at current position
-        //mGoogleMap.clear();
+        mGoogleMap.clear();
         if (currLocationMarker != null) {
             currLocationMarker.remove();
         }
@@ -296,7 +300,31 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
 
         currLocationMarker = mGoogleMap.addMarker(markerOptions);
         currLocationMarker.showInfoWindow();
-       // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
+        double CaldwellLat = 33.954921;
+        double CaldwellLng = -83.375290;
+        double HeartyLat = 33.955946;
+        double HeartyLng = -83.375683;
+        double ChapelLat = 33.956499;
+        double ChapelLng = -83.375148;
+        double NorthHallLat = 33.956169;
+        double NorthHallLng = -83.372517;
+
+        MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
+        MarkerOptions Hearty= new MarkerOptions().title("Hearty Field").position(new LatLng(HeartyLat,HeartyLng));
+        MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
+        MarkerOptions NorthHall = new MarkerOptions().title("North Hall Deck").position(new LatLng(NorthHallLat,NorthHallLng));
+
+        heartyMarker = mGoogleMap.addMarker(Hearty);
+        chapelMarker = mGoogleMap.addMarker(Chapel);
+        caldwellMarker = mGoogleMap.addMarker(Caldwell);
+        northHallMarker = mGoogleMap.addMarker(NorthHall);
+       /** heartyMarker.showInfoWindow();
+        chapelMarker.showInfoWindow();
+        caldwellMarker.showInfoWindow();
+        northHallMarker.showInfoWindow();
+        */
+
+        // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
 
         //zoom to current position:
         CameraPosition cameraPosition = new CameraPosition.Builder()
