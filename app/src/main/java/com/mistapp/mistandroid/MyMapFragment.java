@@ -6,12 +6,16 @@ package com.mistapp.mistandroid;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +32,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -37,6 +44,23 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     private SupportMapFragment googleMapFragment;
     private GoogleApiClient mGoogleApiClient;
     private View view = null;
+    private LocationRequest mLocationRequest;
+
+    private LatLng latLng;
+    private Marker currLocationMarker;
+    private Marker heartyMarker;
+    private Marker chapelMarker;
+    private Marker northHallMarker;
+    private Marker caldwellMarker;
+    private Location mBestReading;
+
+    /**
+     * Inflate map, calls google map fragment into existence
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -53,11 +77,23 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         return view;
     }
 
+    /**
+     * Creates map fragment and all of its features
+     */
     private void initMap() {
-        googleMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
-        googleMapFragment.getMapAsync(this);
+        try {
+            googleMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+            googleMapFragment.getMapAsync(this);
+        } catch(Exception e) {
+            Toast.makeText(getActivity(), "The map can not load on your device", Toast.LENGTH_LONG).show();
+
+        }
     }
 
+    /**
+     * Checks if can connect to google services
+     * @return
+     */
     public boolean googleServicesAvailable() {
         GoogleApiAvailability api = GoogleApiAvailability.getInstance();
         int isAvailable = api.isGooglePlayServicesAvailable(getActivity());
@@ -72,11 +108,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         return false;
     }
 
+    /**
+     * Sets up google map for fragment
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        /**if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     MY_PERMISSIONS_REQUEST_READ_CONTACTS);
@@ -84,15 +124,39 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
-        mGoogleApiClient.connect(); **/
-        double lat = 33.955466;
-        double lng = -83.374311;
-        goToLocationZoom(lat, lng, 17);
-        /**LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        mGoogleApiClient.connect();
+        //double lat = 33.955466;
+        //double lng = -83.374311;
+        //goToLocationZoom(lat, lng, 17);
+
+        Criteria criteria = new Criteria();
+        LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
+        String bestProvider = String.valueOf(lm.getBestProvider(criteria, true)).toString();
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-         **/
+        if (location != null) {
+            Log.e("TAG", "GPS is on");
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            //Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+        }
+        else{
+            //This is what you need:
+
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+            MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(longitude,latitude));
+            mGoogleMap.addMarker(Caldwell);
+
+        }
+        addMarkers();
+
+    }
+
+    private void addMarkers() {
+        //double longitude = location.getLongitude();
+        //double latitude = location.getLatitude();
 
         double CaldwellLat = 33.954921;
         double CaldwellLng = -83.375290;
@@ -108,30 +172,39 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
         MarkerOptions NorthHall = new MarkerOptions().title("North Hall Deck").position(new LatLng(NorthHallLat,NorthHallLng));
 
-        mGoogleMap.addMarker(Caldwell);
-        mGoogleMap.addMarker(Hearty);
-        mGoogleMap.addMarker(Chapel);
-        mGoogleMap.addMarker(NorthHall);
-
-
-
-
-
+        heartyMarker = mGoogleMap.addMarker(Hearty);
+        chapelMarker = mGoogleMap.addMarker(Chapel);
+        northHallMarker = mGoogleMap.addMarker(NorthHall);
+        caldwellMarker = mGoogleMap.addMarker(Caldwell);
+        heartyMarker.showInfoWindow();
+        chapelMarker.showInfoWindow();
+        northHallMarker.showInfoWindow();
+        caldwellMarker.showInfoWindow();
     }
 
+    /**
+     * Goes to any location in the world
+     * @param lat
+     * @param lng
+     */
     private void goToLocation(double lat, double lng) {
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
         mGoogleMap.moveCamera(update);
     }
 
+    /**
+     * Goes to any location in the world and zooms in a set amount
+     * @param lat
+     * @param lng
+     * @param zoom
+     */
     private void goToLocationZoom(double lat, double lng, float zoom) {
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         mGoogleMap.moveCamera(update);
-
-
     }
+
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -148,7 +221,35 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        if (mLastLocation != null) {
+            //place marker at current position
+            //mGoogleMap.clear();
+            latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("Current Position");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+            currLocationMarker = mGoogleMap.addMarker(markerOptions);
+            currLocationMarker.showInfoWindow();
+            heartyMarker.showInfoWindow();
+            chapelMarker.showInfoWindow();
+            northHallMarker.showInfoWindow();
+            caldwellMarker.showInfoWindow();
+
+        }
+
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(5000); //5 seconds
+        mLocationRequest.setFastestInterval(3000); //3 seconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
+
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -160,6 +261,19 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
 
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        Toast.makeText(getContext(),"buildGoogleApiClient",Toast.LENGTH_SHORT).show();
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    /**
+     * Checks if current location changes and updates marker
+     * @param location
+     */
     @Override
     public void onLocationChanged(Location location) {
         if(location == null){
@@ -169,8 +283,58 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 16);
             mGoogleMap.animateCamera(update);
+        }  //place marker at current position
+        //mGoogleMap.clear();
+        if (currLocationMarker != null) {
+            currLocationMarker.remove();
+        }
+        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+
+        currLocationMarker = mGoogleMap.addMarker(markerOptions);
+        currLocationMarker.showInfoWindow();
+       // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
+
+        //zoom to current position:
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng).zoom(17).build();
+
+        mGoogleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
+        //If you only need one location, unregister the listener
+        //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    protected void createLocationRequest() {
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
         }
     }
-}
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+    }
+
 
 
