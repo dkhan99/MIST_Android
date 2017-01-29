@@ -1,6 +1,6 @@
 # MIST_Android
 Application that allows competitors to navigate the tournament.
-Features:
+Includes:
 - Interactive map
 - Brackets for competitions
 - User profile and team
