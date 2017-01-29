@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:text="time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_time"
+        android:layout_marginTop="2dp"/>
+
+    <TextView
+        android:text="name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_name"
+        android:layout_below="@+id/event_time"
+        android:layout_marginLeft="4dp"/>
+
+    <TextView
+        android:text="building"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_building"
+        android:layout_below="@+id/event_name"
+        android:layout_marginTop="4dp"/>
+    <TextView
+        android:text="room num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_room_num"
+        android:layout_below="@+id/event_building"
+        android:layout_marginTop="4dp"/>
+</RelativeLayout>
