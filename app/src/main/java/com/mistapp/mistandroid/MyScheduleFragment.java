@@ -13,7 +13,6 @@ import android.widget.Button;
  * Created by aadil on 1/15/17.
  */
 
-
 public class MyScheduleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,8 +27,6 @@ public class MyScheduleFragment extends Fragment {
                 getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com/file/d/0B9GG5vxkVHa0Q0tZQjdyRFN0Mmc/view")));
             }
         });
-
         return view;
-
     }
 }

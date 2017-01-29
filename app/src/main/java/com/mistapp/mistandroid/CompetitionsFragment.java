@@ -5,6 +5,7 @@ package com.mistapp.mistandroid;
  */
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,7 +20,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.jar.Pack200;
 
 public class CompetitionsFragment extends Fragment implements View.OnClickListener{
 
@@ -89,13 +89,19 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
             String url = bracketUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
             // add code to view the pdf
+
         }
 
         if (view == viewRulebookButton) {
-            String competitionPicked = competitionPicker.getSelectedItem().toString();
+            final String competitionPicked = competitionPicker.getSelectedItem().toString();
             String url = rulebookUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
-            // add code to view the pdf
+            viewRulebookButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(rulebookUrls.get(competitionPicked))));
+                }
+            });
         }
     }
 
@@ -105,52 +111,50 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
                 "Sister’s Improv", "Brother’s Improv", "Sister’s Basketball", "Brother’s Basketball"));
     }
 
-    //dummy values - need actual urls
+    //dummy values - need actual urlsl
     public void updateRulebookUrls(){
-        rulebookUrls.put("Debate","1");
-        rulebookUrls.put("Math Olympics","2");
-        rulebookUrls.put("MIST Quiz Bowl","3");
-        rulebookUrls.put("Sister’s Improv","4");
-        rulebookUrls.put("Brother’s Improv","5");
-        rulebookUrls.put("Sister’s Basketball","6");
-        rulebookUrls.put("Brother’s Basketball","7");
+        rulebookUrls.put("Debate","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dffbf629abc01d8d25f/1485667840236/Debate.pdf");
+        rulebookUrls.put("Math Olympics","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d849dd1758e87f05fdb9b/1485669534042/Math+Olympics.pdf");
+        rulebookUrls.put("MIST Quiz Bowl","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e3db3db2b428d8c2037/1485667901837/Mobile+Applications.pdf");
+        rulebookUrls.put("Sister’s Improv","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1e1b631b0e7cf6d19f/1485667870356/Improv.pdf");
+        rulebookUrls.put("Brother’s Improv","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1e1b631b0e7cf6d19f/1485667870356/Improv.pdf");
+        rulebookUrls.put("Sister’s Basketball","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dd603596e0fcbc0e989/1485667798080/Basketball.pdf");
+        rulebookUrls.put("Brother’s Basketball","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dd603596e0fcbc0e989/1485667798080/Basketball.pdf");
 
-        rulebookUrls.put("Knowledge Test - Book 1","8");
-        rulebookUrls.put("Knowledge Test - Book 2","9");
-        rulebookUrls.put("Knowledge Test - Book 3","a");
-        rulebookUrls.put("Knowledge Test - Book 4","b");
-        rulebookUrls.put("Sister’s Quran Level 1","c");
-        rulebookUrls.put("Sister’s Quran Level 2","d");
-        rulebookUrls.put("Sister’s Quran Level 3","e");
-        rulebookUrls.put("Sister’s Quran Level 4","f");
-        rulebookUrls.put("Brother’s Quran Level 1","g");
-        rulebookUrls.put("Brother’s Quran Level 2","h");
-        rulebookUrls.put("Brother’s Quran Level 3","i");
-        rulebookUrls.put("Brother’s Quran Level 4","j");
-        rulebookUrls.put("2D Art","k");
-        rulebookUrls.put("3D Art","l");
-        rulebookUrls.put("Fashion","m");
-        rulebookUrls.put("Graphic","n");
-        rulebookUrls.put("Photography","o");
-        rulebookUrls.put("Culinary","p");
+        rulebookUrls.put("Knowledge Test - Book 1","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
+        rulebookUrls.put("Knowledge Test - Book 2","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
+        rulebookUrls.put("Knowledge Test - Book 3","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
+        rulebookUrls.put("Knowledge Test - Book 4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
+        rulebookUrls.put("Sister’s Quran Level 1","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Sister’s Quran Level 2","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Sister’s Quran Level 3","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Sister’s Quran Level 4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Brother’s Quran Level 1","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Brother’s Quran Level 2","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Brother’s Quran Level 3","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Brother’s Quran Level 4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("2D Art","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7db9bebafb21325bd50f/1485667770165/2D+Art.pdf");
+        rulebookUrls.put("3D Art","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dbfff7c501134731a67/1485667775113/3D+Art.pdf");
+        rulebookUrls.put("Fashion","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1146c3c4023d82d555/1485667858578/Fashion+Design.pdf");
+        rulebookUrls.put("Graphic","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e183a0411d31b4498f9/1485667864863/Graphic+Design.pdf");
+        rulebookUrls.put("Photography","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d808bb3db2b428d8c3015/1485668492248/Photography.pdf");
+        rulebookUrls.put("Culinary","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dee579fb35be4f27176/1485667822428/Culinary+Arts.pdf");
 
-        rulebookUrls.put("Extemporaneous Essay","q");
-        rulebookUrls.put("Extemporaneous Speaking","r");
-        rulebookUrls.put("Original Oratory","s");
-        rulebookUrls.put("Poetry","t");
-        rulebookUrls.put("Prepared Essay","u");
-        rulebookUrls.put("Short Fiction","v");
-        rulebookUrls.put("poken Word","w");
+        rulebookUrls.put("Extemporaneous Essay","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e068419c2ec3fd8bd4f/1485667846417/Extemporaneous+Essay.pdf");
+        rulebookUrls.put("Extemporaneous Speaking","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e0c1e5b6c3aa8039c3e/1485667852801/Extemporaneous+Speaking.pdf");
+        rulebookUrls.put("Original Oratory","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e4f46c3c4023d82d703/1485667919539/Original+Oratory.pdf");
+        rulebookUrls.put("Poetry","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d80a1e4fcb5a6cdc37e95/1485668514129/Poetry+Literature.pdf");
+        rulebookUrls.put("Prepared Essay","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d814f5016e177f5435b4a/1485668687867/Prepared+Essay.pdf");
+        rulebookUrls.put("Short Fiction","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d8190f7e0ab9c094d4f03/1485668753085/Short+Fiction.pdf");
+        rulebookUrls.put("Spoken Word","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d80e9be6594f328541a31/1485668586010/Poetry+Spoken+Word.pdf");
 
-        rulebookUrls.put("Business Venture","x");
-        rulebookUrls.put("Nasheed/Rap","y");
-        rulebookUrls.put("Community Service","z");
-        rulebookUrls.put("Science Fair","~");
-        rulebookUrls.put("Short Film","!");
-        rulebookUrls.put("Social Media","@");
-        rulebookUrls.put("Mobile Applications","#");
-
-
+        rulebookUrls.put("Business Venture","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dda86e6c04b27522ee4/1485667802939/Business+Venture.pdf");
+        rulebookUrls.put("Nasheed/Rap","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e481e5b6c3aa8039de4/1485667912453/Nasheed+and+Rap.pdf");
+        rulebookUrls.put("Community Service","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7ddfe6f2e152d3e246ae/1485667807443/Community+Service.pdf");
+        rulebookUrls.put("Science Fair","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d8173725e2506f4bbf4c1/1485668724184/Science+Fair.pdf");
+        rulebookUrls.put("Short Film","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d81ada5790aa54e5d75d3/1485668781566/Short+Film.pdf");
+        rulebookUrls.put("Social Media","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d81bcf7e0ab9c094d4ff7/1485668796254/Social+Media.pdf");
+        rulebookUrls.put("Mobile Applications","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e3db3db2b428d8c2037/1485667901837/Mobile+Applications.pdf");
     }
 
     //dummy values - need actual urls
