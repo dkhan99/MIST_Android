@@ -8,6 +8,7 @@
     <string name="prompt_password">Password</string>
 
     <string name="choose_competition">Choose Competition</string>
+    <string name="brackets_appear">brackets will appear for selected bracket competitions</string>
     <string name="view_rules">View Rules</string>
     <string name="view_brackets">View Brackets</string>
 

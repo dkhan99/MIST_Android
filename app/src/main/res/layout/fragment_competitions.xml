@@ -43,5 +43,14 @@
         android:text="@string/view_brackets"
         />
 
+    <TextView
+        android:id="@+id/select_bracket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brackets are shown for selected competitions"
+        android:textSize="15dp"
+        android:layout_below="@+id/select_competition_text"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>
