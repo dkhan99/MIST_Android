@@ -212,7 +212,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     public void onConnected(Bundle bundle) {
         LocationRequest mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000);
+        mLocationRequest.setInterval(50000);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -246,8 +246,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(5000); //5 seconds
-        mLocationRequest.setFastestInterval(3000); //3 seconds
+        mLocationRequest.setInterval(50000);
+        mLocationRequest.setFastestInterval(50000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
