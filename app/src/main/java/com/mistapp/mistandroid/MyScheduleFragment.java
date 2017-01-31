@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Event;
 import com.mistapp.mistandroid.model.Teammate;
@@ -57,131 +58,167 @@ public class MyScheduleFragment extends Fragment {
         String userJson = cacheHandler.getUserJson();
 
         Gson gson = new Gson();
-
-        final ArrayList<String> registeredEvents = new ArrayList<String>();
-
-        if (userType.equals("competitor")){
-            //adding competition names that the user is registered in into registeredEvents array
-            Competitor currentUser = gson.fromJson(userJson, Competitor.class);
-            String groupProjectCompetition = currentUser.getGroupProject();
-            String bracketCompetition = currentUser.getBrackets();
-            String artCompetition = currentUser.getArt();
-            String knowledgeCompetition = currentUser.getKnowledge();
-            String writingCompetition = currentUser.getWriting();
-            String sportsCompetition = currentUser.getSports();
-            if (groupProjectCompetition!=null && !groupProjectCompetition.equals("")) {
-                registeredEvents.add(groupProjectCompetition);
-            }
-            if (bracketCompetition!=null && !bracketCompetition.equals("")) {
-                registeredEvents.add(bracketCompetition);
-            }
-            if (artCompetition!=null && !artCompetition.equals("")) {
-                registeredEvents.add(artCompetition);
-            }
-            if (knowledgeCompetition!=null && !knowledgeCompetition.equals("")) {
-                registeredEvents.add(knowledgeCompetition);
-            }
-            if (writingCompetition!=null && !writingCompetition.equals("")) {
-                registeredEvents.add(writingCompetition);
-            }
-            if (sportsCompetition!=null && !sportsCompetition.equals("")) {
-                registeredEvents.add(sportsCompetition);
-            }
-            ///need to add other events - lunch, social, prayer, etc
-
-        }
-
-
+        String eventsJson = cacheHandler.getCachedEventsJson();
         final EventAdapter adapter = new EventAdapter();
 
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        ref = mDatabase.child("competition_test");
+        //events are not cached already- hit database and store in cache
+        if (eventsJson.equals("")){
+            Log.d(TAG, "events not already cached - querying database");
 
-        //for each competition that the user has registered for, retreive it from db, create event object, and add to listview
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-           @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-               ArrayList<Event>eventArrayList = new ArrayList<Event>();
-               int numFriday = 0;
-               int numSaturday = 0;
-               int numSunday = 0;
-//               int index = 0;
-               for (String competition: registeredEvents){
-                   int day = 1;
-                   DataSnapshot currentEventSnapshot = dataSnapshot.child(competition).child("locationArray");
-                   Log.d(TAG,currentEventSnapshot.toString());
-                   Object eventListObject = (Object)currentEventSnapshot.getValue();
-                   Log.d(TAG,eventListObject.toString());
-                   ArrayList<HashMap> eventList = (ArrayList<HashMap>)(eventListObject);
-                   Log.d(TAG,eventList.toString());
-                   for (HashMap map: eventList){
-                       String date = (String)map.get("date");
-                       String location = (String)map.get("buildingName");
-                       String time = (String)map.get("time");
-                       long roomNumber = (long)map.get("roomNum");
-                       String duration = (String)map.get("duration");
-                       Event e = new Event(competition, location, date, duration, Integer.parseInt(String.valueOf(roomNumber)), time);
+            final ArrayList<String> registeredEvents = new ArrayList<String>();
 
-                       //add event to list - this is so it can be sorted
-                       eventArrayList.add(e);
-                       if (e.getDay() == 17){
-                           numFriday++;
-                       }
-                       else if (e.getDay() == 18){
-                           numSaturday++;
-                       }
-                       else if (e.getDay() == 19){
-                           numSunday++;
-                       }
-
-                   }
-
-
-               }
-
-               Log.d(TAG, "fri: " + numFriday + " sat "+ numSaturday + " sun " + numSunday);
-
-               //sort array and add items and separator items to adapter
-               Event[] eventArray = eventArrayList.toArray(new Event[eventArrayList.size()]);
-               Arrays.sort(eventArray, Event.EventTimeComparator);
-               for (int x=0; x<eventArray.length; x++){
-                    adapter.addItem(eventArray[x]);
-               }
-               if (numFriday != 0){
-                   adapter.addSeparatorItem("March 17, 2017",0);
-               }
-               if (numSaturday != 0){
-                   //if nothing on friday, add as first item, else add to index num_friday + 1 (fridaySeparatorItem)
-                   int indexToAdd = ((numFriday==0) ? 0 : numFriday+1);
-                   adapter.addSeparatorItem("March 18, 2017",indexToAdd);
-               }
-               if (numSunday != 0){
-                   int indexToAdd = 0;
-                   if (numFriday!=0 ){
-                       indexToAdd+=numFriday+1;
-                   }
-                   if (numSaturday!=0 ){
-                       indexToAdd+=numSaturday+1;
-                   }
-                   adapter.addSeparatorItem("March 19, 2017",indexToAdd);
-               }
-
-
-           }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+            if (userType.equals("competitor")){
+                //adding competition names that the user is registered in into registeredEvents array
+                Competitor currentUser = gson.fromJson(userJson, Competitor.class);
+                String groupProjectCompetition = currentUser.getGroupProject();
+                String bracketCompetition = currentUser.getBrackets();
+                String artCompetition = currentUser.getArt();
+                String knowledgeCompetition = currentUser.getKnowledge();
+                String writingCompetition = currentUser.getWriting();
+                String sportsCompetition = currentUser.getSports();
+                if (groupProjectCompetition!=null && !groupProjectCompetition.equals("")) {
+                    registeredEvents.add(groupProjectCompetition);
+                }
+                if (bracketCompetition!=null && !bracketCompetition.equals("")) {
+                    registeredEvents.add(bracketCompetition);
+                }
+                if (artCompetition!=null && !artCompetition.equals("")) {
+                    registeredEvents.add(artCompetition);
+                }
+                if (knowledgeCompetition!=null && !knowledgeCompetition.equals("")) {
+                    registeredEvents.add(knowledgeCompetition);
+                }
+                if (writingCompetition!=null && !writingCompetition.equals("")) {
+                    registeredEvents.add(writingCompetition);
+                }
+                if (sportsCompetition!=null && !sportsCompetition.equals("")) {
+                    registeredEvents.add(sportsCompetition);
+                }
+                ///need to add other events - lunch, social, prayer, etc
 
             }
 
-        });
+
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            ref = mDatabase.child("competition_test");
+
+            //for each competition that the user has registered for, retreive it from db, create event object, and add to listview
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ArrayList<Event>eventArrayList = new ArrayList<Event>();
+                    int numFriday = 0;
+                    int numSaturday = 0;
+                    int numSunday = 0;
+//               int index = 0;
+                    for (String competition: registeredEvents){
+                        int day = 1;
+                        DataSnapshot currentEventSnapshot = dataSnapshot.child(competition).child("locationArray");
+                        Log.d(TAG,currentEventSnapshot.toString());
+                        Object eventListObject = (Object)currentEventSnapshot.getValue();
+                        Log.d(TAG,eventListObject.toString());
+                        ArrayList<HashMap> eventList = (ArrayList<HashMap>)(eventListObject);
+                        Log.d(TAG,eventList.toString());
+                        for (HashMap map: eventList){
+                            String date = (String)map.get("date");
+                            String location = (String)map.get("buildingName");
+                            String time = (String)map.get("time");
+                            long roomNumber = (long)map.get("roomNum");
+                            String duration = (String)map.get("duration");
+                            Event e = new Event(competition, location, date, duration, Integer.parseInt(String.valueOf(roomNumber)), time);
+
+                            //add event to list - this is so it can be sorted
+                            eventArrayList.add(e);
+                            if (e.getDay() == 17){
+                                numFriday++;
+                            }
+                            else if (e.getDay() == 18){
+                                numSaturday++;
+                            }
+                            else if (e.getDay() == 19){
+                                numSunday++;
+                            }
+
+                        }
 
 
-        ListView events_lv = (ListView)view.findViewById(R.id.my_schedule_list);
-        events_lv.setAdapter(adapter);
+                    }
+
+                    //add event list to cache
+                    cacheHandler.cacheEvents(eventArrayList);
+                    cacheHandler.commitToCache();
+
+                    Log.d(TAG, "fri: " + numFriday + " sat "+ numSaturday + " sun " + numSunday);
+
+                    addToAdapter(adapter, eventArrayList, numFriday, numSaturday, numSunday);
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+
+            });
+
+            ListView events_lv = (ListView)view.findViewById(R.id.my_schedule_list);
+            events_lv.setAdapter(adapter);
+        }
+        //Events were cached - need to retreive
+        else{
+            Log.d(TAG, "events were cached - retreiving");
+            String jsonList = cacheHandler.getCachedEventsJson();
+            ArrayList<Event> allEvents = gson.fromJson(jsonList, new TypeToken<ArrayList<Event>>() {}.getType());
+            Log.d(TAG,allEvents.toString());
+            int numFriday = 0;
+            int numSaturday = 0;
+            int numSunday = 0;
+            for (Event e: allEvents) {
+                Log.d(TAG,e.toString());
+                if (e.getDay() == 17) {
+                    numFriday++;
+                } else if (e.getDay() == 18) {
+                    numSaturday++;
+                } else if (e.getDay() == 19) {
+                    numSunday++;
+                }
+            }
+            addToAdapter(adapter, allEvents, numFriday, numSaturday, numSunday);
+            ListView events_lv = (ListView)view.findViewById(R.id.my_schedule_list);
+            events_lv.setAdapter(adapter);
+        }
 
         return view;
+
+    }
+
+    //adds event items and separater items to the adapter
+    public void addToAdapter(EventAdapter adapter, ArrayList<Event>eventArrayList, int numFriday, int numSaturday, int numSunday){
+        //sort array and add items and separator items to adapter
+        Event[] eventArray = eventArrayList.toArray(new Event[eventArrayList.size()]);
+        Arrays.sort(eventArray, Event.EventTimeComparator);
+        for (int x=0; x<eventArray.length; x++){
+            adapter.addItem(eventArray[x]);
+        }
+        if (numFriday != 0){
+            adapter.addSeparatorItem("March 17, 2017",0);
+        }
+        if (numSaturday != 0){
+            //if nothing on friday, add as first item, else add to index num_friday + 1 (fridaySeparatorItem)
+            int indexToAdd = ((numFriday==0) ? 0 : numFriday+1);
+            adapter.addSeparatorItem("March 18, 2017",indexToAdd);
+        }
+        if (numSunday != 0){
+            int indexToAdd = 0;
+            if (numFriday!=0 ){
+                indexToAdd+=numFriday+1;
+            }
+            if (numSaturday!=0 ){
+                indexToAdd+=numSaturday+1;
+            }
+            adapter.addSeparatorItem("March 19, 2017",indexToAdd);
+        }
 
     }
 

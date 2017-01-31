@@ -128,6 +128,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
             //remove user, user uid, user's type, teammates, and notifications from the cache
             cacheHandler.removeCachedUserFields();
             cacheHandler.removeCachedNotificationFields();
+            cacheHandler.removeCachedEvents();
             cacheHandler.removeCachedTeammates();
             cacheHandler.commitToCache();
 
@@ -163,6 +164,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
                 (currentUser).getArt(),
                 (currentUser).getSports(),
                 (currentUser).getBrackets(),
+                (currentUser).getWriting(),
                 (currentUser).getKnowledge()
         };
 
