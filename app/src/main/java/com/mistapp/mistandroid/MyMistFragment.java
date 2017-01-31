@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +48,6 @@ import static com.mistapp.mistandroid.R.id.uid;
 public class MyMistFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = LogInAuth.class.getSimpleName();
-    ListView coaches_lv;
-    ListView teammates_lv;
     FragmentTransaction transaction;
     private TextView logoutText;
     private CacheHandler cacheHandler;
@@ -67,10 +66,16 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
 
         logoutText = (TextView) view.findViewById(R.id.logout);
         logoutText.setOnClickListener(this);
+        RadioGroup group = (RadioGroup)view.findViewById(R.id.radioGroup);
         RadioButton myTeamButton = (RadioButton) view.findViewById(R.id.my_team_button);
         RadioButton myScheduleButton = (RadioButton) view.findViewById(R.id.my_schedule_button);
         final MyTeamFragment myTeamFragment = new MyTeamFragment();
         final MyScheduleFragment myScheduleFragment = new MyScheduleFragment();
+
+        if (cacheHandler.getUserType().equals("coach")){
+            group.setVisibility(View.GONE);
+        }
+
 
         showMyTeamFragment(myTeamFragment);
         Log.d(TAG, "Mah Niga");
