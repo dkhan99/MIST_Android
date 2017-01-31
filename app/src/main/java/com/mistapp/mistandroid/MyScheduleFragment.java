@@ -25,6 +25,7 @@ import com.mistapp.mistandroid.model.Teammate;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,23 +87,26 @@ public class MyScheduleFragment extends Fragment {
             if (sportsCompetition!=null && !sportsCompetition.equals("")) {
                 registeredEvents.add(sportsCompetition);
             }
+            ///need to add other events - lunch, social, prayer, etc
 
         }
 
 
         final EventAdapter adapter = new EventAdapter();
 
-        adapter.addSeparatorItem("March 17, 2017");
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         ref = mDatabase.child("competition_test");
 
         //for each competition that the user has registered for, retreive it from db, create event object, and add to listview
-        //if the day changes, add a separator item, then continue adding event items to the list
-        //later on -> sort by time/day and add separator rows afterwards
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
+               ArrayList<Event>eventArrayList = new ArrayList<Event>();
+               int numFriday = 0;
+               int numSaturday = 0;
+               int numSunday = 0;
+//               int index = 0;
                for (String competition: registeredEvents){
                    int day = 1;
                    DataSnapshot currentEventSnapshot = dataSnapshot.child(competition).child("locationArray");
@@ -118,20 +122,49 @@ public class MyScheduleFragment extends Fragment {
                        long roomNumber = (long)map.get("roomNum");
                        String duration = (String)map.get("duration");
                        Event e = new Event(competition, location, date, duration, Integer.parseInt(String.valueOf(roomNumber)), time);
-                       if (e.getDate().equals("03/18") && day == 1){
-                           adapter.addSeparatorItem("March 18, 2017");
-                           day = 2;
+
+                       //add event to list - this is so it can be sorted
+                       eventArrayList.add(e);
+                       if (e.getDay() == 17){
+                           numFriday++;
                        }
-                       else if (e.getDate().equals("03/19") && day == 2){
-                           adapter.addSeparatorItem("March 19, 2017");
-                           day = 3;
+                       else if (e.getDay() == 18){
+                           numSaturday++;
                        }
-                       adapter.addItem(e);
+                       else if (e.getDay() == 19){
+                           numSunday++;
+                       }
 
                    }
 
-                   break;
 
+               }
+
+               Log.d(TAG, "fri: " + numFriday + " sat "+ numSaturday + " sun " + numSunday);
+
+               //sort array and add items and separator items to adapter
+               Event[] eventArray = eventArrayList.toArray(new Event[eventArrayList.size()]);
+               Arrays.sort(eventArray, Event.EventTimeComparator);
+               for (int x=0; x<eventArray.length; x++){
+                    adapter.addItem(eventArray[x]);
+               }
+               if (numFriday != 0){
+                   adapter.addSeparatorItem("March 17, 2017",0);
+               }
+               if (numSaturday != 0){
+                   //if nothing on friday, add as first item, else add to index num_friday + 1 (fridaySeparatorItem)
+                   int indexToAdd = ((numFriday==0) ? 0 : numFriday+1);
+                   adapter.addSeparatorItem("March 18, 2017",indexToAdd);
+               }
+               if (numSunday != 0){
+                   int indexToAdd = 0;
+                   if (numFriday!=0 ){
+                       indexToAdd+=numFriday+1;
+                   }
+                   if (numSaturday!=0 ){
+                       indexToAdd+=numSaturday+1;
+                   }
+                   adapter.addSeparatorItem("March 19, 2017",indexToAdd);
                }
 
 
@@ -141,6 +174,7 @@ public class MyScheduleFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
 
             }
+
         });
 
 
@@ -171,10 +205,10 @@ public class MyScheduleFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        public void addSeparatorItem(final String item) {
-            mData.add(item);
+        public void addSeparatorItem(final String item, int indexOfAddition) {
+            mData.add(indexOfAddition, item);
             // save separator position
-            mSeparatorsSet.add(mData.size() - 1);
+            mSeparatorsSet.add(indexOfAddition);
             notifyDataSetChanged();
         }
 
