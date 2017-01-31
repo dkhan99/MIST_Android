@@ -102,7 +102,10 @@ public class MyTeamFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean teamExists = false;
-                    DataSnapshot currentTeammateSnapshot = dataSnapshot.child(userTeamName);
+                    //replaces hashtags and periods
+                    String teamNameInDatabase = userTeamName.replaceAll("[#.]", "_");
+                    DataSnapshot currentTeammateSnapshot = dataSnapshot.child(teamNameInDatabase);
+
                     HashMap<String, HashMap> teamMap = (HashMap<String, HashMap>) currentTeammateSnapshot.getValue();
                     Iterator it = teamMap.entrySet().iterator();
                     ArrayList<Teammate> coachList = new ArrayList<Teammate>();

@@ -289,9 +289,8 @@ public class MyScheduleFragment extends Fragment {
                         v = vi.inflate(R.layout.item_event, parent, false);
 
                         holder1 = new EventViewHolder();
-                        holder1.nameText = (TextView) v.findViewById(R.id.event_name);
-                        holder1.timeText = (TextView) v.findViewById(R.id.event_time);
-                        holder1.locationText = (TextView) v.findViewById(R.id.event_building);
+                        holder1.nameAndTimeText = (TextView) v.findViewById(R.id.event_name_and_time);
+                        holder1.locationText = (TextView) v.findViewById(R.id.event_location);
                         holder1.roomNumText = (TextView) v.findViewById(R.id.event_room_num);
                         v.setTag(holder1);
                     }
@@ -305,11 +304,8 @@ public class MyScheduleFragment extends Fragment {
                         // set up the list item
                         if (myItem != null) {
                             // set item text
-                            if (holder1.nameText != null) {
-                                holder1.nameText.setText(((Event) myItem).getName());
-                            }
-                            if (holder1.timeText != null){
-                                holder1.timeText.setText(((Event) myItem).getTime());
+                            if (holder1.nameAndTimeText != null) {
+                                holder1.nameAndTimeText.setText(((Event) myItem).getTime() + " - " + ((Event) myItem).getName());
                             }
                             if (holder1.locationText != null){
                                 holder1.locationText.setText(((Event) myItem).getLocation());
@@ -361,8 +357,7 @@ public class MyScheduleFragment extends Fragment {
     }
 
     public static class EventViewHolder {
-        public TextView nameText;
-        public TextView timeText;
+        public TextView nameAndTimeText;
         public TextView locationText;
         public TextView roomNumText;
     }
