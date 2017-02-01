@@ -26,6 +26,7 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle("Program");
         View view = inflater.inflate(R.layout.fragment_program, container, false);
 
         //define and set toolbar. Removed this because of error I was getting... need to look into it

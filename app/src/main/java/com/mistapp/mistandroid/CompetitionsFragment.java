@@ -38,6 +38,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_competitions, container, false);
+        getActivity().setTitle("Competitions");
 
         rulebookUrls = new HashMap<String, String>();
         bracketUrls = new HashMap<String, String>();

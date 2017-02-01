@@ -15,9 +15,37 @@
     <RelativeLayout
         android:id="@+id/radio_buttons_layout"
         android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         >
+
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/radio_button_layout"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true">-->
+
+
+            <!--<Button-->
+                <!--android:id="@+id/my_team_radio_btn"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="My Team"-->
+                <!--android:textColor="#E6E6E6"-->
+                <!--android:background="@drawable/radio_button_selected"/>-->
+
+            <!--<Button-->
+                <!--android:id="@+id/my_schedule_radio_btn"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="My Schedule"-->
+                <!--android:textColor="@color/mistRed"-->
+                <!--android:layout_toRightOf="@+id/my_team_radio_btn"-->
+                <!--android:background="@drawable/radio_button_unselected"/>-->
+        <!--</RelativeLayout>-->
+
         <RadioGroup
             android:layout_marginTop="20dp"
             android:id="@+id/radioGroup"
@@ -27,17 +55,26 @@
             android:checkedButton="@+id/my_team_button"
             android:layout_height="wrap_content">
 
+
             <RadioButton
                 android:text="My Team"
+                android:textColor="@color/mistGray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/custom_radio_button"
+                android:button="@null"
+                android:textAlignment="center"
                 android:id="@+id/my_team_button" />
 
             <RadioButton
-                android:text="MY Schedule"
+                android:text="My Schedule"
+                android:textColor="@color/mistRed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/custom_radio_button"
                 android:layout_toRightOf="@+id/my_team_button"
+                android:button="@null"
+                android:textAlignment="center"
                 android:id="@+id/my_schedule_button" />
         </RadioGroup>
 

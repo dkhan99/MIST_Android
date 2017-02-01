@@ -1,10 +1,12 @@
 package com.mistapp.mistandroid;
 
 import android.app.ProgressDialog;
+import android.support.v4.content.ContextCompat;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -57,6 +59,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("MY MIST");
 
         View view = inflater.inflate(R.layout.fragment_my_mist, container, false);
 
@@ -67,8 +70,8 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
         logoutText = (TextView) view.findViewById(R.id.logout);
         logoutText.setOnClickListener(this);
         RadioGroup group = (RadioGroup)view.findViewById(R.id.radioGroup);
-        RadioButton myTeamButton = (RadioButton) view.findViewById(R.id.my_team_button);
-        RadioButton myScheduleButton = (RadioButton) view.findViewById(R.id.my_schedule_button);
+        final RadioButton myTeamButton = (RadioButton) view.findViewById(R.id.my_team_button);
+        final RadioButton myScheduleButton = (RadioButton) view.findViewById(R.id.my_schedule_button);
         final MyTeamFragment myTeamFragment = new MyTeamFragment();
         final MyScheduleFragment myScheduleFragment = new MyScheduleFragment();
 
@@ -82,17 +85,44 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
         myTeamButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final int version = Build.VERSION.SDK_INT;
 
                 if (isChecked == true){
                     showMyTeamFragment(myTeamFragment);
+                    if (version >= 23) {
+                        myTeamButton.setTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.mistGray));
+                    } else {
+                        myTeamButton.setTextColor(getResources().getColor(R.color.mistGray));
+                    }
+                }
+                else{
+                    if (version >= 23) {
+                        myTeamButton.setTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.mistRed));
+                    } else {
+                        myTeamButton.setTextColor(getResources().getColor(R.color.mistRed));
+                    }
                 }
             }
         });
         myScheduleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                final int version = Build.VERSION.SDK_INT;
+                Log.d("123", version+" ~~~~~~~~~~~~~~~`");
                 if (isChecked == true) {
                     showMyScheduleFragment(myScheduleFragment);
+                    if (version >= 23) {
+                        myScheduleButton.setTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.mistGray));
+                    } else {
+                        myScheduleButton.setTextColor(getResources().getColor(R.color.mistGray));
+                    }
+                }
+                else{
+                    if (version >= 23) {
+                        myScheduleButton.setTextColor(ContextCompat.getColor(getActivity().getApplicationContext(), R.color.mistRed));
+                    } else {
+                        myScheduleButton.setTextColor(getResources().getColor(R.color.mistRed));
+                    }
                 }
             }
         });

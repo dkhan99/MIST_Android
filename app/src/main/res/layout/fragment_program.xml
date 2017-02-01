@@ -30,54 +30,48 @@
 
         <Button
             android:text="Friday, March 17th"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/friday_schedule_button"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button"
-            android:layout_alignParentEnd="true" />
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowRadius="3"
+            android:layout_margin="5dp"
+            android:background="@drawable/red_button"/>
 
         <Button
             android:text="Saturday, March 18th"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/saturday_schedule_button"
             android:layout_below="@id/friday_schedule_button"
-            android:layout_marginTop="62dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/campus"
-            android:layout_alignParentEnd="true" />
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowRadius="3"
+            android:layout_margin="5dp"
+            android:background="@drawable/red_button"/>
         <Button
             android:text="Sunday, March 19th"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/sunday_schedule_button"
             android:layout_below="@+id/saturday_schedule_button"
-            android:layout_marginTop="124dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button"
-            android:layout_alignParentEnd="true" />
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowRadius="3"
+            android:layout_margin="5dp"
+            android:background="@drawable/red_button"/>
 
     </RelativeLayout>
 
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     <TextView
         android:id="@+id/important_contacts_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/program_of_events_layout"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Important Contacts"
-        android:paddingTop="30dp"
         android:textSize="30dp"
         android:layout_centerHorizontal="true"
         />
