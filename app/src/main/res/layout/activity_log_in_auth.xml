@@ -97,7 +97,7 @@
 
             <TextView
                 android:textAlignment ="center"
-                android:text = "Havn't created an account yet? \n Register here"
+                android:text = "Haven't created an account yet? \n Register here"
                 android:id = "@+id/textViewSignin"
                 style="@style/switch_login_register_text"
                 />

@@ -202,12 +202,12 @@ public class MyScheduleFragment extends Fragment {
             adapter.addItem(eventArray[x]);
         }
         if (numFriday != 0){
-            adapter.addSeparatorItem("March 17, 2017",0);
+            adapter.addSeparatorItem("Friday, March 17",0);
         }
         if (numSaturday != 0){
             //if nothing on friday, add as first item, else add to index num_friday + 1 (fridaySeparatorItem)
             int indexToAdd = ((numFriday==0) ? 0 : numFriday+1);
-            adapter.addSeparatorItem("March 18, 2017",indexToAdd);
+            adapter.addSeparatorItem("Saturday, March 18",indexToAdd);
         }
         if (numSunday != 0){
             int indexToAdd = 0;
@@ -217,7 +217,7 @@ public class MyScheduleFragment extends Fragment {
             if (numSaturday!=0 ){
                 indexToAdd+=numSaturday+1;
             }
-            adapter.addSeparatorItem("March 19, 2017",indexToAdd);
+            adapter.addSeparatorItem("Sunday, March 19",indexToAdd);
         }
 
     }
@@ -311,7 +311,7 @@ public class MyScheduleFragment extends Fragment {
                                 holder1.locationText.setText(((Event) myItem).getLocation());
                             }
                             if (holder1.roomNumText != null){
-                                holder1.roomNumText.setText(Integer.toString(((Event) myItem).getRoomNumber()));
+                                holder1.roomNumText.setText("rooms: [ " + Integer.toString(((Event) myItem).getRoomNumber()) + " ]");
                             }
                         }
                     }
