@@ -42,14 +42,18 @@
     <string name="num_unread_notifications">num_unread_notifications</string>
     <string name="notifications">notifications</string>
     <string name="teammates">teammates</string>
+    <string name="events">events</string>
 
 
     <string name="app_package_name">com.mistapp.mistandroid</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_help_directory">HelpDirectory</string>
     <string name="title_activity_team">Team</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
+

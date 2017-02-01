@@ -102,7 +102,10 @@ public class MyTeamFragment extends Fragment {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     boolean teamExists = false;
-                    DataSnapshot currentTeammateSnapshot = dataSnapshot.child(userTeamName);
+                    //replaces hashtags and periods
+                    String teamNameInDatabase = userTeamName.replaceAll("[#.]", "_");
+                    DataSnapshot currentTeammateSnapshot = dataSnapshot.child(teamNameInDatabase);
+
                     HashMap<String, HashMap> teamMap = (HashMap<String, HashMap>) currentTeammateSnapshot.getValue();
                     Iterator it = teamMap.entrySet().iterator();
                     ArrayList<Teammate> coachList = new ArrayList<Teammate>();
@@ -155,7 +158,6 @@ public class MyTeamFragment extends Fragment {
         //teammates were cached - need to retreive
         else{
             Log.d(TAG, "teammates are cached. Getting from cache");
-            cacheHandler.getCachedTeammatesJson();
             String jsonList = cacheHandler.getCachedTeammatesJson();
             ArrayList<Teammate> coachList = new ArrayList<Teammate>();
             ArrayList<Teammate> teammateList = new ArrayList<Teammate>();
@@ -209,6 +211,23 @@ public class MyTeamFragment extends Fragment {
         if (userType.equals("competitor")){
             String json = cacheHandler.getUserJson();
             Log.d(TAG, "CurrentUser from cache: " + json);
+
+            if (json == null){
+                Log.d(TAG, "LOGGING USER OUT");
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getActivity(), "peace out ", Toast.LENGTH_LONG).show();
+
+                //remove user, user uid, user's type, teammates, and notifications from the cache
+                cacheHandler.removeCachedUserFields();
+                cacheHandler.removeCachedNotificationFields();
+                cacheHandler.removeCachedEvents();
+                cacheHandler.removeCachedTeammates();
+                cacheHandler.commitToCache();
+                Intent i= new Intent(getActivity().getApplicationContext(), WelcomeActivity.class);
+                getActivity().startActivity(i);
+                return;
+            }
+
             Competitor currentUser = gson.fromJson(json, Competitor.class);
             nameText.setText(currentUser.getName());
             teamNameText.setText(currentUser.getTeam());
@@ -222,6 +241,7 @@ public class MyTeamFragment extends Fragment {
         else if (userType.equals("coach")){
             String json = cacheHandler.getUserJson();
             Log.d(TAG, "CurrentUser from cache: " + json);
+
             if (json == null){
                 Log.d(TAG, "LOGGING USER OUT");
                 FirebaseAuth.getInstance().signOut();
@@ -230,12 +250,14 @@ public class MyTeamFragment extends Fragment {
                 //remove user, user uid, user's type, teammates, and notifications from the cache
                 cacheHandler.removeCachedUserFields();
                 cacheHandler.removeCachedNotificationFields();
+                cacheHandler.removeCachedEvents();
                 cacheHandler.removeCachedTeammates();
                 cacheHandler.commitToCache();
                 Intent i= new Intent(getActivity().getApplicationContext(), WelcomeActivity.class);
                 getActivity().startActivity(i);
                 return;
             }
+
             Coach currentUser = gson.fromJson(json, Coach.class);
             nameText.setText(currentUser.getName());
             teamNameText.setText(currentUser.getTeam());

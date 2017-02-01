@@ -30,7 +30,6 @@ import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Guest;
-import com.mistapp.mistandroid.model.MistData;
 
 public class LogInAuth extends AppCompatActivity implements View.OnClickListener {
 
@@ -257,6 +256,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 (currentUser).getArt(),
                 (currentUser).getSports(),
                 (currentUser).getBrackets(),
+                (currentUser).getWriting(),
                 (currentUser).getKnowledge()
         };
 

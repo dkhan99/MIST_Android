@@ -1,0 +1,43 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="2dp"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/event_top_row"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:text="time - name"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_name_and_time"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/event_bottom_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_below="@+id/event_top_row">
+
+    <TextView
+        android:text="location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_location" />
+    <TextView
+        android:text="room num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/event_room_num"
+        android:layout_toRightOf="@+id/event_location"
+        android:layout_marginLeft="15dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

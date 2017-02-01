@@ -62,7 +62,7 @@ public class MyMistActivity extends AppCompatActivity {
 
     private BottomBar bottomBar;
     private Bundle args;
-    private MapFragment mapFragment;
+    private MyMapFragment myMapFragment;
     private CompetitionsFragment competitionsFragment;
     private MyMistFragment myMistFragment;
     private GuestMistFragment guestMistFragment;
@@ -125,7 +125,7 @@ public class MyMistActivity extends AppCompatActivity {
         };
 
 
-        mapFragment = new MapFragment();
+        myMapFragment = new MyMapFragment();
         competitionsFragment = new CompetitionsFragment();
         myMistFragment = new MyMistFragment();
         guestMistFragment = new GuestMistFragment();
@@ -156,7 +156,7 @@ public class MyMistActivity extends AppCompatActivity {
                 transaction = getSupportFragmentManager().beginTransaction();
 
                 if (tabId == R.id.tab_map) {
-                    transaction.replace(R.id.fragment_container, mapFragment);
+                    transaction.replace(R.id.fragment_container, myMapFragment);
                 }
                 if (tabId == R.id.tab_competitions) {
                     transaction.replace(R.id.fragment_container, competitionsFragment);
