@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/program_of_events_text"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -67,6 +68,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
     <TextView
         android:id="@+id/important_contacts_text"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/program_of_events_layout"
@@ -92,29 +94,28 @@
 
         <Button
             android:text="@string/text_mist_hotline"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textAlignment="viewStart"
             android:id="@+id/helpLine"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/button"
-            android:layout_alignParentEnd="true" />
+            android:layout_margin="5dp"
+            android:drawableEnd="@drawable/ic_local_phone_black_24dp"
+            android:background="@drawable/green_contact_button"/>
 
         <Button
             android:text="@string/text_campus_police"
-            android:layout_width="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textAlignment="viewStart"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/campusPolice"
             android:layout_below="@+id/helpLine"
-            android:layout_marginTop="62dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/campus"
-            android:layout_alignParentEnd="true" />
+            android:drawableEnd="@drawable/ic_local_phone_black_24dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/pink_contact_button"/>
 
     </RelativeLayout>
 </RelativeLayout>
