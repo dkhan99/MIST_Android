@@ -256,6 +256,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 (currentUser).getArt(),
                 (currentUser).getSports(),
                 (currentUser).getBrackets(),
+                (currentUser).getWriting(),
                 (currentUser).getKnowledge()
         };
 
