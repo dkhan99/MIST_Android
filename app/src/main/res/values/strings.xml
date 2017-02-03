@@ -44,6 +44,18 @@
     <string name="teammates">teammates</string>
     <string name="events">events</string>
 
+    <string name="guest_info_1">The Muslim Interscholastic Tournament of Atlanta (MIST) is a fun, educational,
+        interactive program of competitions and workshops designed to bring Muslim and non-Muslim high school
+        students together from around the nation to develop leadership, communication, and other creative skills
+        in order to develop a strong personal identity.
+    </string>
+
+    <string name="guest_learn_more">Learn more at: \n www.mistatlanta.com</string>
+
+    <string name="guest_info_2">
+        Our mission is to unite high school students together in order to create a growing environment in which leadership,
+        communication, and creative skills are developed all while gaining a more intellectual understanding of Islam.
+        These environments thrive during our annual regional and national tournaments.</string>
 
     <string name="app_package_name">com.mistapp.mistandroid</string>
 
