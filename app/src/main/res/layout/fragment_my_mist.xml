@@ -23,32 +23,6 @@
         android:layout_centerHorizontal="true"
         >
 
-        <!--<RelativeLayout-->
-            <!--android:id="@+id/radio_button_layout"-->
-            <!--android:layout_marginTop="20dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true">-->
-
-
-            <!--<Button-->
-                <!--android:id="@+id/my_team_radio_btn"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="My Team"-->
-                <!--android:textColor="#E6E6E6"-->
-                <!--android:background="@drawable/radio_button_selected"/>-->
-
-            <!--<Button-->
-                <!--android:id="@+id/my_schedule_radio_btn"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="My Schedule"-->
-                <!--android:textColor="@color/mistRed"-->
-                <!--android:layout_toRightOf="@+id/my_team_radio_btn"-->
-                <!--android:background="@drawable/radio_button_unselected"/>-->
-        <!--</RelativeLayout>-->
-
         <RadioGroup
             android:layout_marginTop="20dp"
             android:id="@+id/radioGroup"

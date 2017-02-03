@@ -1,5 +1,8 @@
 package com.mistapp.mistandroid.model;
 
+import android.content.Intent;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -13,7 +16,7 @@ public class Event implements Comparable<Event>{
     private String location; //building name
     private String date;     // eg: '03/17'
     private String duration; // eg: '2hr30min'
-    private int roomNumber;
+    private ArrayList<Long> roomNumbers;
     private String time;     // '11:20am'
 
     public Event(){
@@ -21,16 +24,19 @@ public class Event implements Comparable<Event>{
         this.location = "location";
         this.date = "date";
         this.duration = "duration";
-        this.roomNumber = 3;
+        ArrayList l = new ArrayList<Long>();
+        l.add(302);
+        l.add(230);
+        this.roomNumbers = l;
         this.time = "time";
     }
 
-    public Event(String name, String location, String date, String duration, int roomNumber, String time){
+    public Event(String name, String location, String date, String duration, ArrayList<Long> roomNumbers, String time){
         this.name = name;
         this.location = location;
         this.date = date;
         this.duration = duration;
-        this.roomNumber = roomNumber;
+        this.roomNumbers = roomNumbers;
         this.time = time;
     }
 
@@ -75,8 +81,8 @@ public class Event implements Comparable<Event>{
         return duration;
     }
 
-    public int getRoomNumber() {
-        return roomNumber;
+    public ArrayList<Long> getRoomNumbers() {
+        return roomNumbers;
     }
 
     public String getTime() {

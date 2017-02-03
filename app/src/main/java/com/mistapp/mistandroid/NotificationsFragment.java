@@ -78,6 +78,8 @@ public class NotificationsFragment extends Fragment {
 
             Log.d(TAG, "Showing x notifications: " +notificationArray.size() );
             Log.d(TAG, "Showing notifications: " +jsonList );
+            TextView noNotificationsText = (TextView)view.findViewById(R.id.no_notifications_text);
+            noNotificationsText.setVisibility(View.INVISIBLE);
 
             //Set listview's adapter and set onClickListener
             NotificationAdapter listAdapter = new NotificationAdapter(getActivity(), notificationArray);
@@ -88,6 +90,9 @@ public class NotificationsFragment extends Fragment {
         }
         else{
             Log.d(TAG, "No notifications exist- cannot show anything here");
+            TextView noNotificationsText = (TextView)view.findViewById(R.id.no_notifications_text);
+            noNotificationsText.setVisibility(View.VISIBLE);
+
         }
 
 
