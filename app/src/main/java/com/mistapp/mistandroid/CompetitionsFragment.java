@@ -94,12 +94,13 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         }
 
         if (view == viewRulebookButton) {
-            final String competitionPicked = competitionPicker.getSelectedItem().toString();
-            String url = rulebookUrls.get(competitionPicked);
-            Log.d(TAG, "URL CHOSEN: " + url);
+
             viewRulebookButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String competitionPicked = competitionPicker.getSelectedItem().toString();
+                    String url = rulebookUrls.get(competitionPicked);
+                    Log.d(TAG, "URL CHOSEN: " + url);
                     getActivity().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(rulebookUrls.get(competitionPicked))));
                 }
             });
@@ -122,18 +123,8 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         rulebookUrls.put("Sister’s Basketball","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dd603596e0fcbc0e989/1485667798080/Basketball.pdf");
         rulebookUrls.put("Brother’s Basketball","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dd603596e0fcbc0e989/1485667798080/Basketball.pdf");
 
-        rulebookUrls.put("Knowledge Test - Book 1","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
-        rulebookUrls.put("Knowledge Test - Book 2","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
-        rulebookUrls.put("Knowledge Test - Book 3","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
-        rulebookUrls.put("Knowledge Test - Book 4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
-        rulebookUrls.put("Sister’s Quran Level 1","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Sister’s Quran Level 2","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Sister’s Quran Level 3","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Sister’s Quran Level 4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Brother’s Quran Level 1","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Brother’s Quran Level 2","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Brother’s Quran Level 3","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
-        rulebookUrls.put("Brother’s Quran Level 4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
+        rulebookUrls.put("Knowledge Tests - Book 1-4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e242e69cf76b7569607/1485667876517/Knowledge+Tests.pdf");
+        rulebookUrls.put("Quran Level 1-4","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
         rulebookUrls.put("2D Art","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7db9bebafb21325bd50f/1485667770165/2D+Art.pdf");
         rulebookUrls.put("3D Art","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dbfff7c501134731a67/1485667775113/3D+Art.pdf");
         rulebookUrls.put("Fashion","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1146c3c4023d82d555/1485667858578/Fashion+Design.pdf");

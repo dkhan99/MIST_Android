@@ -2,16 +2,8 @@
 <resources>
 
     <array name="competitions">
-        <item>Knowledge Test - Book 1</item>
-        <item>Knowledge Test - Book 2</item>
-        <item>Knowledge Test - Book 3</item>
-        <item>Knowledge Test - Book 4</item>
-        <item>Sister’s Quran Level 1</item>
-        <item>Sister’s Quran Level 2</item>
-        <item>Sister’s Quran Level 3</item>
-        <item>Brother’s Quran Level 1</item>
-        <item>Brother’s Quran Level 2</item>
-        <item>Brother’s Quran Level 3</item>
+        <item>Knowledge Tests - Book 1-4</item>
+        <item>Quran Level 1-4</item>
 
         <item>2D Art</item>
         <item>3D Art</item>
@@ -42,8 +34,8 @@
         <item>Social Media</item>
         <item> Mobile Applications</item>
 
-        <item>*Sister’s Basketball</item>
-        <item>*Brother’s Basketball</item>
+        <item>Sister’s Basketball</item>
+        <item>Brother’s Basketball</item>
     </array>
 
 
