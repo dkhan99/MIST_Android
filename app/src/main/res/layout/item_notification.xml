@@ -2,15 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="horizontal"
-    android:weightSum="2"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp"
+    android:weightSum="100"
+    android:padding="10dp"
     android:layout_height="match_parent" >
 
     <ImageView
         android:id="@+id/notification_star"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:tint="@color/mistRed"
         android:src="@drawable/ic_star_black_24dp"
         android:visibility="invisible"
         android:paddingRight="10dp"
@@ -18,18 +19,33 @@
 
     <TextView
         android:id="@+id/notification_text"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:layout_weight="53"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textSize="20dp"
-        android:text="Text" />
+        android:text="Lunch will be served at" />
     <TextView
         android:id="@+id/notification_time"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="32"
         android:layout_gravity="end"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textAlignment="viewEnd"
         android:textSize="20dp"
-        android:text="Time" />
+        android:text="35 minutes ago" />
+
+    <ImageView
+        android:id="@+id/notification_arrow"
+        android:layout_width="0dp"
+        android:layout_weight="7"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
+        android:paddingLeft="8dp"
+        />
+
 </LinearLayout>
