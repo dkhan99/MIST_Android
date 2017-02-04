@@ -43,6 +43,7 @@
     <string name="num_unread_notifications">num_unread_notifications</string>
     <string name="notifications">notifications</string>
     <string name="teammates">teammates</string>
+    <string name="events">events</string>
 
 
     <string name="app_package_name">com.mistapp.mistandroid</string>

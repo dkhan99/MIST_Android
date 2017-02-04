@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.mistapp.mistandroid.model.Event;
 import com.mistapp.mistandroid.model.Teammate;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -67,6 +69,7 @@ public class CacheHandler {
 
     }
 
+
     public void cacheNotifications(String jsonArray){
         editor.putString(context.getString(R.string.notifications), jsonArray);
     }
@@ -93,6 +96,22 @@ public class CacheHandler {
     public void cacheAllNotificationFields(String jsonArray, int unread){
         cacheNotifications(jsonArray);
         cacheNumUnreadNotifications(unread);
+    }
+
+
+    public void cacheEvents(ArrayList<Event> events){
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(events);
+        editor.putString(context.getString(R.string.events), jsonArray);
+    }
+
+    public String getCachedEventsJson(){
+        return sharedPref.getString(context.getString(R.string.events), "");
+    }
+
+    public void removeCachedEvents(){
+        editor.remove(context.getString(R.string.events));
+        editor.commit();
     }
 
     public void cacheTeammates(ArrayList<Teammate> teammates){
