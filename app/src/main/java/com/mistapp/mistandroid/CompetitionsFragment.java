@@ -88,8 +88,12 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
             String competitionPicked = competitionPicker.getSelectedItem().toString();
             String url = bracketUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
-            // add code to view the pdf
-
+           /** viewRulebookButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().startActivity(new Intent(Intent.ACTION_VIEW, )));
+                }
+            }); **/
         }
 
         if (view == viewRulebookButton) {
