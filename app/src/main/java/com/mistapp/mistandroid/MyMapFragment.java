@@ -69,6 +69,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
         }
+
         if (googleServicesAvailable()) {
             Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();

@@ -61,6 +61,7 @@ public class NotificationAdapter extends ArrayAdapter {
         return convertView;
     }
 
+
     public void setText(ViewHolder viewHolder, Notification currentNotification){
         viewHolder.text.setText(currentNotification.getTitle());
         if (currentNotification.getSeen() == false){

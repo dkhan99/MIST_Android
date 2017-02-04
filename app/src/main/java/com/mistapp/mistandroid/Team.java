@@ -37,9 +37,9 @@ public class Team extends ActionBarActivity {
         recycler1.addItemDecoration(dividerItemDecoration);
         mAdapter = new FirebaseRecyclerAdapter<Coach, PersonHolder>(Coach.class, android.R.layout.two_line_list_item, PersonHolder.class, ref) {
             @Override
-            public void populateViewHolder(PersonHolder chatMessageViewHolder, Coach coach, int position) {
-                chatMessageViewHolder.setName(coach.getName());
-                chatMessageViewHolder.setText(coach.getMistId());
+            public void populateViewHolder(PersonHolder ViewHolder, Coach coach, int position) {
+                ViewHolder.setName(coach.getName());
+                ViewHolder.setText(coach.getMistId());
             }
         };
         recycler1.setAdapter(mAdapter);
@@ -55,9 +55,9 @@ public class Team extends ActionBarActivity {
 
         mAdapter2 = new FirebaseRecyclerAdapter<Competitor, PersonHolder>(Competitor.class, android.R.layout.two_line_list_item, PersonHolder.class, mref) {
             @Override
-            public void populateViewHolder(PersonHolder chatMessageViewHolder, Competitor competitor, int position) {
-                chatMessageViewHolder.setName(competitor.getName());
-                chatMessageViewHolder.setText(competitor.getMistId());
+            public void populateViewHolder(PersonHolder ViewHolder, Competitor competitor, int position) {
+                ViewHolder.setName(competitor.getName());
+                ViewHolder.setText(competitor.getMistId());
             }
         };
         recycler2.setAdapter(mAdapter2);

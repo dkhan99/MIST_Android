@@ -59,7 +59,7 @@ public class MyMistActivity extends AppCompatActivity {
     public static boolean isInForeground;
 
     private static final String TAG = LogInAuth.class.getSimpleName();
-
+    private static final String comp = "math";
     private BottomBar bottomBar;
     private Bundle args;
     private MyMapFragment myMapFragment;
@@ -208,6 +208,9 @@ public class MyMistActivity extends AppCompatActivity {
         isInForeground = false;
     }
 
+    public void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
 
     //at this time, the actual new notification will have been added to shared preferences
     public void updateBottomBarNotifications(){
