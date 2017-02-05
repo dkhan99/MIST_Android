@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+
+import static com.mistapp.mistandroid.R.id.brackets;
 
 public class CompetitionsFragment extends Fragment implements View.OnClickListener{
 
@@ -89,8 +93,15 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
             String competitionPicked = competitionPicker.getSelectedItem().toString();
             String url = bracketUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
-            // add code to view the pdf
-
+            Fragment fragment = new Brackets();
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            Bundle args = new Bundle();
+            args.putString("PARAM", url);
+            fragment.setArguments(args);
+            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         }
 
         if (view == viewRulebookButton) {
@@ -151,12 +162,12 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
 
     //dummy values - need actual urls
     public void updateBracketUrls() {
-        bracketUrls.put("Debate", "1");
-        bracketUrls.put("Math Olympics", "2");
-        bracketUrls.put("MIST Quiz Bowl", "3");
-        bracketUrls.put("Sister’s Improv", "4");
-        bracketUrls.put("Brother’s Improv", "5");
-        bracketUrls.put("Sister’s Basketball", "6");
-        bracketUrls.put("Brother’s Basketball", "7");
+        bracketUrls.put("Debate", "Debate");
+        bracketUrls.put("Math Olympics", "MathOlympics");
+        bracketUrls.put("MIST Quiz Bowl", "QuizBowl");
+        bracketUrls.put("Sister’s Improv", "SisterImprov");
+        bracketUrls.put("Brother’s Improv", "BrotherImprov");
+        bracketUrls.put("Sister’s Basketball", "SistersBasketball");
+        bracketUrls.put("Brother’s Basketball", "BrothersBasketball");
     }
 }

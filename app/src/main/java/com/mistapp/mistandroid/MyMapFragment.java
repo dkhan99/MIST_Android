@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,10 +69,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
         }
+
         if (googleServicesAvailable()) {
             Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
-            initMap();
+            if (mGoogleApiClient != null) {
+                Log.i("mGoogleApiClient", " google api client it's not null!");
+                mGoogleApiClient.connect();
+                initMap();
+            }
         } else {
             //No Google Maps Layout
         }
@@ -124,31 +130,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
-        mGoogleApiClient.connect();
-        //double lat = 33.955466;
-        //double lng = -83.374311;
-        //goToLocationZoom(lat, lng, 17);
 
-        Criteria criteria = new Criteria();
         LocationManager lm = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        String bestProvider = String.valueOf(lm.getBestProvider(criteria, true)).toString();
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
             Log.e("TAG", "GPS is on");
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            //Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
-        }
-        else{
-            //This is what you need:
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-            MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(longitude,latitude));
-            mGoogleMap.addMarker(Caldwell);
-
+            //debugging: Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
         }
         addMarkers();
 
@@ -176,35 +165,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         chapelMarker = mGoogleMap.addMarker(Chapel);
         northHallMarker = mGoogleMap.addMarker(NorthHall);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
-        /**
-        heartyMarker.showInfoWindow();
-        chapelMarker.showInfoWindow();
-        northHallMarker.showInfoWindow();
-        caldwellMarker.showInfoWindow();
-         */
-    }
-
-    /**
-     * Goes to any location in the world
-     * @param lat
-     * @param lng
-     */
-    private void goToLocation(double lat, double lng) {
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLng(ll);
-        mGoogleMap.moveCamera(update);
-    }
-
-    /**
-     * Goes to any location in the world and zooms in a set amount
-     * @param lat
-     * @param lng
-     * @param zoom
-     */
-    private void goToLocationZoom(double lat, double lng, float zoom) {
-        LatLng ll = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
-        mGoogleMap.moveCamera(update);
     }
 
 
@@ -214,6 +174,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(50000);
 
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(),
@@ -235,13 +197,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             markerOptions.title("Current Position");
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
             currLocationMarker = mGoogleMap.addMarker(markerOptions);
-            /**
-            currLocationMarker.showInfoWindow();
-            heartyMarker.showInfoWindow();
-            chapelMarker.showInfoWindow();
-            northHallMarker.showInfoWindow();
-            caldwellMarker.showInfoWindow();
-             */
 
         }
 
@@ -253,8 +208,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
-
-
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -263,15 +216,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        Toast.makeText(getContext(),"buildGoogleApiClient",Toast.LENGTH_SHORT).show();
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
     }
 
     /**
@@ -318,12 +262,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         chapelMarker = mGoogleMap.addMarker(Chapel);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
         northHallMarker = mGoogleMap.addMarker(NorthHall);
-       /** heartyMarker.showInfoWindow();
-        chapelMarker.showInfoWindow();
-        caldwellMarker.showInfoWindow();
-        northHallMarker.showInfoWindow();
-        */
-
         // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
 
         //zoom to current position:
@@ -333,8 +271,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         mGoogleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
 
-        //If you only need one location, unregister the listener
-        //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     protected void createLocationRequest() {
@@ -348,6 +284,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public void onResume() {
         super.onResume();
+
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
