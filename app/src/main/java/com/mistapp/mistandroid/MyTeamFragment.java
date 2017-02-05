@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
+import com.mistapp.mistandroid.model.Event;
 import com.mistapp.mistandroid.model.Notification;
 import com.mistapp.mistandroid.model.Teammate;
 import com.mistapp.mistandroid.model.User;
@@ -37,6 +38,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -96,7 +98,7 @@ public class MyTeamFragment extends Fragment {
             Log.d(TAG, "teammates are not cached. getting from db, and adding to cache");
             //get teammates from database -> populate view, and add to cache
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            ref = mDatabase.child("team");
+            ref = mDatabase.child(getResources().getString(R.string.firebase_team_table));
 
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -138,6 +140,10 @@ public class MyTeamFragment extends Fragment {
                     cacheHandler.cacheTeammates(allTeammates);
                     cacheHandler.commitToCache();
 
+                    //sorts teammates by name
+                    Collections.sort(teammateList, Teammate.TeammateNameComparator);
+                    Collections.sort(coachList, Teammate.TeammateNameComparator);
+
                     MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
                     MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
                     ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
@@ -170,6 +176,11 @@ public class MyTeamFragment extends Fragment {
                     coachList.add(currentTeammate);
                 }
             }
+            
+            //sorts teammates by name
+            Collections.sort(teammateList, Teammate.TeammateNameComparator);
+            Collections.sort(coachList, Teammate.TeammateNameComparator);
+
             MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
             MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
             ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);

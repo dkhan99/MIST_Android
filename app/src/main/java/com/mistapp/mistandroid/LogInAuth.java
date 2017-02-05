@@ -84,7 +84,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
 
                     cacheHandler.cacheUserUid(user.getUid());
                     cacheHandler.commitToCache();
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
@@ -170,7 +170,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             final String uid = user.getUid();
                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                            final DatabaseReference ref = mDatabase.child("registered-user");
+                            final DatabaseReference ref = mDatabase.child(getResources().getString(R.string.firebase_registered_user_table));
 
                             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -220,6 +220,8 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
 
                                     } else{
                                         Log.d(TAG, "Login failure");
+                                        Toast.makeText(context, "Authentication failed",
+                                                Toast.LENGTH_SHORT).show();
                                     }
 
 
@@ -265,6 +267,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
             if (!competition.equals("")) {
                 Log.d(TAG, "COMP NAME: "+competition);
                 String underScoreCompName = competition.replaceAll(" ", "_");
+                underScoreCompName = underScoreCompName.replaceAll("'", "_");
                 FirebaseMessaging.getInstance().subscribeToTopic(underScoreCompName);
             }
         }

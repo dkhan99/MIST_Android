@@ -101,7 +101,7 @@ public class MyScheduleFragment extends Fragment {
 
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            ref = mDatabase.child("event");
+            ref = mDatabase.child(getResources().getString(R.string.firebase_event_table));
 
             //for each competition that the user has registered for, retreive it from db, create event object, and add to listview
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -116,6 +116,7 @@ public class MyScheduleFragment extends Fragment {
 
                         DataSnapshot currentEventSnapshot = dataSnapshot.child(competition).child("locationArray");
                         Log.d(TAG,currentEventSnapshot.toString());
+                        Log.d(TAG,competition + " ----");
                         Object eventListObject = (Object)currentEventSnapshot.getValue();
                         Log.d(TAG,eventListObject.toString());
                         ArrayList<HashMap> eventList = (ArrayList<HashMap>)(eventListObject);
