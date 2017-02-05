@@ -8,16 +8,31 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="@dimen/activity_no_action_bar_vertical_margin"
+    style="@style/mist_red_background"
     tools:context="com.mistapp.mistandroid.LogInAuth">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".3">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="100dp"
-        app:srcCompat="@mipmap/original_logo"
+        app:srcCompat="@drawable/final_official_logo"
         android:id="@+id/imageView2" />
+
+    </RelativeLayout>
     <!-- Login progress -->
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight=".7">
+
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -25,12 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
-
-    <ScrollView
-        android:id="@+id/login_form"
-        android:layout_width="match_parent"
-        android:layout_height="340dp"
-        android:orientation = "vertical">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -41,62 +50,59 @@
             android:layout_centerVertical = "true" >
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                style="@style/login_register_text_input_layout">
 
-                <android.support.design.widget.TextInputEditText
+            <android.support.design.widget.TextInputEditText
                     android:id="@+id/log_in_email"
+                    android:background="@drawable/edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="start"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
+                style="@style/login_register_text_input_layout">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/log_in_password"
+                android:background="@drawable/edit_text"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/log_in_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true" />
-
+                android:layout_height="match_parent"
+                android:hint="@string/prompt_password"
+                android:textColorHint="@color/white"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/action_sign_in_short"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:layout_centerVertical="true"
+                android:ellipsize="start"
+                android:singleLine="true"
+                />
             </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold"
-                android:background="@drawable/button"
-                android:onClick="goRulebook"/>
 
             <TextView
-                android:paddingTop="75px"
-                android:textColor= "#FF0000"
+                android:id="@+id/email_sign_in_text"
+                android:text="@string/action_login"
+                android:clickable="true"
+                style="@style/login_register_submit_text"
+                />
+
+            <TextView
                 android:textAlignment ="center"
-                android:textSize = "65px"
-                android:text = "Havn't created an account yet? \n Register here"
+                android:text = "Haven't created an account yet? \n Register here"
                 android:id = "@+id/textViewSignin"
-                android:layout_width="match_parent"
-                android:layout_height = "wrap_content"
-                android:onClick="goRegAuth"/>
+                style="@style/switch_login_register_text"
+                />
             
         </LinearLayout>
-    </ScrollView>
-
+    </RelativeLayout>
 
 </LinearLayout>

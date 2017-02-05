@@ -52,7 +52,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private EditText mEmailView;
     private EditText mPasswordView;
     private EditText mMISTIdView;
-    private Button mRegisterButton;
+    private TextView mRegisterText;
     private TextView mtextViewRegister;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -103,12 +103,12 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         mEmailView = (TextInputEditText) findViewById(R.id.email);
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
         mMISTIdView = (TextInputEditText) findViewById(R.id.mist_id);
-        mRegisterButton = (Button) findViewById(R.id.email_register_button);
+        mRegisterText = (TextView) findViewById(R.id.email_register_text);
 
         mtextViewRegister = (TextView)findViewById(R.id.textViewSignin);
 
         //attaching listeners to button and link
-        mRegisterButton.setOnClickListener(this);
+        mRegisterText.setOnClickListener(this);
         mtextViewRegister.setOnClickListener(this);
     }
 
@@ -118,7 +118,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View view) {
-        if (view == mRegisterButton) {
+        if (view == mRegisterText) {
             attemptRegister();
         }
         if (view == mtextViewRegister) {

@@ -43,7 +43,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private DataSnapshot currentUserSnapshot;
     private boolean exists;
 
-    private Button mLogInButton;
+    private TextView mLogInText;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -100,11 +100,11 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         //Initialize views
         mEmailView = (TextInputEditText) findViewById(R.id.log_in_email);
         mPasswordView = (TextInputEditText) findViewById(R.id.log_in_password);
-        mLogInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mLogInText = (TextView) findViewById(R.id.email_sign_in_text);
         mtextView = (TextView) findViewById(R.id.textViewSignin);
 
         //Listen for user clicks on the button and hyperlink
-        mLogInButton.setOnClickListener(this);
+        mLogInText.setOnClickListener(this);
         mtextView.setOnClickListener(this);
     }
 
@@ -114,7 +114,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
      */
     @Override
     public void onClick(View view) {
-        if (view == mLogInButton) {
+        if (view == mLogInText) {
             attemptSignIn();
         }
 

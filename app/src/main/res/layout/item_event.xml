@@ -1,6 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="2dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="2dp"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -11,6 +13,7 @@
 
     <TextView
         android:text="time - name"
+        android:textColor="@color/mistRed"
         android:textSize="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,20 +26,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
+        android:layout_marginTop="5dp"
         android:layout_below="@+id/event_top_row">
 
     <TextView
         android:text="location"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/event_location" />
     <TextView
         android:text="room num"
+        android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/event_room_num"
         android:layout_toRightOf="@+id/event_location"
-        android:layout_marginLeft="15dp"/>
+        android:layout_marginLeft="8dp"/>
 
     </RelativeLayout>
 
