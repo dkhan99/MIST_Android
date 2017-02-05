@@ -87,7 +87,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                     //save user's uid in shared preferences
                     cacheHandler.cacheUserUid(user.getUid());
                     cacheHandler.commitToCache();
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
                     startActivity(intent);
                 } else {  // User is signed out
@@ -248,7 +248,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         final String mistId = mMISTIdView.getText().toString().trim();
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        final DatabaseReference ref = mDatabase.child("user");
+        final DatabaseReference ref = mDatabase.child(getResources().getString(R.string.firebase_user_table));
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -284,8 +284,10 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         Object currentUser = null;
                                         if (currentUserType.equals("competitor")) {
                                             currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                            subscribeToCompetitorTopics((Competitor)currentUser);
                                         } else if (currentUserType.equals("coach")){
                                             currentUser = currentUserSnapshot.getValue(Coach.class);
+                                            subscribeToCoachTopics((Coach)currentUser);
                                         } else if (currentUserType.equals("guest")){
                                             currentUser = currentUserSnapshot.getValue(Guest.class);
                                         }
@@ -293,7 +295,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                                         //Saving to Database
                                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                         String uid = user.getUid();
-                                        mDatabase.child("registered-user").child(uid).setValue(currentUser);
+                                        mDatabase.child(getResources().getString(R.string.firebase_registered_user_table)).child(uid).setValue(currentUser);
                                         Log.d(TAG, "user added to database: " + currentUser.toString());
 
                                         cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
@@ -318,6 +320,53 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
         });
+    }
+
+
+    //subscribe to team name, competitions, and "competitor"
+    public void subscribeToCompetitorTopics(Competitor currentUser){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentUser.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic(underScoreTeamName);
+        Log.d(TAG, "TEAM NAME: "+underScoreTeamName);
+
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().subscribeToTopic("competitor");
+
+        String[] compArray = {
+                (currentUser).getGroupProject(),
+                (currentUser).getArt(),
+                (currentUser).getSports(),
+                (currentUser).getBrackets(),
+                (currentUser).getWriting(),
+                (currentUser).getKnowledge()
+        };
+
+        //subscribe to user's competitions (replaces spaces with underscores in competition name)
+        for (String competition: compArray){
+            if (!competition.equals("")) {
+                Log.d(TAG, "COMP NAME: "+competition);
+                String underScoreCompName = competition.replaceAll(" ", "_");
+                underScoreCompName = underScoreCompName.replaceAll("'", "_");
+                FirebaseMessaging.getInstance().subscribeToTopic(underScoreCompName);
+            }
+        }
+    }
+
+    //suscribes to team name and "coach"
+    public void subscribeToCoachTopics(Coach currentCoach){
+
+        //subscribe to the current user's team name (replaces spaces with underscores in team name)
+        String teamName = currentCoach.getTeam();
+        String underScoreTeamName = teamName.replaceAll(" ", "_");
+        FirebaseMessaging.getInstance().subscribeToTopic(underScoreTeamName);
+
+        //subscribe to the current user type
+        FirebaseMessaging.getInstance().subscribeToTopic("coach");
+
     }
 
     /**
