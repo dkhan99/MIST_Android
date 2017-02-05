@@ -5,40 +5,48 @@
     android:orientation="vertical"
     android:background="@android:color/background_light">
     <LinearLayout
+        android:background="@drawable/notification_popup_background"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:layout_margin="1dp"
-        android:background="@android:color/darker_gray">
+
         >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:scaleX="1.2"
-                android:scaleY="1.2"
-                android:src="@mipmap/original_logo" />
+
+
             <TextView
                 android:id="@+id/popup_title"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:layout_width="fill_parent"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Title" />
             <TextView
-                android:id="@+id/popup_body"
-                android:layout_width="fill_parent"
+                android:id="@+id/popup_time"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="body"/>
+                android:text="time"/>
+
+            <TextView
+                android:id="@+id/popup_body"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="This is the body of the message"/>
             <Button
                 android:id="@+id/dismiss"
-                android:layout_marginTop="20dp"
-                android:layout_width="fill_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/notification_popup_dismiss_button"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dismiss" />
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

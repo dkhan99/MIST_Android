@@ -9,16 +9,20 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -39,19 +43,31 @@ public class NotificationsFragment extends Fragment {
     LayoutInflater currentInflater;
     ViewGroup currentContainer;
     private CacheHandler cacheHandler;
+    int layoutHeight;
+    int layoutWidth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        getActivity().setTitle("Notifications");
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
-        
+
+
         currentInflater = inflater;
         currentContainer = container;
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
+//        RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.notification_list_layout);
+        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+        layoutWidth = metrics.widthPixels;
+        layoutHeight = metrics.heightPixels;
+//        layoutHeight = layout.getHeight();
+//        layoutWidth = layout.getWidth();
         notifications_lv = (ListView)view.findViewById(R.id.notification_list);
 
         //retreive notifications from shared preferences
@@ -62,6 +78,8 @@ public class NotificationsFragment extends Fragment {
 
             Log.d(TAG, "Showing x notifications: " +notificationArray.size() );
             Log.d(TAG, "Showing notifications: " +jsonList );
+            TextView noNotificationsText = (TextView)view.findViewById(R.id.no_notifications_text);
+            noNotificationsText.setVisibility(View.INVISIBLE);
 
             //Set listview's adapter and set onClickListener
             NotificationAdapter listAdapter = new NotificationAdapter(getActivity(), notificationArray);
@@ -72,6 +90,9 @@ public class NotificationsFragment extends Fragment {
         }
         else{
             Log.d(TAG, "No notifications exist- cannot show anything here");
+            TextView noNotificationsText = (TextView)view.findViewById(R.id.no_notifications_text);
+            noNotificationsText.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -102,7 +123,8 @@ public class NotificationsFragment extends Fragment {
 
                 String titleText = clickedNotification.getTitle();
                 String bodyText = clickedNotification.getBody();
-                initiatePopupWindow(titleText, bodyText);
+                String timeText = (String)((TextView)view.findViewById(R.id.notification_time)).getText();
+                initiatePopupWindow(titleText, bodyText, timeText);
 
                 Gson gson = new Gson();
                 String jsonArray = gson.toJson(notificationArray);
@@ -124,19 +146,27 @@ public class NotificationsFragment extends Fragment {
         star.setVisibility(View.INVISIBLE);
     }
 
-    private void initiatePopupWindow(String title, String body) {
+    private void initiatePopupWindow(String title, String body, String time) {
         try {
 // We need to get the instance of the LayoutInflater
             View layout = currentInflater.inflate(R.layout.notification_detail,null, false);
-            final PopupWindow pwindo = new PopupWindow(layout, 750, 950, true);
+
+            int widthDimen = (int)(layoutWidth * 8.0 / 10.0);
+            int heightDimen = (int)(layoutHeight * 5.5 / 10.0);
+            Log.d(TAG, "DIMEN WIDTH: "+widthDimen);
+            Log.d(TAG, "DIMEN HAIGHT: "+heightDimen);
+            final PopupWindow pwindo = new PopupWindow(layout, widthDimen, heightDimen, true);
+
             pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
             Button btnClosePopup = (Button) layout.findViewById(R.id.dismiss);
             TextView titleTextView = (TextView)layout.findViewById(R.id.popup_title);
             TextView bodyTextView = (TextView)layout.findViewById(R.id.popup_body);
+            TextView timeText = (TextView)layout.findViewById(R.id.popup_time);
 
             titleTextView.setText(title);
             bodyTextView.setText(body);
+            timeText.setText(time);
             Log.d(TAG, "Values should change: "+ title + " "+body);
             btnClosePopup.setOnClickListener(new View.OnClickListener() {
                 @Override

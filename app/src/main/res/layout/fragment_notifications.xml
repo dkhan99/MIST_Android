@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/notification_test_text"
-        android:layout_marginTop="40dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Notifications"
-        android:textSize="40dp"/>
+    android:layout_height="match_parent"
+    android:id="@+id/notification_list_layout">
 
     <ListView
         android:layout_marginTop="20dp"
         android:id="@+id/notification_list"
         android:layout_width="match_parent"
-        android:layout_below="@+id/notification_test_text"
         android:layout_height="wrap_content">
     </ListView>
 
+    <TextView
+        android:id="@+id/no_notifications_text"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Notifications to Show"
+        android:textSize="23dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        />
 
 </RelativeLayout>

@@ -3,15 +3,66 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/mistRed</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="mist_red_background">
+        <item name="android:background">@color/mistRed</item>
+    </style>
+
+    <!--on welcome page, text of competitor, coach, or guest-->
+    <style name="welcome_user_type_text">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">40dp</item>
+        <item name="android:layout_marginTop">18dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <!--In login and registering page, the edit text views that the user types info in-->
+    <style name="login_register_text_input_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:layout_marginLeft">40dp</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginRight">40dp</item>
+    </style>
+
+    <!--'Login' or 'Register' text the user clicks to register or login-->
+    <style name="login_register_submit_text">
+        <item name="android:layout_gravity">center_horizontal</item>
+         <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+         <item name="android:layout_marginTop">40dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">40dp</item>
+    </style>
+
+    <!--Text that asks "already registered?" -> switches from login screen to register screen-->
+    <style name="switch_login_register_text">
+        <item name="android:paddingTop">75px</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">40px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="MyTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="android:windowBackground">@color/mistRed</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
