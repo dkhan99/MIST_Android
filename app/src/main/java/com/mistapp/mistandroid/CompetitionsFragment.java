@@ -57,6 +57,9 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         viewBracketButton.setOnClickListener(this);
         viewRulebookButton.setOnClickListener(this);
 
+        //default value is Mist Bowl (index = 14)
+        competitionPicker.setSelection(14);
+
         competitionPicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
