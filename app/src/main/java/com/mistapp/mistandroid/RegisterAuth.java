@@ -282,6 +282,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
                                         //figure out the type of user, create a respective object, populate its fields from the db, and save to 'registered-user' table
                                         Object currentUser = null;
+                                        Log.d(TAG,"current user type is this: " + currentUserType);
                                         if (currentUserType.equals("competitor")) {
                                             currentUser = currentUserSnapshot.getValue(Competitor.class);
                                             subscribeToCompetitorTopics((Competitor)currentUser);
