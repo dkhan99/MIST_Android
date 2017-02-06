@@ -50,7 +50,7 @@
     <string name="firebase_user_table">mist_2017_user</string>
     <string name="firebase_registered_user_table">mist_2017_registered-user</string>
     <string name="firebase_team_table">mist_2017_team</string>
-
+    <string name="firebase_bracket_table">mist_2017_bracket</string>
 
     <string name="guest_info_1">The Muslim Interscholastic Tournament of Atlanta (MIST) is a fun, educational,
         interactive program of competitions and workshops designed to bring Muslim and non-Muslim high school
@@ -74,6 +74,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_splash">SplashActivity</string>
 
 </resources>
 

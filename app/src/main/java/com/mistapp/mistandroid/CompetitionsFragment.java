@@ -120,7 +120,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
 
     //double check the capitalizations and special characters
     public void updateBracketCompetitions(){
-        bracketCompetitions = new ArrayList<String>(Arrays.asList("Debate", "Math Olympics", "MIST Quiz Bowl",
+        bracketCompetitions = new ArrayList<String>(Arrays.asList("Debate", "Math Olympics", "MIST Bowl",
                 "Sister’s Improv", "Brother’s Improv", "Sister’s Basketball", "Brother’s Basketball"));
     }
 
@@ -128,7 +128,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
     public void updateRulebookUrls(){
         rulebookUrls.put("Debate","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dffbf629abc01d8d25f/1485667840236/Debate.pdf");
         rulebookUrls.put("Math Olympics","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d849dd1758e87f05fdb9b/1485669534042/Math+Olympics.pdf");
-        rulebookUrls.put("MIST Quiz Bowl","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e3db3db2b428d8c2037/1485667901837/Mobile+Applications.pdf");
+        rulebookUrls.put("MIST Bowl","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e3db3db2b428d8c2037/1485667901837/Mobile+Applications.pdf");
         rulebookUrls.put("Sister’s Improv","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1e1b631b0e7cf6d19f/1485667870356/Improv.pdf");
         rulebookUrls.put("Brother’s Improv","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1e1b631b0e7cf6d19f/1485667870356/Improv.pdf");
         rulebookUrls.put("Sister’s Basketball","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dd603596e0fcbc0e989/1485667798080/Basketball.pdf");
@@ -163,11 +163,11 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
     //dummy values - need actual urls
     public void updateBracketUrls() {
         bracketUrls.put("Debate", "Debate");
-        bracketUrls.put("Math Olympics", "MathOlympics");
-        bracketUrls.put("MIST Quiz Bowl", "QuizBowl");
-        bracketUrls.put("Sister’s Improv", "SisterImprov");
-        bracketUrls.put("Brother’s Improv", "BrotherImprov");
-        bracketUrls.put("Sister’s Basketball", "SistersBasketball");
-        bracketUrls.put("Brother’s Basketball", "BrothersBasketball");
+        bracketUrls.put("Math Olympics", "Math Olympics");
+        bracketUrls.put("MIST Bowl", "MIST Bowl");
+        bracketUrls.put("Sister’s Improv", "Sister's Improv");
+        bracketUrls.put("Brother’s Improv", "Brother's Improv");
+        bracketUrls.put("Sister’s Basketball", "Sister's Basketball");
+        bracketUrls.put("Brother’s Basketball", "Brother's Basketball");
     }
 }

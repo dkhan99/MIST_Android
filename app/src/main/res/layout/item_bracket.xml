@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:paddingLeft="2dp"
+
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/bracket_top_row"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="team name"
+            android:textColor="@color/mistRed"
+            android:textSize="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bracket_team_name"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/bracket_bottom_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/bracket_top_row">
+
+        <TextView
+            android:text="Day"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bracket_day" />
+
+        <TextView
+            android:text="time"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bracket_time"
+            android:layout_toRightOf="@+id/bracket_day"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:text="  -  "
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bracket_spacer"
+            android:layout_toRightOf="@id/bracket_time"/>
+
+        <TextView
+            android:text="building"
+            android:layout_toRightOf="@id/bracket_spacer"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bracket_building" />
+        <TextView
+            android:text="room"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bracket_room"
+            android:layout_toRightOf="@+id/bracket_building"
+            android:layout_marginLeft="8dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
