@@ -25,6 +25,7 @@ public class BracketFragment extends Fragment {
 
     private RecyclerView recycler1, recycler2, recycler3, recycler4, recycler5;
     private TextView r1Text, r2Text, r3Text, r4Text, r5Text;
+    private TextView noBracketsText;
     private FirebaseRecyclerAdapter<Bracket, PersonHolder> mAdapter, mAdapter2, mAdapter3, mAdapter4, mAdapter5;
     private String competition;
     private DatabaseReference ref, mref, mreff, mrefff, mreffff;
@@ -39,6 +40,8 @@ public class BracketFragment extends Fragment {
         r3Text = (TextView) view.findViewById(R.id.round3_text);
         r4Text = (TextView) view.findViewById(R.id.round4_text);
         r5Text = (TextView) view.findViewById(R.id.round5_text);
+
+        noBracketsText = (TextView) view.findViewById(R.id.no_brackets_text);
 
         competition = getArguments().getString("PARAM");
         bracketTitle.setText(competition + " Bracket");
@@ -71,6 +74,7 @@ public class BracketFragment extends Fragment {
         };
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
+                noBracketsText.setVisibility(View.GONE);
                 changeRoundName(mAdapter.getItemCount(), r1Text);
             }
         });
@@ -95,6 +99,7 @@ public class BracketFragment extends Fragment {
         };
         mAdapter2.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
+                noBracketsText.setVisibility(View.GONE);
                 changeRoundName(mAdapter2.getItemCount(), r2Text);
             }
         });
@@ -119,6 +124,7 @@ public class BracketFragment extends Fragment {
         };
         mAdapter3.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
+                noBracketsText.setVisibility(View.GONE);
                 changeRoundName(mAdapter3.getItemCount(), r3Text);
             }
         });
@@ -143,6 +149,7 @@ public class BracketFragment extends Fragment {
         };
         mAdapter4.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
+                noBracketsText.setVisibility(View.GONE);
                 changeRoundName(mAdapter4.getItemCount(), r4Text);
             }
         });
@@ -168,10 +175,13 @@ public class BracketFragment extends Fragment {
         };
         mAdapter5.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             public void onItemRangeInserted(int positionStart, int itemCount) {
+                noBracketsText.setVisibility(View.GONE);
                 changeRoundName(mAdapter5.getItemCount(), r5Text);
             }
         });
         recycler5.setAdapter(mAdapter5);
+
+
 
         return view;
     }
@@ -194,7 +204,7 @@ public class BracketFragment extends Fragment {
         }
         //if itemCount > 9, round name stays as is (eg: "Round 1")
     }
-
+    
 
     public static class Bracket {
         private String teamName;
