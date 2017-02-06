@@ -93,7 +93,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
             String competitionPicked = competitionPicker.getSelectedItem().toString();
             String url = bracketUrls.get(competitionPicked);
             Log.d(TAG, "URL CHOSEN: " + url);
-            Fragment fragment = new Brackets();
+            Fragment fragment = new BracketFragment();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             Bundle args = new Bundle();
