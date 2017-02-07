@@ -49,9 +49,25 @@ public class MyTeamAdapter extends ArrayAdapter {
         // Populate the data from the data object via the viewHolder object
         // into the template view.
         viewHolder.name.setText(teammate.getName());
-        viewHolder.phoneNumber.setText(Long.toString(teammate.getPhoneNumber()));
+        String formattedNumber = getFormattedPhoneNumber(teammate.getPhoneNumber());
+        viewHolder.phoneNumber.setText(formattedNumber);
+
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    //format the number with area code + country code
+    private String getFormattedPhoneNumber(long number){
+        String phoneNumber = Long.toString(number);
+        if (phoneNumber.length() == 10){
+            phoneNumber = ( "(" + phoneNumber.substring(0,3) + ")-" + phoneNumber.substring(3,6) + "-" + phoneNumber.substring(6,9));
+        }
+        else if (phoneNumber.length() == 11){
+            phoneNumber = ( "+" + phoneNumber.charAt(0) + "(" + phoneNumber.substring(1,4) + ")-" + phoneNumber.substring(4,7) + "-" + phoneNumber.substring(7,10));
+        }
+        //else ->  keep phone number as is
+        return phoneNumber;
+
     }
 
 }
