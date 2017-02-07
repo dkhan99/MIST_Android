@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
@@ -263,56 +264,86 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 }
                 if (exists){
 
-                    //create auth user
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(RegisterAuth.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                    Query ref1 = mDatabase.child(getResources().getString(R.string.firebase_registered_user_table)).orderByChild("mistId").equalTo(mistId);
+                    ref1.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                Toast.makeText(context, "That MIST ID has already been registered... please try again or contact support",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                //create auth user
+                                mAuth.createUserWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(RegisterAuth.this, new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                                    // Sign in failed- display a message to the user
-                                    if (!task.isSuccessful()) {
-                                        Log.d(TAG, "CreateUserWithEmailAndPass failed", task.getException());
-                                        Toast.makeText(context, "Technical error or user exists... please try again or contact support",
-                                                Toast.LENGTH_SHORT).show();
-                                    // Sucessful sign in. Add user to registered-users database
-                                    } else {
-                                        Log.d(TAG, "createUserWithEmailAndPass succeeded", task.getException());
-                                        String currentUserType = (String)currentUserSnapshot.child("userType").getValue();
+                                                // Sign in failed- display a message to the user
+                                                if (!task.isSuccessful()) {
+                                                    Log.d(TAG, "CreateUserWithEmailAndPass failed", task.getException());
+                                                    Toast.makeText(context, "That email account is already in use... please try again or contact support",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    // Sucessful sign in. Add user to registered-users database
+                                                } else {
+                                                    Log.d(TAG, "createUserWithEmailAndPass succeeded", task.getException());
+                                                    String currentUserType = (String) currentUserSnapshot.child("userType").getValue();
+                                                    String userMistID = "";
+                                                    //figure out the type of user, create a respective object, populate its fields from the db, and save to 'registered-user' table
+                                                    Object currentUser = null;
+                                                    Log.d(TAG, "current user type is this: " + currentUserType);
+                                                    if (currentUserType.equals("competitor")) {
+                                                        currentUser = currentUserSnapshot.getValue(Competitor.class);
+                                                        userMistID = ((Competitor)currentUser).getMistId();
+                                                        subscribeToCompetitorTopics((Competitor) currentUser);
+                                                    } else if (currentUserType.equals("coach")) {
+                                                        currentUser = currentUserSnapshot.getValue(Coach.class);
+                                                        userMistID = ((Coach)currentUser).getMistId();
+                                                        subscribeToCoachTopics((Coach) currentUser);
+                                                    }
 
-                                        //figure out the type of user, create a respective object, populate its fields from the db, and save to 'registered-user' table
-                                        Object currentUser = null;
-                                        Log.d(TAG,"current user type is this: " + currentUserType);
-                                        if (currentUserType.equals("competitor")) {
-                                            currentUser = currentUserSnapshot.getValue(Competitor.class);
-                                            subscribeToCompetitorTopics((Competitor)currentUser);
-                                        } else if (currentUserType.equals("coach")){
-                                            currentUser = currentUserSnapshot.getValue(Coach.class);
-                                            subscribeToCoachTopics((Coach)currentUser);
-                                        } else if (currentUserType.equals("guest")){
-                                            currentUser = currentUserSnapshot.getValue(Guest.class);
-                                        }
+                                                    //Saving to Database
+                                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                    String uid = user.getUid();
+                                                    mDatabase.child(getResources().getString(R.string.firebase_registered_user_table)).child(uid).setValue(currentUser);
+                                                    Log.d(TAG, "user added to database: " + currentUser.toString());
 
-                                        //Saving to Database
-                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        String uid = user.getUid();
-                                        mDatabase.child(getResources().getString(R.string.firebase_registered_user_table)).child(uid).setValue(currentUser);
-                                        Log.d(TAG, "user added to database: " + currentUser.toString());
+                                                    //setting hasRegistered flag in the user db to true
+//                                                    mDatabase.child(getResources().getString(R.string.firebase_user_table)).child(userMistID).child("hasRegistered").setValue(1);
 
-                                        cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
-                                        cacheHandler.commitToCache();
+                                                    cacheHandler.cacheAllUserFields(uid, currentUser, currentUserType);
+                                                    cacheHandler.commitToCache();
 
-                                        Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
-                                        intent.putExtra(getString(R.string.user_uid_key), uid);
-                                        intent.putExtra(getString(R.string.current_user_type), currentUserType);
-                                        FirebaseMessaging.getInstance().subscribeToTopic(currentUserType);
-                                        startActivity(intent);
-                                    }
-                                    // ...
-                                }
-                            });
+                                                    Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
+                                                    intent.putExtra(getString(R.string.user_uid_key), uid);
+                                                    intent.putExtra(getString(R.string.current_user_type), currentUserType);
+                                                    FirebaseMessaging.getInstance().subscribeToTopic(currentUserType);
+                                                    startActivity(intent);
+                                                }
+                                                // ...
+                                            }
+                                        });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    //if mistID has already been used to register the user
+
+
+
                 }
-
+                //mist ID doesn't exist
+                else{
+                    Log.d(TAG, "The MIST ID: " + mistId + " does not exist. Please try with another MIST ID");
+                    Toast.makeText(context, "The MIST ID: " + mistId + " does not exist. Please try with another MIST ID",
+                            Toast.LENGTH_SHORT).show();
+                }
                 Log.d(TAG, "Value is: " + value);
             }
             @Override
@@ -352,6 +383,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, "COMP NAME: "+competition);
                 String underScoreCompName = competition.replaceAll(" ", "_");
                 underScoreCompName = underScoreCompName.replaceAll("'", "_");
+                underScoreCompName = underScoreCompName.replaceAll("/", "_");
                 FirebaseMessaging.getInstance().subscribeToTopic(underScoreCompName);
             }
         }

@@ -208,6 +208,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
             if (!competition.equals("")) {
                 String underScoreCompName = competition.replaceAll(" ", "_");
                 underScoreCompName = underScoreCompName.replaceAll("'", "_");
+                underScoreCompName = underScoreCompName.replaceAll("/", "_");
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(underScoreCompName);
             }
         }

@@ -187,6 +187,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
 
                                     //if exists, caches user fields in database, and sets notification topics
                                     if (exists){
+
                                         // Get User object from db
                                         String currentUserType = (String)currentUserSnapshot.child("userType").getValue();
                                         Object currentUser = null;
@@ -199,8 +200,6 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                             currentUser = currentUserSnapshot.getValue(Coach.class);
                                             subscribeToCoachTopics((Coach)currentUser);
 
-                                        } else if (currentUserType.equals("guest")) {
-                                            currentUser = currentUserSnapshot.getValue(Guest.class);
                                         }
 
                                         Log.d(TAG, "Login success");
@@ -217,6 +216,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                                         intent.putExtra(getString(R.string.current_user_type), currentUserType);
 
                                         startActivity(intent);
+
 
                                     } else{
                                         Log.d(TAG, "Login failure");
@@ -268,6 +268,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                 Log.d(TAG, "COMP NAME: "+competition);
                 String underScoreCompName = competition.replaceAll(" ", "_");
                 underScoreCompName = underScoreCompName.replaceAll("'", "_");
+                underScoreCompName = underScoreCompName.replaceAll("/", "_");
                 FirebaseMessaging.getInstance().subscribeToTopic(underScoreCompName);
             }
         }
