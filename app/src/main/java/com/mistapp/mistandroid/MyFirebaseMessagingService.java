@@ -1,5 +1,6 @@
 package com.mistapp.mistandroid;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,8 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -121,6 +124,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentTitle(title)
                         .setContentText(body);
 
+        final int version = Build.VERSION.SDK_INT;
+        Log.d(TAG, "build version is: "+version);
+        if (version >= 23) {
+            mBuilder.setColor(ContextCompat.getColor(getApplication().getApplicationContext(), R.color.mistRed));
+        } else {
+            mBuilder.setColor(getResources().getColor(R.color.mistGray));
+        }
 
         //creating the intent that will be triggered when user clicks the notification
         //title, body, and time of the notification is passed to the intent
