@@ -11,10 +11,9 @@
         android:orientation="vertical"
 
         >
-
-
             <TextView
                 android:id="@+id/popup_title"
+                android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:textSize="20dp"
@@ -22,9 +21,10 @@
                 android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title" />
+                android:text="This is the long title that will be shown sample" />
             <TextView
                 android:id="@+id/popup_time"
+                android:gravity="center_horizontal"
                 android:layout_gravity="center_horizontal"
                 android:textSize="16dp"
                 android:layout_marginTop="10dp"
@@ -32,21 +32,38 @@
                 android:layout_height="wrap_content"
                 android:text="time"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="25dp"
+                android:layout_marginTop="25dp"
+                android:id="@+id/line_notificaiton"
+                android:background="@android:color/black"/>
+
             <TextView
                 android:id="@+id/popup_body"
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
                 android:textColor="@color/black"
                 android:text="This is the body of the message"/>
-            <Button
-                android:id="@+id/dismiss"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/notification_popup_dismiss_button"
-                android:layout_marginTop="30dp"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dismiss" />
+                android:paddingBottom="30dp"
+                >
+                <Button
+                    android:id="@+id/dismiss"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/notification_popup_dismiss_button"
+                    android:layout_marginTop="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dismiss" />
+            </RelativeLayout>
         </LinearLayout>
 </LinearLayout>

@@ -23,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Event;
 import com.mistapp.mistandroid.model.Teammate;
+import com.roughike.bottombar.BottomBar;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -370,7 +371,6 @@ public class MyScheduleFragment extends Fragment {
     public static class TitleViewHolder {
         public TextView dayText;
     }
-
 
 }
 

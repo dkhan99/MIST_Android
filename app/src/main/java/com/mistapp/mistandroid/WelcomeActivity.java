@@ -181,5 +181,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.d("~~~~~~~~~~~`", "back, has been pressed from welcome page- nothing should happen!");
+
+    }
 
 }

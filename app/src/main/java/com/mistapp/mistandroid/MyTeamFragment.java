@@ -34,6 +34,7 @@ import com.mistapp.mistandroid.model.Event;
 import com.mistapp.mistandroid.model.Notification;
 import com.mistapp.mistandroid.model.Teammate;
 import com.mistapp.mistandroid.model.User;
+import com.roughike.bottombar.BottomBar;
 
 import org.w3c.dom.Text;
 

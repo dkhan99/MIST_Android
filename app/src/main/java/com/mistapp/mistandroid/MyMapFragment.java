@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.roughike.bottombar.BottomBar;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
@@ -67,6 +68,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Map");
+
         // Inflate the layout for this fragment
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
@@ -302,7 +305,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public void onResume() {
         super.onResume();
-
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(0);
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
@@ -325,7 +329,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             mGoogleApiClient.disconnect();
         }
     }
-    }
+
+}
 
 
 

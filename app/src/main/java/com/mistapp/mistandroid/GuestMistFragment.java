@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.roughike.bottombar.BottomBar;
 
 /**
  * Created by aadil on 1/23/17.
@@ -46,5 +47,12 @@ public class GuestMistFragment extends Fragment implements View.OnClickListener{
             startActivity(intent);
 
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(2);
     }
 }

@@ -122,14 +122,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setSmallIcon(R.drawable.original_logo)
                         .setContentTitle(title)
-                        .setContentText(body);
+                        .setContentText(body)
+                        .setVibrate(new long[] { 600, 600, 600, 600, 1000 });
 
         final int version = Build.VERSION.SDK_INT;
         Log.d(TAG, "build version is: "+version);
         if (version >= 23) {
             mBuilder.setColor(ContextCompat.getColor(getApplication().getApplicationContext(), R.color.mistRed));
         } else {
-            mBuilder.setColor(getResources().getColor(R.color.mistGray));
+            mBuilder.setColor(getResources().getColor(R.color.mistRed));
         }
 
         //creating the intent that will be triggered when user clicks the notification
