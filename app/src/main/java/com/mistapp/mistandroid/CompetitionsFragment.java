@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.roughike.bottombar.BottomBar;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -56,6 +58,9 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         competitionPicker = (Spinner) view.findViewById(R.id.competitions_spinner);
         viewBracketButton.setOnClickListener(this);
         viewRulebookButton.setOnClickListener(this);
+
+        //default value is Mist Bowl (index = 14)
+        competitionPicker.setSelection(14);
 
         competitionPicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -170,4 +175,12 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         bracketUrls.put("Sister’s Basketball", "Sister's Basketball");
         bracketUrls.put("Brother’s Basketball", "Brother's Basketball");
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(1);
+    }
+
 }

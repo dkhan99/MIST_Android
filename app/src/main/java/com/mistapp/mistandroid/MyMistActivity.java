@@ -91,12 +91,11 @@ public class MyMistActivity extends AppCompatActivity {
         //if current user type was passed off in intent, get it
         if (getIntent().getExtras().containsKey(getString(R.string.current_user_type))) {
             currentUserType = (String) getIntent().getExtras().get(getString(R.string.current_user_type));
-            Log.d(TAG,"usertype was passed in intent: " + currentUserType);
-        }
-        else{
+            Log.d(TAG, "usertype was passed in intent: " + currentUserType);
+        } else {
             //otherwise get the currentUserType from cache
             currentUserType = cacheHandler.getUserType();
-            Log.d(TAG,"usertype was not passed in intent. getting from cache: " + currentUserType);
+            Log.d(TAG, "usertype was not passed in intent. getting from cache: " + currentUserType);
         }
 
         Log.d(TAG, "CURRENT USER IS A : " + currentUserType);
@@ -124,6 +123,8 @@ public class MyMistActivity extends AppCompatActivity {
             }
         };
 
+        Bundle bundle = new Bundle();
+        String myMessage = "Stackoverflow is cool!";
 
         myMapFragment = new MyMapFragment();
         competitionsFragment = new CompetitionsFragment();
@@ -136,12 +137,12 @@ public class MyMistActivity extends AppCompatActivity {
 
         transaction = getSupportFragmentManager().beginTransaction();
         // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
-        if (currentUserType.equals("guest")){
-            transaction.replace(R.id.fragment_container, guestMistFragment);
+        if (currentUserType.equals("guest")) {
+            transaction.replace(R.id.fragment_container, guestMistFragment, "mist");
+        } else {
+            transaction.replace(R.id.fragment_container, myMistFragment, "mist");
         }
-        else{
-            transaction.replace(R.id.fragment_container, myMistFragment);
-        }
+
         transaction.addToBackStack(null);
         transaction.commit();
 
@@ -151,46 +152,80 @@ public class MyMistActivity extends AppCompatActivity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                Log.d(TAG, "Tab selected: "+ tabId);
+                boolean reselected = false;
+                Log.d(TAG, "NUM FRAGMENTS IN STACK: "+getSupportFragmentManager().getBackStackEntryCount());
+                Log.d(TAG, "selecting tab # " + tabId);
                 updateBottomBarNotifications();
                 transaction = getSupportFragmentManager().beginTransaction();
 
                 if (tabId == R.id.tab_map) {
-                    transaction.replace(R.id.fragment_container, myMapFragment);
-                }
-                if (tabId == R.id.tab_competitions) {
-                    transaction.replace(R.id.fragment_container, competitionsFragment);
-                }
-                if (tabId == R.id.tab_my_mist) {
-                    if (currentUserType .equals("guest")){
-                        transaction.replace(R.id.fragment_container, guestMistFragment);
+                    if (getSupportFragmentManager().findFragmentByTag("map") == null) {
+                        Log.d(TAG, "is null");
                     }
                     else{
-                        transaction.replace(R.id.fragment_container, myMistFragment);
+                        reselected = true;
+                    }
+                    transaction.replace(R.id.fragment_container, myMapFragment, "map");
+                }
+                if (tabId == R.id.tab_competitions) {
+                    if (getSupportFragmentManager().findFragmentByTag("competitions") == null) {
+                        Log.d(TAG, "is null");
+                    }
+                    else{
+                        reselected = true;
+                    }
+                    transaction.replace(R.id.fragment_container, competitionsFragment, "competitions");
+                }
+                if (tabId == R.id.tab_my_mist) {
+                    if (currentUserType.equals("guest")) {
+                        if (getSupportFragmentManager().findFragmentByTag("mist") == null) {
+                            Log.d(TAG, "is null");
+                        }
+                        else{
+                            reselected = true;
+                        }
+                        transaction.replace(R.id.fragment_container, guestMistFragment, "mist");
+                    } else {
+                        if (getSupportFragmentManager().findFragmentByTag("mist") == null) {
+                            Log.d(TAG, "is null");
+                        }
+                        else{
+                            reselected = true;
+                        }
+                        transaction.replace(R.id.fragment_container, myMistFragment, "mist");
                     }
                 }
                 if (tabId == R.id.tab_program) {
-                    transaction.replace(R.id.fragment_container, programFragment);
+                    if (getSupportFragmentManager().findFragmentByTag("program") == null) {
+                        Log.d(TAG, "is null");
+                    }
+                    else{
+                        reselected = true;
+                    }
+                    transaction.replace(R.id.fragment_container, programFragment, "program");
                 }
                 if (tabId == R.id.tab_notifications) {
-                    transaction.replace(R.id.fragment_container, notificationsFragment);
+                    if (getSupportFragmentManager().findFragmentByTag("notifications") == null) {
+                        Log.d(TAG, "is null");
+                    }
+                    else{
+                        reselected = true;
+                    }
+                    transaction.replace(R.id.fragment_container, notificationsFragment, "notifications");
                 }
 
-                transaction.addToBackStack(null);
-                // Commit the transaction
                 transaction.commit();
-            }
-        });
 
-        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-            @Override
-            public void onTabReSelected(@IdRes int tabId) {
-                if (tabId == R.id.tab_map) {
-                    // The tab with id R.id.tab_favorites was reselected,
-                    // change your content accordingly.
+                if (!reselected) {
+                    transaction.addToBackStack(null);
+                    // Commit the transaction
+                }
+                else{
+                    Log.d(TAG, "Was Reselected");
                 }
             }
         });
+
     }
 
     @Override
@@ -199,7 +234,7 @@ public class MyMistActivity extends AppCompatActivity {
         Log.d(TAG, "ACTIVITY HAS Resumed!");
         //Any time the activity is started from a hidden state, check for updates in notifications
         updateBottomBarNotifications();
-        isInForeground =true;
+        isInForeground = true;
     }
 
     @Override
@@ -208,26 +243,56 @@ public class MyMistActivity extends AppCompatActivity {
         isInForeground = false;
     }
 
-    public void setActionBarTitle(String title){
+    public void setActionBarTitle(String title) {
         getSupportActionBar().setTitle(title);
     }
 
     //at this time, the actual new notification will have been added to shared preferences
-    public void updateBottomBarNotifications(){
+    public void updateBottomBarNotifications() {
         int numUnreadNotifications = cacheHandler.getNumUnreadNotifications(0);
         Gson gson = new Gson();
         BottomBarTab notificationTab = bottomBar.getTabAtPosition(4);
 
         //remove badge if there are no new notifications. Set the badge count appropriately if there are
-        if (numUnreadNotifications == 0){
+        if (numUnreadNotifications == 0) {
             notificationTab.removeBadge();
             Log.d(TAG, "No notifications to show -> remove badge");
-        } else{
+        } else {
             notificationTab.setBadgeCount(numUnreadNotifications);
-            Log.d(TAG, "Adding notification badges: " +numUnreadNotifications);
+            Log.d(TAG, "Adding notification badges: " + numUnreadNotifications);
         }
 
     }
+
+    public BottomBar getBottomBar() {
+        return this.bottomBar;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d("~~~~~~~~~~~`", "back, has been pressed!");
+
+        Fragment mainFragment = getSupportFragmentManager().findFragmentByTag("mist");
+
+        //if current fragment was main fragment (myMistFragment or GuestMistFragment), do nothing if back is hit
+        if (mainFragment != null && mainFragment.isVisible()){
+            Log.d(TAG,"current fragment was already main fragment... doing nother");
+        }
+        //if current fragment was any other fragment besides main fragment, show main fragment
+        else{
+            Log.d(TAG,"current fragment was another fragment... going back to main fragment");
+            transaction = getSupportFragmentManager().beginTransaction();
+            if (currentUserType.equals("guest")) {
+                transaction.replace(R.id.fragment_container, guestMistFragment, "mist");
+            }
+            else{
+                transaction.replace(R.id.fragment_container, myMistFragment, "mist");
+            }
+            transaction.commit();
+        }
+
+    }
+
 
 
 }

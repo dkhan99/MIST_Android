@@ -182,6 +182,13 @@ public class NotificationsFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(4);
+    }
+
 }
 
 

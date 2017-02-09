@@ -35,6 +35,7 @@ import com.google.gson.Gson;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Teammate;
+import com.roughike.bottombar.BottomBar;
 
 import org.w3c.dom.Text;
 
@@ -79,8 +80,8 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
             group.setVisibility(View.GONE);
         }
 
-
         showMyTeamFragment(myTeamFragment);
+
         Log.d(TAG, "Mah Niga");
         myTeamButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -131,17 +132,15 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
 
     public void showMyTeamFragment(MyTeamFragment fragment){
         transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.my_mist_frame_layout, fragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.my_mist_frame_layout, fragment, "myteam");
+        //dont want to add this fragment to the backstack- will never hit back to go to these
         transaction.commit();
     }
 
     public void showMyScheduleFragment(MyScheduleFragment fragment){
         transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.my_mist_frame_layout, fragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.my_mist_frame_layout, fragment, "myschedule");
+        //dont want to add this fragment to the backstack- will never hit back to go to these
         transaction.commit();
     }
 
@@ -208,6 +207,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
             if (!competition.equals("")) {
                 String underScoreCompName = competition.replaceAll(" ", "_");
                 underScoreCompName = underScoreCompName.replaceAll("'", "_");
+                underScoreCompName = underScoreCompName.replaceAll("/", "_");
                 FirebaseMessaging.getInstance().unsubscribeFromTopic(underScoreCompName);
             }
         }
@@ -226,5 +226,11 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
 
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(2);
+    }
 
 }

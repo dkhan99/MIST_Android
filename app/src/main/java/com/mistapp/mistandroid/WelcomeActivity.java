@@ -42,7 +42,6 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-        FirebaseApp.initializeApp(this);
 
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -182,5 +181,10 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.d("~~~~~~~~~~~`", "back, has been pressed from welcome page- nothing should happen!");
+
+    }
 
 }

@@ -10,7 +10,6 @@
         android:elevation = "10dp"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/brackets_title"
             android:textColor="@color/black"
@@ -23,6 +22,18 @@
             android:textSize="30dp"
             android:layout_centerHorizontal="true"
             />
+
+        <TextView
+            android:id="@+id/no_brackets_text"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No Brackets to Show"
+            android:textSize="23dp"
+            android:layout_centerHorizontal="true"
+            />
+
 
         <TextView
             android:id="@+id/round1_text"

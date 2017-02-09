@@ -23,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.mistapp.mistandroid.model.Competitor;
 import com.mistapp.mistandroid.model.Event;
 import com.mistapp.mistandroid.model.Teammate;
+import com.roughike.bottombar.BottomBar;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -76,6 +77,8 @@ public class MyScheduleFragment extends Fragment {
                 String knowledgeCompetition = currentUser.getKnowledge();
                 String writingCompetition = currentUser.getWriting();
                 String sportsCompetition = currentUser.getSports();
+
+                //for each of the competitions, check if they exist -> if so -> add it to the list of registered events
                 if (groupProjectCompetition!=null && !groupProjectCompetition.equals("")) {
                     registeredEvents.add(groupProjectCompetition);
                 }
@@ -113,10 +116,11 @@ public class MyScheduleFragment extends Fragment {
                     int numSunday = 0;
 
                     for (String competition: registeredEvents){
-
+                        competition = competition.replaceAll("/", "_");
+                        Log.d(TAG,competition + " ----");
                         DataSnapshot currentEventSnapshot = dataSnapshot.child(competition).child("locationArray");
                         Log.d(TAG,currentEventSnapshot.toString());
-                        Log.d(TAG,competition + " ----");
+
                         Object eventListObject = (Object)currentEventSnapshot.getValue();
                         Log.d(TAG,eventListObject.toString());
                         ArrayList<HashMap> eventList = (ArrayList<HashMap>)(eventListObject);
@@ -367,7 +371,6 @@ public class MyScheduleFragment extends Fragment {
     public static class TitleViewHolder {
         public TextView dayText;
     }
-
 
 }
 

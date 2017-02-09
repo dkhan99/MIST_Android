@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.roughike.bottombar.BottomBar;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
@@ -48,8 +49,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     private LocationRequest mLocationRequest;
 
     private LatLng latLng;
+    private Marker NorthCampusGreenMarker;
     private Marker currLocationMarker;
     private Marker heartyMarker;
+    private Marker sanfordMarker;
     private Marker chapelMarker;
     private Marker northHallMarker;
     private Marker caldwellMarker;
@@ -65,6 +68,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle("Map");
+
         // Inflate the layout for this fragment
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
@@ -151,20 +156,28 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         double CaldwellLng = -83.375290;
         double HeartyLat = 33.955946;
         double HeartyLng = -83.375683;
-        double ChapelLat = 33.956499;
-        double ChapelLng = -83.375148;
-        double NorthHallLat = 33.956169;
-        double NorthHallLng = -83.372517;
+        double ChapelLat = 33.956663;
+        double ChapelLng = -83.375181;
+        double sanfordLat = 33.953768;
+        double sanfordLng = -83.374784;
+        double NorthDeckLat = 33.956169;
+        double NorthDeckLng = -83.372517;
+        double NorthCampusGreenLat = 33.956681;
+        double NorthCampusGreenLng = -83.374673;
 
         MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
+        MarkerOptions Sanford= new MarkerOptions().title("Sanford Hall").position(new LatLng(sanfordLat,sanfordLng));
         MarkerOptions Hearty= new MarkerOptions().title("Hearty Field").position(new LatLng(HeartyLat,HeartyLng));
         MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
-        MarkerOptions NorthHall = new MarkerOptions().title("North Hall Deck").position(new LatLng(NorthHallLat,NorthHallLng));
+        MarkerOptions NorthCampusGreen = new MarkerOptions().title("N. Campus Green").position(new LatLng(NorthCampusGreenLat,NorthCampusGreenLng));
+        MarkerOptions NorthHall = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
 
         heartyMarker = mGoogleMap.addMarker(Hearty);
         chapelMarker = mGoogleMap.addMarker(Chapel);
-        northHallMarker = mGoogleMap.addMarker(NorthHall);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
+        sanfordMarker = mGoogleMap.addMarker(Sanford);
+        NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
+        northHallMarker = mGoogleMap.addMarker(NorthHall);
     }
 
 
@@ -248,19 +261,27 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         double CaldwellLng = -83.375290;
         double HeartyLat = 33.955946;
         double HeartyLng = -83.375683;
-        double ChapelLat = 33.956499;
-        double ChapelLng = -83.375148;
-        double NorthHallLat = 33.956169;
-        double NorthHallLng = -83.372517;
+        double ChapelLat = 33.956663;
+        double ChapelLng = -83.375181;
+        double sanfordLat = 33.953768;
+        double sanfordLng = -83.374784;
+        double NorthDeckLat = 33.956169;
+        double NorthDeckLng = -83.372517;
+        double NorthCampusGreenLat = 33.956681;
+        double NorthCampusGreenLng = -83.374673;
 
         MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
+        MarkerOptions Sanford= new MarkerOptions().title("Sanford Hall").position(new LatLng(sanfordLat,sanfordLng));
         MarkerOptions Hearty= new MarkerOptions().title("Hearty Field").position(new LatLng(HeartyLat,HeartyLng));
         MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
-        MarkerOptions NorthHall = new MarkerOptions().title("North Hall Deck").position(new LatLng(NorthHallLat,NorthHallLng));
+        MarkerOptions NorthCampusGreen = new MarkerOptions().title("N. Campus Green").position(new LatLng(NorthCampusGreenLat,NorthCampusGreenLng));
+        MarkerOptions NorthHall = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
 
         heartyMarker = mGoogleMap.addMarker(Hearty);
         chapelMarker = mGoogleMap.addMarker(Chapel);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
+        sanfordMarker = mGoogleMap.addMarker(Sanford);
+        NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
         northHallMarker = mGoogleMap.addMarker(NorthHall);
         // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
 
@@ -284,7 +305,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public void onResume() {
         super.onResume();
-
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(0);
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
@@ -307,7 +329,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             mGoogleApiClient.disconnect();
         }
     }
-    }
+
+}
 
 
 

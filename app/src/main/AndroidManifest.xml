@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
 
     package="com.mistapp.mistandroid">
 
@@ -12,6 +11,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
 
     <permission
         android:name="com.mistapp.mistandroid.permission.MAPS_RECIEVE"
@@ -24,14 +27,11 @@
         android:glEsVersion="0x0020000"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/original_logo"
         android:label="@string/app_name"
-        tools:node="replace"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".MyFirebaseMessagingService">
@@ -64,6 +64,8 @@
             android:name=".WelcomeActivity"
             android:label="@string/app_name"
             android:theme="@style/MyTheme.Base">
+
+
         </activity>
         <activity
             android:name=".SplashActivity"
@@ -73,6 +75,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".LogInAuth"

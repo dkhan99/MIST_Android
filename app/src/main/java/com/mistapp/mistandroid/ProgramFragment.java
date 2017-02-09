@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.roughike.bottombar.BottomBar;
+
 
 public class ProgramFragment extends Fragment implements View.OnClickListener {
 
@@ -95,6 +97,13 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
 //            String sundayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sundayProgramUri)));
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        BottomBar bbar = ((MyMistActivity)getActivity()).getBottomBar();
+        bbar.selectTabAtPosition(3);
     }
 }
 
