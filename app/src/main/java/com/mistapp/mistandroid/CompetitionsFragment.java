@@ -133,7 +133,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
     public void updateRulebookUrls(){
         rulebookUrls.put("Debate","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dffbf629abc01d8d25f/1485667840236/Debate.pdf");
         rulebookUrls.put("Math Olympics","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d849dd1758e87f05fdb9b/1485669534042/Math+Olympics.pdf");
-        rulebookUrls.put("MIST Bowl","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e3db3db2b428d8c2037/1485667901837/Mobile+Applications.pdf");
+        rulebookUrls.put("MIST Bowl","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e33e6f2e152d3e2489d/1485667892131/MIST+Bowl.pdf");
         rulebookUrls.put("Sister’s Improv","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1e1b631b0e7cf6d19f/1485667870356/Improv.pdf");
         rulebookUrls.put("Brother’s Improv","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1e1b631b0e7cf6d19f/1485667870356/Improv.pdf");
         rulebookUrls.put("Sister’s Basketball","http://docs.google.com/gview?embedded=true&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dd603596e0fcbc0e989/1485667798080/Basketball.pdf");
