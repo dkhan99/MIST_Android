@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mDatabase;
     private Context context;
+    private ProgressBar progressBar;
 
 
     private CacheHandler cacheHandler;
@@ -71,6 +73,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
+        progressBar = (ProgressBar) findViewById(R.id.register_progress);
 
         context = getApplicationContext();
 
@@ -182,6 +185,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
             return;
         } else {
             //Register the user
+            progressBar.setVisibility(View.VISIBLE);
             register();
 
             //mAuthTask = new UserLoginTask(email, password);
@@ -200,7 +204,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
 
     //Checks if the mist id has a dash and is of length 10
     private boolean isMistIdValid(String mistId) {
-        if (mistId.length() == 10) {
+        if (mistId.length() == 10 || mistId.length() == 9) {
             if (mistId.charAt(4) == '-') {
                 return true;
             }
@@ -268,6 +272,7 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                     ref1.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            //if an item already exists (a user with the specific mist id...)
                             if (dataSnapshot.exists()) {
                                 Toast.makeText(context, "That MIST ID has already been registered... please try again or contact support",
                                         Toast.LENGTH_SHORT).show();
@@ -344,11 +349,13 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(context, "The MIST ID: " + mistId + " does not exist. Please try with another MIST ID",
                             Toast.LENGTH_SHORT).show();
                 }
+                progressBar.setVisibility(View.GONE);
                 Log.d(TAG, "Value is: " + value);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Failed to read value
+                progressBar.setVisibility(View.GONE);
                 Log.w(TAG, "Failed to read value.", databaseError.toException());
             }
         });
