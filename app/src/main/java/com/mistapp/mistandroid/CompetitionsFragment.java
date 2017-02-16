@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,12 +71,14 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
                 }
                 String chosenCompetition = ((TextView)view).getText().toString();
 
-                //show 'view bracket' button only if the competition is a bracket competition
+                //show 'clickable' button only if the competition is a bracket competition
                 if (bracketCompetitions.contains(chosenCompetition)){
-                    viewBracketButton.setVisibility(View.VISIBLE);
+                    viewBracketButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.red_button));
+                    viewBracketButton.setClickable(true);
                 }
                 else{
-                    viewBracketButton.setVisibility(View.INVISIBLE);
+                    viewBracketButton.setBackground(ContextCompat.getDrawable(getActivity(), R.drawable.red_button_unclickable));
+                    viewBracketButton.setClickable(false);
                 }
             }
 
