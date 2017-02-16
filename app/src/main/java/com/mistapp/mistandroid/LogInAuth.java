@@ -10,8 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,8 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private Context context;
     private CacheHandler cacheHandler;
 
+    private ProgressBar progressBar;
+
     private TextView mtextView;
 
 
@@ -63,6 +67,10 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
+
+
+        progressBar = (ProgressBar) findViewById(R.id.login_progress);
+
 
         Intent intent = getIntent();
         context = getApplication();
@@ -129,6 +137,8 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
      * Checks with firebase if email/password combination is correct
      */
     public void attemptSignIn() {
+
+
         final String email = mEmailView.getText().toString().trim();
         final String password = mPasswordView.getText().toString().trim();
         View focusView = null;
@@ -150,6 +160,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
             focusView.requestFocus();
             return;
         }
+        progressBar.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -236,7 +247,9 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
                             });
                             // ...
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
+
          });
     }
 

@@ -98,6 +98,7 @@ public class MyScheduleFragment extends Fragment {
                     registeredEvents.add(sportsCompetition);
                 }
                 ///need to add other events - lunch, social, prayer, etc
+                //registeredEvents.addAll(Arrays.asList("Lunch", "Workshop - sometitle", "Ice-cream Social", "Registration", "Orientation", "Dinner", "Dhuhr", "Asr", "Maghrib"));
 
             }
 
@@ -128,10 +129,10 @@ public class MyScheduleFragment extends Fragment {
                         for (HashMap map: eventList){
                             String date = (String)map.get("date");
                             String location = (String)map.get("location");
-                            String time = (String)map.get("time");
+                            String startTime = (String)map.get("startTime");
                             ArrayList<Long> roomNumbers = (ArrayList<Long>)map.get("roomNums");
-                            String duration = (String)map.get("duration");
-                            Event e = new Event(competition, location, date, duration, roomNumbers, time);
+                            String endTime = (String)map.get("endTime");
+                            Event e = new Event(competition, location, date, endTime, roomNumbers, startTime);
 
                             //add event to list - this is so it can be sorted
                             eventArrayList.add(e);
@@ -201,6 +202,9 @@ public class MyScheduleFragment extends Fragment {
     //adds event items and separater items to the adapter
     public void addToAdapter(EventAdapter adapter, ArrayList<Event>eventArrayList, int numFriday, int numSaturday, int numSunday){
         //sort array and add items and separator items to adapter
+        for (int x=0;x<eventArrayList.size();x++){
+            Log.d("TAG", "NAME: " + eventArrayList.get(x).toString());
+        }
         Event[] eventArray = eventArrayList.toArray(new Event[eventArrayList.size()]);
         Arrays.sort(eventArray, Event.EventTimeComparator);
         for (int x=0; x<eventArray.length; x++){
@@ -309,15 +313,36 @@ public class MyScheduleFragment extends Fragment {
                         // set up the list item
                         if (myItem != null) {
                             // set item text
+
+                            String startTime = ((Event) myItem).getStartTime();
+                            String endTime = ((Event) myItem).getEndTime();
+
+                            //adds extra space if time is short - so competition names are aligned
+                            String extraSpace1 = "";
+                            String extraSpace2 = "";
+                            int mostTimeCharacters = 14; //12:40am has 7 characters max number of chars is 17
+
+                            int difference = mostTimeCharacters - (startTime.length() + endTime.length());
+                            Log.d(TAG, "difference in length: " + difference);
+                            for (int x=0;x<difference;x++){
+                                if (x%2==0) {
+                                    extraSpace1 += " ";
+                                }else{
+                                    extraSpace2+=" ";
+                                }
+                            }
                             if (holder1.nameAndTimeText != null) {
-                                holder1.nameAndTimeText.setText(((Event) myItem).getTime() + " - " + ((Event) myItem).getName());
+                                holder1.nameAndTimeText.setText(startTime + " - " + endTime + extraSpace1 + " --- " + extraSpace2 +((Event) myItem).getName());
                             }
                             if (holder1.locationText != null){
                                 holder1.locationText.setText(((Event) myItem).getLocation());
                             }
                             if (holder1.roomNumText != null){
-                                String allLocations = ((Event) myItem).getRoomNumbers().toString();
-                                holder1.roomNumText.setText("rooms: " + allLocations);
+                                ArrayList<Long> roomNumbers = ((Event) myItem).getRoomNumbers();
+                                String roomNumsString = roomNumbers.toString();
+                                roomNumsString = roomNumsString.substring(1,roomNumsString.length()-1);
+//                                String allLocations = (roomNumbers.toString().substring(1,roomNumbers.size()-1));
+                                holder1.roomNumText.setText("rooms: " + roomNumsString);
                             }
                         }
                     }

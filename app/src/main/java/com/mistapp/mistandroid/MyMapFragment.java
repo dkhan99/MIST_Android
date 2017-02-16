@@ -8,6 +8,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -39,8 +40,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.plus.Plus;
 import com.roughike.bottombar.BottomBar;
+
+import java.util.ArrayList;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
@@ -59,6 +63,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     private Marker northHallMarker;
     private Marker caldwellMarker;
     private Location mBestReading;
+    private ArrayList<LatLng> arrayPoints = null;
 
     /**
      * Inflate map, calls google map fragment into existence
@@ -79,11 +84,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
 
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+            Log.d("map", "I am here");
+        }
+        else{
+            Log.d("map", "I am there");
+            initMap();
         }
         return view;
     }
@@ -96,9 +105,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             googleMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
             googleMapFragment.getMapAsync(this);
             addMarkers();
+            addLines();
 
         } catch (Exception e) {
-            Log.e("TAG", "Map cannot be loaded");
+            Log.e("TAG", "Map cannot be loaded" + e);
 
         }
     }
@@ -143,8 +153,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
                 //debugging: Toast.makeText(getContext(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
             }
             addMarkers();
+            addLines();
         } else {
             addMarkers();
+            addLines();
             goToLocationZoom(33.955655, -83.374050, 17);
 
         }
@@ -156,6 +168,30 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         mGoogleMap.moveCamera(update);
     }
 
+
+    private void addLines(){
+//        mGoogleMap.addPolyline();
+        // settin polyline in the map
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.color(Color.RED);
+        polylineOptions.width(5);
+        arrayPoints = new ArrayList<LatLng>();
+        arrayPoints.add(new LatLng(33.953483,-83.375382));
+        arrayPoints.add(new LatLng(33.956597,-83.376227));
+        arrayPoints.add(new LatLng(33.957399,-83.372573));
+
+        arrayPoints.add(new LatLng(33.955504,-83.371899));
+        arrayPoints.add(new LatLng(33.955439,-83.372497));
+        arrayPoints.add(new LatLng(33.955913,-83.373452));
+        arrayPoints.add(new LatLng(33.955488,-83.375131));
+        arrayPoints.add(new LatLng(33.953626,-83.374462));
+        arrayPoints.add(new LatLng(33.953468,-83.375287));
+        arrayPoints.add(new LatLng(33.953483,-83.375382));
+
+        polylineOptions.addAll(arrayPoints);
+        mGoogleMap.addPolyline(polylineOptions);
+
+    }
 
     private void addMarkers() {
         //double longitude = location.getLongitude();
@@ -297,7 +333,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
         northHallMarker = mGoogleMap.addMarker(NorthHall);
         // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
-
+        addLines();
         //zoom to current position:
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng).zoom(17).build();
@@ -360,15 +396,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
                     Log.i("TAG", " permission granted");
 
                     Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
-                        mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
-                        if (mGoogleApiClient != null) {
-                            Log.i("mGoogleApiClient", " accepted and google api client it's not null!");
-                            mGoogleApiClient.connect();
-                            initMap();
-                        }
+                    mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
+                    if (mGoogleApiClient != null) {
+                        Log.i("mGoogleApiClient", " accepted and google api client it's not null!");
+                        mGoogleApiClient.connect();
+                        initMap();
+                    }
 
 
-                        //No Google Maps Layout
+                    //No Google Maps Layout
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -398,6 +434,5 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     }
 
 }
-
 
 

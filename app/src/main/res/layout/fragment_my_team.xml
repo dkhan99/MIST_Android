@@ -86,6 +86,18 @@
         android:textSize="30dp"
         />
 
+    <TextView
+        android:id="@+id/no_teammates_text"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/my_team_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Teammates to Display"
+        android:textSize="23dp"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        />
+
     <LinearLayout
         android:layout_below="@+id/my_team_text"
         android:id="@+id/coach_team_layout"
