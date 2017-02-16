@@ -84,16 +84,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
 
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-                Log.d("map", "I am here");
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+            Log.d("map", "I am here");
         }
         else{
             Log.d("map", "I am there");
             initMap();
-            goToLocationZoom(33.955655, -83.374050, 17);
         }
         return view;
     }
@@ -334,7 +333,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
         northHallMarker = mGoogleMap.addMarker(NorthHall);
         // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
-
+        addLines();
         //zoom to current position:
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng).zoom(17).build();
@@ -397,15 +396,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
                     Log.i("TAG", " permission granted");
 
                     Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
-                        mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
-                        if (mGoogleApiClient != null) {
-                            Log.i("mGoogleApiClient", " accepted and google api client it's not null!");
-                            mGoogleApiClient.connect();
-                            initMap();
-                        }
+                    mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
+                    if (mGoogleApiClient != null) {
+                        Log.i("mGoogleApiClient", " accepted and google api client it's not null!");
+                        mGoogleApiClient.connect();
+                        initMap();
+                    }
 
 
-                        //No Google Maps Layout
+                    //No Google Maps Layout
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -435,6 +434,5 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     }
 
 }
-
 
 
