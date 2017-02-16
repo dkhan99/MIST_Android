@@ -58,10 +58,13 @@ public class MyTeamFragment extends Fragment {
     private TextView emailText;
     private TextView mistIdText;
     private TextView coachText;
+    private TextView teammateText;
     private CacheHandler cacheHandler;
 
     private String userTeamName;
     private String userMistId;
+
+    private TextView noTeammatesText;
 
     LinearLayout coachLayout;
     LinearLayout teammateLayout;
@@ -85,6 +88,8 @@ public class MyTeamFragment extends Fragment {
         teammateLayout = (LinearLayout)view.findViewById(R.id.teammates_layout);
         coachTeamLayout = (LinearLayout)view.findViewById(R.id.coach_team_layout);
 
+        noTeammatesText = (TextView)view.findViewById(R.id.no_teammates_text);
+
         cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
         coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
         teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
@@ -95,6 +100,7 @@ public class MyTeamFragment extends Fragment {
         emailText = (TextView)view.findViewById(R.id.email_address);
 
         coachText = (TextView)view.findViewById(R.id.coaches_text);
+        teammateText  = (TextView)view.findViewById(R.id.teammates_text);
 
         AdapterView.OnItemClickListener listener = createItemClickListener();
 
@@ -161,6 +167,9 @@ public class MyTeamFragment extends Fragment {
                     if (coachList.size() == 0){
                         removeCoachLayout();
                     }
+                    if (teammateList.size() == 0){
+                        noTeammatesText.setVisibility(View.VISIBLE);
+                    }
 
                     MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
                     MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
@@ -199,8 +208,14 @@ public class MyTeamFragment extends Fragment {
             Collections.sort(teammateList, Teammate.TeammateNameComparator);
             Collections.sort(coachList, Teammate.TeammateNameComparator);
 
-            if (coachList.size() == 0){
+            if (coachList.size() == 0 && teammateList.size() == 0){
+                removeCoachAndTeamLayout();
+            }
+            else if (coachList.size() == 0){
                 removeCoachLayout();
+            }
+            else if (teammateList.size() == 0){
+                removeTeammateLayout();
             }
 
             MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
@@ -235,6 +250,12 @@ public class MyTeamFragment extends Fragment {
         return listener;
     }
 
+    private void removeCoachAndTeamLayout(){
+        removeCoachLayout();
+        removeTeammateLayout();
+        noTeammatesText.setVisibility(View.VISIBLE);
+    }
+
     //removes coach text + listview -> this method is called when there are no (other) coaches on the team
     private void removeCoachLayout(){
         Log.d(TAG, "there are no coaches - removing coaches view");
@@ -244,6 +265,16 @@ public class MyTeamFragment extends Fragment {
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)coachLayout.getLayoutParams();
         params.weight = 0;
         coachLayout.setLayoutParams(params);
+    }
+
+    private void removeTeammateLayout(){
+        Log.d(TAG, "there are no teammates - removing teammate view");
+        teammateText.setVisibility(View.GONE);
+        teammates_lv.setVisibility(View.GONE);
+        coachTeamLayout.setWeightSum(1);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)teammateLayout.getLayoutParams();
+        params.weight = 0;
+        teammateLayout.setLayoutParams(params);
     }
 
 
