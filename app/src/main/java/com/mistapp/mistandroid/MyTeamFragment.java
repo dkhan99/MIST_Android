@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import static com.mistapp.mistandroid.R.id.uid;
 
@@ -57,8 +59,8 @@ public class MyTeamFragment extends Fragment {
     private TextView teamNameText;
     private TextView emailText;
     private TextView mistIdText;
-    private TextView coachText;
-    private TextView teammateText;
+
+
     private CacheHandler cacheHandler;
 
     private String userTeamName;
@@ -66,12 +68,8 @@ public class MyTeamFragment extends Fragment {
 
     private TextView noTeammatesText;
 
-    LinearLayout coachLayout;
-    LinearLayout teammateLayout;
-    LinearLayout coachTeamLayout;
 
-    ListView coaches_lv;
-    ListView teammates_lv;
+    ListView myTeamList;
     View view;
 
 
@@ -84,28 +82,22 @@ public class MyTeamFragment extends Fragment {
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        coachLayout = (LinearLayout)view.findViewById(R.id.coaches_layout);
-        teammateLayout = (LinearLayout)view.findViewById(R.id.teammates_layout);
-        coachTeamLayout = (LinearLayout)view.findViewById(R.id.coach_team_layout);
+        final TeamAdapter adapter = new TeamAdapter();
+
+        myTeamList = (ListView)view.findViewById(R.id.my_team_list);
 
         noTeammatesText = (TextView)view.findViewById(R.id.no_teammates_text);
 
         cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
-        coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
-        teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
 
         nameText = (TextView)view.findViewById(R.id.user_name);
         teamNameText = (TextView)view.findViewById(R.id.team_name);
         mistIdText = (TextView)view.findViewById(R.id.mist_id);
         emailText = (TextView)view.findViewById(R.id.email_address);
 
-        coachText = (TextView)view.findViewById(R.id.coaches_text);
-        teammateText  = (TextView)view.findViewById(R.id.teammates_text);
-
         AdapterView.OnItemClickListener listener = createItemClickListener();
 
-        coaches_lv.setOnItemClickListener(listener);
-        teammates_lv.setOnItemClickListener(listener);
+        myTeamList.setOnItemClickListener(listener);
 
         setUserProfile();
 
@@ -164,19 +156,9 @@ public class MyTeamFragment extends Fragment {
                     Collections.sort(teammateList, Teammate.TeammateNameComparator);
                     Collections.sort(coachList, Teammate.TeammateNameComparator);
 
-                    if (coachList.size() == 0){
-                        removeCoachLayout();
-                    }
-                    if (teammateList.size() == 0){
-                        noTeammatesText.setVisibility(View.VISIBLE);
-                    }
-
-                    MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
-                    MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
-                    ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
-                    ListView teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
-                    coaches_lv.setAdapter(coachesAdapter);
-                    teammates_lv.setAdapter(teammatesAdapter);
+                    addToAdapter(adapter, teammateList, coachList, teammateList.size(), coachList.size());
+                    ListView teammates_lv = (ListView)view.findViewById(R.id.my_team_list);
+                    teammates_lv.setAdapter(adapter);
                 }
 
                 @Override
@@ -196,6 +178,11 @@ public class MyTeamFragment extends Fragment {
             ArrayList<Teammate> teammateList = new ArrayList<Teammate>();
             ArrayList<Teammate> allTeammates = gson.fromJson(jsonList, new TypeToken<ArrayList<Teammate>>() {}.getType());
             for (Teammate currentTeammate : allTeammates){
+                //capitalizing first letter in the name
+                String origName = currentTeammate.getName();
+                if (origName!=null && origName.length()>0) {
+                    currentTeammate.setName(origName.substring(0, 1).toUpperCase() + origName.substring(1));
+                }
                 if (currentTeammate.getIsCompetitor() == 1){
                     teammateList.add(currentTeammate);
                 }
@@ -208,22 +195,11 @@ public class MyTeamFragment extends Fragment {
             Collections.sort(teammateList, Teammate.TeammateNameComparator);
             Collections.sort(coachList, Teammate.TeammateNameComparator);
 
-            if (coachList.size() == 0 && teammateList.size() == 0){
-                removeCoachAndTeamLayout();
-            }
-            else if (coachList.size() == 0){
-                removeCoachLayout();
-            }
-            else if (teammateList.size() == 0){
-                removeTeammateLayout();
-            }
 
-            MyTeamAdapter coachesAdapter = new MyTeamAdapter(getActivity(), coachList);
-            MyTeamAdapter teammatesAdapter = new MyTeamAdapter(getActivity(), teammateList);
-            ListView coaches_lv = (ListView)view.findViewById(R.id.coaches_list);
-            ListView teammates_lv = (ListView)view.findViewById(R.id.teammates_list);
-            coaches_lv.setAdapter(coachesAdapter);
-            teammates_lv.setAdapter(teammatesAdapter);
+            addToAdapter(adapter, teammateList, coachList, teammateList.size(), coachList.size());
+            ListView teammates_lv = (ListView)view.findViewById(R.id.my_team_list);
+            teammates_lv.setAdapter(adapter);
+
         }
 
 
@@ -250,33 +226,36 @@ public class MyTeamFragment extends Fragment {
         return listener;
     }
 
-    private void removeCoachAndTeamLayout(){
-        removeCoachLayout();
-        removeTeammateLayout();
-        noTeammatesText.setVisibility(View.VISIBLE);
-    }
+    //adds event items and separater items to the adapter
+    public void addToAdapter(MyTeamFragment.TeamAdapter adapter, ArrayList<Teammate>teammateArrayList, ArrayList<Teammate>coachArrayList, int numTeammates, int numCoaches) {
+        //sort array and add items and separator items to adapter
+        for (int x = 0; x < teammateArrayList.size(); x++) {
+            Log.d("TAG", "NAME: " + teammateArrayList.get(x).toString());
+        }
 
-    //removes coach text + listview -> this method is called when there are no (other) coaches on the team
-    private void removeCoachLayout(){
-        Log.d(TAG, "there are no coaches - removing coaches view");
-        coachText.setVisibility(View.GONE);
-        coaches_lv.setVisibility(View.GONE);
-        coachTeamLayout.setWeightSum(1);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)coachLayout.getLayoutParams();
-        params.weight = 0;
-        coachLayout.setLayoutParams(params);
-    }
 
-    private void removeTeammateLayout(){
-        Log.d(TAG, "there are no teammates - removing teammate view");
-        teammateText.setVisibility(View.GONE);
-        teammates_lv.setVisibility(View.GONE);
-        coachTeamLayout.setWeightSum(1);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)teammateLayout.getLayoutParams();
-        params.weight = 0;
-        teammateLayout.setLayoutParams(params);
-    }
+        if (numCoaches != 0) {
+            adapter.addSeparatorItem("Coaches", 0);
+            for (int x = 0; x < coachArrayList.size(); x++) {
+                adapter.addItem(coachArrayList.get(x));
+            }
+        }
+        if (numTeammates != 0) {
+            int indexToAdd = 0;
+            if (numCoaches!=0){
+                indexToAdd += coachArrayList.size();
+            }
+            adapter.addSeparatorItem("Teammates", indexToAdd);
+            for (int x = 0; x < teammateArrayList.size(); x++) {
+                adapter.addItem(teammateArrayList.get(x));
+            }
+        }
 
+        if (numCoaches == 0 && numTeammates == 0) {
+            noTeammatesText.setVisibility(View.VISIBLE);
+        }
+
+    }
 
     public void setUserProfile(){
 
@@ -343,6 +322,160 @@ public class MyTeamFragment extends Fragment {
             userTeamName = currentUser.getTeam();
             userMistId = currentUser.getMistId();
         }
+    }
+
+    //format the number with area code + country code
+    private String getFormattedPhoneNumber(long number){
+        String phoneNumber = Long.toString(number);
+        if (phoneNumber.length() == 10){
+            phoneNumber = ( "(" + phoneNumber.substring(0,3) + ")-" + phoneNumber.substring(3,6) + "-" + phoneNumber.substring(6,9));
+        }
+        else if (phoneNumber.length() == 11){
+            phoneNumber = ( "+" + phoneNumber.charAt(0) + "(" + phoneNumber.substring(1,4) + ")-" + phoneNumber.substring(4,7) + "-" + phoneNumber.substring(7,10));
+        }
+        //else ->  keep phone number as is
+        return phoneNumber;
+
+    }
+
+    private class TeamAdapter extends BaseAdapter {
+
+        private static final int TYPE_ITEM = 0;
+        private static final int TYPE_SEPARATOR = 1;
+        private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+
+        private ArrayList<Object> mData = new ArrayList<Object>();
+        private LayoutInflater mInflater;
+
+        private TreeSet mSeparatorsSet = new TreeSet();
+
+        public TeamAdapter() {
+            mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
+        public void addItem(final Teammate teammate) {
+            Log.d("123123", "adding item" + teammate.getName());
+            mData.add(teammate);
+            notifyDataSetChanged();
+        }
+
+        public void addSeparatorItem(final String item, int indexOfAddition) {
+            mData.add(indexOfAddition, item);
+            // save separator position
+            mSeparatorsSet.add(indexOfAddition);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return mSeparatorsSet.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return TYPE_MAX_COUNT;
+        }
+
+        @Override
+        public int getCount() {
+            return mData.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mData.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+            int type = getItemViewType(position);
+
+            switch(type){
+                case TYPE_ITEM:
+                    TeamViewHolder holder1;
+
+                    if (convertView == null) {
+                        LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        convertView = vi.inflate(R.layout.item_team_member, parent, false);
+                        holder1 = new TeamViewHolder();
+                        holder1.nameText = (TextView) convertView.findViewById(R.id.teammember_name);
+                        holder1.phoneNumberText = (TextView) convertView.findViewById(R.id.teammember_phone);
+
+                        convertView.setTag(holder1);
+                    }
+                    else {
+                        holder1 = (TeamViewHolder) convertView.getTag();
+                    }
+
+                    Object myItem = mData.get(position);
+                    if (myItem instanceof Teammate) {
+                        // set up the list item
+                        if (myItem != null) {
+                            // set item text
+                            Log.d(TAG, "myitem is NOT null!!");
+                            if (holder1.nameText != null) {
+                                holder1.nameText.setText(((Teammate) myItem).getName());
+                            }
+                            if (holder1.phoneNumberText != null){
+                                holder1.phoneNumberText.setText(getFormattedPhoneNumber(((Teammate) myItem).getPhoneNumber()));
+                            }
+                        }
+                        else{
+                            Log.d(TAG, "myitem is null!!");
+                        }
+                    }
+
+                    // return the created view
+                    return convertView;
+
+                case TYPE_SEPARATOR:
+                    MyTeamFragment.TitleViewHolder holder2;
+
+                    if (convertView == null) {
+                        LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        convertView = vi.inflate(R.layout.item_day_header, parent, false);
+                        holder2 = new TitleViewHolder();
+                        holder2.teammateTypeText = (TextView) convertView.findViewById(R.id.event_day_header);
+                        convertView.setTag(holder2);
+                    }
+                    else {
+                        holder2 = (TitleViewHolder) convertView.getTag();
+                    }
+
+                    Object myItem1 = mData.get(position);
+                    if (myItem1 instanceof String) {
+                        // set up the list item
+                        if (myItem1 != null) {
+                            // set item text
+                            if (holder2.teammateTypeText != null) {
+                                holder2.teammateTypeText.setText(((String) myItem1));
+                            }
+                        }
+                    }
+
+
+                    // return the created view
+                    return convertView;
+            }
+
+            return convertView;
+        }
+
+    }
+
+    public static class TeamViewHolder {
+        public TextView nameText;
+        public TextView phoneNumberText;
+    }
+
+    public static class TitleViewHolder {
+        public TextView teammateTypeText; //coach or teammate
     }
 
 }
