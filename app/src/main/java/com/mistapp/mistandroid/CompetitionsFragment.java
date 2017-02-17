@@ -143,7 +143,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         rulebookUrls.put("Fashion","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1146c3c4023d82d555/1485667858578/Fashion+Design.pdf");
         rulebookUrls.put("Graphic","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e183a0411d31b4498f9/1485667864863/Graphic+Design.pdf");
         rulebookUrls.put("Photography","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d808bb3db2b428d8c3015/1485668492248/Photography.pdf");
-        rulebookUrls.put("Culinary","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dee579fb35be4f27176/1485667822428/Culinary+Arts.pdf");
+        rulebookUrls.put("Culinary Arts","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dee579fb35be4f27176/1485667822428/Culinary+Arts.pdf");
 
         rulebookUrls.put("Extemporaneous Essay","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e068419c2ec3fd8bd4f/1485667846417/Extemporaneous+Essay.pdf");
         rulebookUrls.put("Extemporaneous Speaking","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e0c1e5b6c3aa8039c3e/1485667852801/Extemporaneous+Speaking.pdf");
