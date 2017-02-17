@@ -84,14 +84,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         }
 
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d("TAG", "Oncreate did not have permission");
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
             // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
             // app-defined int constant. The callback method gets the
             // result of the request.
-            Log.d("map", "I am here");
         }
         else{
-            Log.d("map", "I am there");
+            Log.d("TAG", "Oncreate did have permission, initializing map");
             initMap();
         }
         return view;
@@ -106,6 +106,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             googleMapFragment.getMapAsync(this);
             addMarkers();
             addLines();
+            goToLocationZoom(33.955655, -83.374050, 17);
+
 
         } catch (Exception e) {
             Log.e("TAG", "Map cannot be loaded" + e);
@@ -154,6 +156,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             }
             addMarkers();
             addLines();
+            goToLocationZoom(33.955655, -83.374050, 17);
+
         } else {
             addMarkers();
             addLines();
@@ -291,21 +295,21 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         } else {
 
             LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
-            CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 16);
-            mGoogleMap.animateCamera(update);
+            //CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, 16);
+            //mGoogleMap.animateCamera(update);
         }  //place marker at current position
         mGoogleMap.clear();
         if (currLocationMarker != null) {
             currLocationMarker.remove();
         }
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        //MarkerOptions markerOptions = new MarkerOptions();
+        //markerOptions.position(latLng);
+        //markerOptions.title("Current Position");
+        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
-        currLocationMarker = mGoogleMap.addMarker(markerOptions);
-        currLocationMarker.showInfoWindow();
+        //currLocationMarker = mGoogleMap.addMarker(markerOptions);
+        //currLocationMarker.showInfoWindow();
         double CaldwellLat = 33.954921;
         double CaldwellLng = -83.375290;
         double HeartyLat = 33.955946;
@@ -335,11 +339,11 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
         addLines();
         //zoom to current position:
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(latLng).zoom(17).build();
+        //CameraPosition cameraPosition = new CameraPosition.Builder()
+         //       .target(latLng).zoom(17).build();
 
-        mGoogleMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));
+        //mGoogleMap.animateCamera(CameraUpdateFactory
+         //       .newCameraPosition(cameraPosition));
 
     }
 
@@ -395,7 +399,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.i("TAG", " permission granted");
 
-                    Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
                     mGoogleApiClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API).addConnectionCallbacks(this).build();
                     if (mGoogleApiClient != null) {
                         Log.i("mGoogleApiClient", " accepted and google api client it's not null!");
@@ -418,7 +421,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
                     if (mGoogleApiClient != null) {
                         mGoogleApiClient.connect();
                         Log.i("mGoogleApiClient", " step 2");
-                        Toast.makeText(getActivity(), "Zooming in", Toast.LENGTH_LONG).show();
                         Log.i("mGoogleApiClient", " declined to accept and api connected!");
                         initMap();
                     }
