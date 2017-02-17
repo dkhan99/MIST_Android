@@ -34,6 +34,17 @@ public class NotificationAdapter extends ArrayAdapter {
     }
 
     @Override
+    public int getViewTypeCount(){
+        return getCount();
+    }
+
+    @Override
+    public int getItemViewType(int posisiton){
+        return posisiton;
+    }
+
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         Notification current_notification = (Notification) getItem(position);
