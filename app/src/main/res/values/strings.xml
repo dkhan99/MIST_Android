@@ -45,6 +45,14 @@
     <string name="teammates">teammates</string>
     <string name="events">events</string>
 
+    <!--Names for the titles of each page-->
+    <string name="my_mist_page_title">My Mist</string>
+    <string name="notification_page_title">Notifications</string>
+    <string name="program_page_title">Program</string>
+    <string name="competitions_page_title">Competitions</string>
+    <string name="map_page_title">Map</string>
+
+
     <!--Names of the firebase database tables-->
     <string name="firebase_event_table">mist_2017_event</string>
     <string name="firebase_user_table">mist_2017_user</string>

@@ -75,7 +75,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("Map");
+        getActivity().setTitle(getResources().getString(R.string.map_page_title));
         Log.i("TAG", " onmapcreate!");
 
         // Inflate the layout for this fragment

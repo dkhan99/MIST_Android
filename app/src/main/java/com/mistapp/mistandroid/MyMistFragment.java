@@ -60,7 +60,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("MY MIST");
+        getActivity().setTitle(getResources().getString(R.string.my_mist_page_title));
 
         View view = inflater.inflate(R.layout.fragment_my_mist, container, false);
 

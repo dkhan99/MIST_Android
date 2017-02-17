@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -22,7 +24,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -31,6 +32,7 @@ import com.mistapp.mistandroid.model.Notification;
 import com.roughike.bottombar.BottomBar;
 
 import java.util.ArrayList;
+
 
 
 public class NotificationsFragment extends Fragment {
@@ -49,7 +51,15 @@ public class NotificationsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getActivity().setTitle("Notifications");
+        getActivity().setTitle(getResources().getString(R.string.notification_page_title));
+//        Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Montserrat-Regular.otf");
+//        SpannableString s = new SpannableString(getResources().getString(R.string.notification_page_title));
+//        s.setSpan(new TypefaceSpan1(getActivity(), "Montserrat-Regular.otf"), 0, s.length(),
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        // Update the action bar title with the TypefaceSpan instance
+//        getActivity().setTitle(s);
+
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
