@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +45,8 @@ public class MyScheduleFragment extends Fragment {
     private DatabaseReference mDatabase;
     private DatabaseReference ref;
     private CacheHandler cacheHandler;
+    private ProgressBar progressBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,11 +59,14 @@ public class MyScheduleFragment extends Fragment {
         cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
         String userType = cacheHandler.getUserType();
         String userJson = cacheHandler.getUserJson();
+        progressBar = (ProgressBar) view.findViewById(R.id.schedule_progress);
+
 
         Gson gson = new Gson();
         String eventsJson = cacheHandler.getCachedEventsJson();
         final EventAdapter adapter = new EventAdapter();
 
+        progressBar.setVisibility(View.VISIBLE);
 
         //events are not cached already- hit database and store in cache
         if (eventsJson.equals("")){
@@ -156,14 +162,14 @@ public class MyScheduleFragment extends Fragment {
                     cacheHandler.commitToCache();
 
                     Log.d(TAG, "fri: " + numFriday + " sat "+ numSaturday + " sun " + numSunday);
-
+                    progressBar.setVisibility(View.GONE);
                     addToAdapter(adapter, eventArrayList, numFriday, numSaturday, numSunday);
 
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.GONE);
                 }
 
             });
@@ -192,6 +198,7 @@ public class MyScheduleFragment extends Fragment {
             }
             addToAdapter(adapter, allEvents, numFriday, numSaturday, numSunday);
             ListView events_lv = (ListView)view.findViewById(R.id.my_schedule_list);
+            progressBar.setVisibility(View.GONE);
             events_lv.setAdapter(adapter);
         }
 

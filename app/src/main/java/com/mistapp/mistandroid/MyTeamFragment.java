@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,7 @@ public class MyTeamFragment extends Fragment {
     private TextView emailText;
     private TextView mistIdText;
 
+    private ProgressBar progressBar;
 
     private CacheHandler cacheHandler;
 
@@ -79,10 +82,13 @@ public class MyTeamFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_my_team, container, false);
 
+
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         final TeamAdapter adapter = new TeamAdapter();
+
+        progressBar = (ProgressBar) view.findViewById(R.id.team_progress);
 
         myTeamList = (ListView)view.findViewById(R.id.my_team_list);
 
@@ -104,6 +110,8 @@ public class MyTeamFragment extends Fragment {
         String teammates = cacheHandler.getCachedTeammatesJson();
 
         Gson gson = new Gson();
+
+        progressBar.setVisibility(View.VISIBLE);
 
         //teammates are not cached already
         if (teammates.equals("")){
@@ -158,12 +166,14 @@ public class MyTeamFragment extends Fragment {
 
                     addToAdapter(adapter, teammateList, coachList, teammateList.size(), coachList.size());
                     ListView teammates_lv = (ListView)view.findViewById(R.id.my_team_list);
+                    progressBar.setVisibility(View.GONE);
                     teammates_lv.setAdapter(adapter);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     // Getting Post failed, log a message
+                    progressBar.setVisibility(View.GONE);
                     Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                     // ...
                 }
@@ -198,6 +208,7 @@ public class MyTeamFragment extends Fragment {
 
             addToAdapter(adapter, teammateList, coachList, teammateList.size(), coachList.size());
             ListView teammates_lv = (ListView)view.findViewById(R.id.my_team_list);
+            progressBar.setVisibility(View.GONE);
             teammates_lv.setAdapter(adapter);
 
         }
