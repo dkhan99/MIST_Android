@@ -30,7 +30,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/original_logo"
+        android:icon="@mipmap/mist_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
