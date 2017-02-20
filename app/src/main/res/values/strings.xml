@@ -28,8 +28,8 @@
 
     <string name="error_field_required">This field is required</string>
 
-    <string name="text_mist_hotline">MIST Atlanta Help Line \n 6789004806</string>
-    <string name="text_campus_police">Campus Police \n 6789004805</string>
+    <string name="text_mist_hotline">MIST Atlanta Help Line \n (678)-900-4806</string>
+    <string name="text_campus_police">Campus Police \n (678)-900-4805</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
