@@ -20,14 +20,14 @@
         android:id="@+id/imageViewLayout"
         android:layout_weight=".3">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/final_official_logo"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:id="@+id/imageView"
-        android:layout_alignParentTop="true" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/final_official_logo"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            android:id="@+id/imageView"
+            android:layout_alignParentTop="true" />
 
         </RelativeLayout>
 
@@ -44,26 +44,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         android:id="@+id/i_am_a"
         android:layout_centerHorizontal="true" />
 
 
     <TextView
         style="@style/welcome_user_type_text"
-        android:text="Competitor"
+        android:text="COMPETITOR"
         android:layout_below="@+id/i_am_a"
         android:id="@+id/student" />
 
     <TextView
         style="@style/welcome_user_type_text"
-        android:text="Coach"
+        android:text="COACH"
         android:layout_below="@+id/student"
         android:id="@+id/coach" />
 
     <TextView
         style="@style/welcome_user_type_text"
-        android:text="Guest"
+        android:text="GUEST"
         android:layout_below="@+id/coach"
         android:id="@+id/guest" />
 
