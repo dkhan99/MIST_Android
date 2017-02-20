@@ -13,54 +13,55 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_person_black_24dp"
+            android:src="@drawable/user_icon_gray"
             android:adjustViewBounds="true"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="50dp"
+            android:tint="@color/black"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
             android:scaleType="fitXY"
-            android:scaleX="5"
-            android:scaleY="5"
             android:id="@+id/user_icon" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="10dp"
             android:paddingTop="20dp"
             android:id="@+id/user_profile_text_layout"
             android:layout_toRightOf="@id/user_icon">
 
             <TextView
+                style="@style/userDetails"
                 android:id="@+id/user_name"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="FirstName LastName"/>
+                android:text="John Smith"/>
 
             <TextView
                 android:id="@+id/team_name"
-                android:textColor="@color/black"
+                style="@style/userDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_name"
-                android:text="TeamnNme"/>
+                android:text="Peachtree Horners HS"/>
             <TextView
                 android:id="@+id/email_address"
-                android:textColor="@color/black"
+                style="@style/userDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/team_name"
-                android:text="Eamil"/>
+                android:text="john.smith@gmail.com"/>
             <TextView
                 android:id="@+id/mist_id"
-                android:textColor="@color/black"
+                style="@style/userDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/email_address"
-                android:text="MistID"/>
+                android:text="8394-34156"/>
 
         </RelativeLayout>
     </RelativeLayout>
@@ -82,6 +83,7 @@
         android:textColor="@color/black"
         android:layout_below="@+id/line"
         android:layout_width="match_parent"
+        android:layout_marginLeft="5dp"
         android:layout_height="wrap_content"
         android:textSize="30dp"
         />
@@ -103,7 +105,7 @@
         android:id="@+id/coach_team_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:layout_marginLeft="5dp"
         android:orientation="vertical"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="3dp">

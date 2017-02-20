@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textSize="18dp"
         android:textColor="@color/mistRed"
-        android:text="Name" />
+        android:text="John Smith" />
     <TextView
         android:id="@+id/teammember_phone"
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_below="@id/teammember_name"
         android:textSize="13dp"
         android:textColor="@color/black"
-        android:text="Phone Number" />
+        android:text="(___)-___-____" />
 
     <ImageView
         android:layout_alignParentRight="true"

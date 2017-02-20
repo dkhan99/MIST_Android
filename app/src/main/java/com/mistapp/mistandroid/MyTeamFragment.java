@@ -71,7 +71,6 @@ public class MyTeamFragment extends Fragment {
 
     private TextView noTeammatesText;
 
-
     ListView myTeamList;
     View view;
 
@@ -113,6 +112,9 @@ public class MyTeamFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
+        final String userType = cacheHandler.getUserType();
+
+
         //teammates are not cached already
         if (teammates.equals("")){
             Log.d(TAG, "teammates are not cached. getting from db, and adding to cache");
@@ -143,9 +145,20 @@ public class MyTeamFragment extends Fragment {
                             Teammate currentMate = currentTeammateSnapshot.child((String)pair.getKey()).getValue(Teammate.class);
 
                             if (currentMate.getIsCompetitor() == 1){
+                                //competitor shoudn't have other competitor's phone numbers
+                                Log.d(TAG, "got here - " + userType);
+                                if (userType.equals("competitor")){
+                                    currentMate.setPhoneNumber(0);
+                                    Log.d(TAG, "got here1 - " + currentMate.getPhoneNumber());
+                                }
+                                else{
+                                    Log.d(TAG, "got here2 - " + currentMate.getPhoneNumber());
+                                }
+                                Log.d(TAG, "adding to teammate: " + currentMate.getName());
                                 teammateList.add(currentMate);
                             }
                             else{
+                                Log.d(TAG, "adding to coach: " + currentMate.getName());
                                 coachList.add(currentMate);
                             }
                             Log.d(TAG, "Adding Teammate with mistid: " + mistId + " name: " + currentMate.getName() + " phone: " + currentMate.getPhoneNumber() + " iscompetitor: " + currentMate.getIsCompetitor());
@@ -221,6 +234,10 @@ public class MyTeamFragment extends Fragment {
         AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (cacheHandler.getUserType().equals("competitor") && ((Teammate)parent.getItemAtPosition(position)).getIsCompetitor() == 1){
+                    return;
+                }
                 ProgressDialog progress = new ProgressDialog(getActivity());
                 progress.setMessage("Opening call :) ");
                 progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -244,20 +261,21 @@ public class MyTeamFragment extends Fragment {
             Log.d("TAG", "NAME: " + teammateArrayList.get(x).toString());
         }
 
-
         if (numCoaches != 0) {
             adapter.addSeparatorItem("Coaches", 0);
             for (int x = 0; x < coachArrayList.size(); x++) {
+                Log.d(TAG, "who coach am i adding?" + coachArrayList.get(x).getName());
                 adapter.addItem(coachArrayList.get(x));
             }
         }
         if (numTeammates != 0) {
             int indexToAdd = 0;
             if (numCoaches!=0){
-                indexToAdd += coachArrayList.size();
+                indexToAdd += coachArrayList.size() + 1;
             }
             adapter.addSeparatorItem("Teammates", indexToAdd);
             for (int x = 0; x < teammateArrayList.size(); x++) {
+                Log.d(TAG, "who teammate am i adding?" + teammateArrayList.get(x).getName());
                 adapter.addItem(teammateArrayList.get(x));
             }
         }
@@ -338,6 +356,11 @@ public class MyTeamFragment extends Fragment {
     //format the number with area code + country code
     private String getFormattedPhoneNumber(long number){
         String phoneNumber = Long.toString(number);
+        Log.d(TAG, "PHONE NUM LEN:" + phoneNumber.length());
+        if (phoneNumber.length() < 2){
+            //shouldn't display phone number
+            phoneNumber = "";
+        }
         if (phoneNumber.length() == 10){
             phoneNumber = ( "(" + phoneNumber.substring(0,3) + ")-" + phoneNumber.substring(3,6) + "-" + phoneNumber.substring(6,9));
         }
@@ -425,7 +448,10 @@ public class MyTeamFragment extends Fragment {
                     }
 
                     Object myItem = mData.get(position);
+
+
                     if (myItem instanceof Teammate) {
+
                         // set up the list item
                         if (myItem != null) {
                             // set item text

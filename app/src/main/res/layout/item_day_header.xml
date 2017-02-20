@@ -14,7 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/event_day_header"
-        android:layout_marginLeft="3dp"
         android:layout_marginTop="2dp"/>
 
 </RelativeLayout>

@@ -45,6 +45,9 @@ public class Teammate implements Comparable<Teammate>{
     public void setName(String name){
         this.name = name;
     }
+    public void setPhoneNumber(long phoneNumber){
+        this.phoneNumber = phoneNumber;
+    }
 
     //returns 1 if current event is before event to be compared
     public int compareTo(Teammate compareTeam) {
