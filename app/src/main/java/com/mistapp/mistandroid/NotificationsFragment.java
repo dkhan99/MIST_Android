@@ -163,7 +163,7 @@ public class NotificationsFragment extends Fragment {
             View layout = currentInflater.inflate(R.layout.notification_detail,null, false);
 
             int widthDimen = (int)(layoutWidth * 8.0 / 10.0);
-            int heightDimen = (int)(layoutHeight * 5.5 / 10.0);
+            int heightDimen = (int)(layoutHeight * 5.1 / 10.0);
             Log.d(TAG, "DIMEN WIDTH: "+widthDimen);
             Log.d(TAG, "DIMEN HAIGHT: "+heightDimen);
             final PopupWindow pwindo = new PopupWindow(layout, widthDimen, heightDimen, true);
