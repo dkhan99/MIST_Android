@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="8"
         android:tint="@color/mistRed"
-        android:src="@drawable/ic_star_black_24dp"
+        android:src="@drawable/ic_fiber_manual_record_black_24dp"
         android:visibility="invisible"
         android:paddingRight="10dp"
         />
