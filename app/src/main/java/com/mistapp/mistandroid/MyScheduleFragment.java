@@ -339,7 +339,7 @@ public class MyScheduleFragment extends Fragment {
                                 }
                             }
                             if (holder1.nameAndTimeText != null) {
-                                holder1.nameAndTimeText.setText(startTime + " - " + endTime + extraSpace1 + " --- " + extraSpace2 +((Event) myItem).getName());
+                                holder1.nameAndTimeText.setText(startTime + " - " + endTime + extraSpace1 + " : " + extraSpace2 +((Event) myItem).getName());
                             }
                             if (holder1.locationText != null){
                                 holder1.locationText.setText(((Event) myItem).getLocation());
@@ -349,7 +349,7 @@ public class MyScheduleFragment extends Fragment {
                                 String roomNumsString = roomNumbers.toString();
                                 roomNumsString = roomNumsString.substring(1,roomNumsString.length()-1);
 //                                String allLocations = (roomNumbers.toString().substring(1,roomNumbers.size()-1));
-                                holder1.roomNumText.setText("rooms: " + roomNumsString);
+                                holder1.roomNumText.setText("Rooms: " + roomNumsString);
                             }
                         }
                     }
