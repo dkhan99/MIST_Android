@@ -12,6 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,11 +51,10 @@ import java.util.Map;
 
 import static com.mistapp.mistandroid.R.id.uid;
 
-public class MyMistFragment extends Fragment implements View.OnClickListener{
+public class MyMistFragment extends Fragment{
 
     private static final String TAG = LogInAuth.class.getSimpleName();
     FragmentTransaction transaction;
-    private TextView logoutText;
     private CacheHandler cacheHandler;
 
 
@@ -61,6 +63,7 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getActivity().setTitle(getResources().getString(R.string.my_mist_page_title));
+        setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.fragment_my_mist, container, false);
 
@@ -68,8 +71,6 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
         SharedPreferences.Editor editor = sharedPref.edit();
         cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
 
-        logoutText = (TextView) view.findViewById(R.id.logout);
-        logoutText.setOnClickListener(this);
         RadioGroup group = (RadioGroup)view.findViewById(R.id.radioGroup);
         final RadioButton myTeamButton = (RadioButton) view.findViewById(R.id.my_team_button);
         final RadioButton myScheduleButton = (RadioButton) view.findViewById(R.id.my_schedule_button);
@@ -144,40 +145,46 @@ public class MyMistFragment extends Fragment implements View.OnClickListener{
         transaction.commit();
     }
 
-    /**
-     * If button or textview is clicked, then we go to the next activity after verifying data
-     * @param view
-     */
+
     @Override
-    public void onClick(View view) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //adding signout text to actionbar
+        inflater.inflate(R.menu.actionbar_menu_nonguest, menu);
+    }
 
-        if (view == logoutText) {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(getActivity(), "peace out ", Toast.LENGTH_LONG).show();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.signout_item:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getActivity(), "peace out ", Toast.LENGTH_LONG).show();
 
-            Gson gson = new Gson();
-            String json = cacheHandler.getUserJson();
-            String currentUserType = cacheHandler.getUserType();
+                Gson gson = new Gson();
+                String json = cacheHandler.getUserJson();
+                String currentUserType = cacheHandler.getUserType();
 
-            //remove user, user uid, user's type, teammates, and notifications from the cache
-            cacheHandler.removeCachedUserFields();
-            cacheHandler.removeCachedNotificationFields();
-            cacheHandler.removeCachedEvents();
-            cacheHandler.removeCachedTeammates();
-            cacheHandler.commitToCache();
+                //remove user, user uid, user's type, teammates, and notifications from the cache
+                cacheHandler.removeCachedUserFields();
+                cacheHandler.removeCachedNotificationFields();
+                cacheHandler.removeCachedEvents();
+                cacheHandler.removeCachedTeammates();
+                cacheHandler.commitToCache();
 
-            //unsibscribing from topics that were previously subscribed to when logged in
-            if (currentUserType.equals("coach")){
-                Coach currentUser = gson.fromJson(json, Coach.class);
-                unSubscribeFromCoachTopics(currentUser);
-            }
-            else if(currentUserType.equals("competitor")){
-                Competitor currentUser = gson.fromJson(json, Competitor.class);
-                unSubscribeFromCompetitorTopics(currentUser);
-            }
+                //unsibscribing from topics that were previously subscribed to when logged in
+                if (currentUserType.equals("coach")){
+                    Coach currentUser = gson.fromJson(json, Coach.class);
+                    unSubscribeFromCoachTopics(currentUser);
+                }
+                else if(currentUserType.equals("competitor")){
+                    Competitor currentUser = gson.fromJson(json, Competitor.class);
+                    unSubscribeFromCompetitorTopics(currentUser);
+                }
 
-            Intent intent = new Intent(getActivity(), WelcomeActivity.class);
-            startActivity(intent);
+                Intent intent = new Intent(getActivity(), WelcomeActivity.class);
+                startActivity(intent);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

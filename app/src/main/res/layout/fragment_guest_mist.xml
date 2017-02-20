@@ -7,29 +7,18 @@
 
 
     <TextView
-        android:text="Sign In"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/black"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="2dp"
-        android:clickable="true"
-        android:id="@+id/guest_login" />
-
-    <TextView
-        android:layout_below="@+id/guest_login"
+        android:layout_alignParentTop="true"
         android:id="@+id/guest_wecome_text"
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="25dp"
         android:layout_marginBottom="10dp"
         android:text="Welcome to MIST Atlanta 2017!"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
-        android:textSize="40dp"/>
+        android:textSize="30dp"/>
 
     <TextView
         android:layout_below="@+id/guest_wecome_text"
@@ -43,6 +32,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:textSize="15dp"/>
+
     <TextView
         android:layout_below="@+id/guest_information_1"
         android:textColor="@color/black"
@@ -67,5 +57,6 @@
         android:layout_centerHorizontal="true"
         android:autoLink="web"
         android:textSize="15dp"/>
+
 
 </RelativeLayout>
