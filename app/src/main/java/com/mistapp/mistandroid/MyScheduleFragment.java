@@ -105,7 +105,9 @@ public class MyScheduleFragment extends Fragment {
                 }
                 ///need to add other events - lunch, social, prayer, etc
                 //registeredEvents.addAll(Arrays.asList("Lunch", "Workshop - sometitle", "Ice-cream Social", "Registration", "Orientation", "Dinner", "Dhuhr", "Asr", "Maghrib"));
-
+                for (String competition: registeredEvents) {
+                    competition = competition.replaceAll("/", "_");
+                }
             }
 
 
@@ -122,40 +124,44 @@ public class MyScheduleFragment extends Fragment {
                     int numSaturday = 0;
                     int numSunday = 0;
 
-                    for (String competition: registeredEvents){
-                        competition = competition.replaceAll("/", "_");
-                        Log.d(TAG,competition + " ----");
-                        DataSnapshot currentEventSnapshot = dataSnapshot.child(competition).child("locationArray");
-                        Log.d(TAG,currentEventSnapshot.toString());
+                    //for each event in the list of possible events
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        DataSnapshot currentEventLocationSnapshot = postSnapshot.child("locationArray");
+                        DataSnapshot currentEventTypeSnapshot = postSnapshot.child("isCompetition");
 
-                        Object eventListObject = (Object)currentEventSnapshot.getValue();
+                        String currentEventName = postSnapshot.getKey();
+
+                        Object eventListObject = (Object)currentEventLocationSnapshot.getValue();
+                        long eventisCompetition = (long)currentEventTypeSnapshot.getValue();
+
                         Log.d(TAG,eventListObject.toString());
                         ArrayList<HashMap> eventList = (ArrayList<HashMap>)(eventListObject);
                         Log.d(TAG,eventList.toString());
-                        for (HashMap map: eventList){
-                            String date = (String)map.get("date");
-                            String location = (String)map.get("location");
-                            String startTime = (String)map.get("startTime");
-                            ArrayList<Long> roomNumbers = (ArrayList<Long>)map.get("roomNums");
-                            String endTime = (String)map.get("endTime");
-                            Event e = new Event(competition, location, date, endTime, roomNumbers, startTime);
-
-                            //add event to list - this is so it can be sorted
-                            eventArrayList.add(e);
-                            if (e.getDay() == 17){
-                                numFriday++;
-                            }
-                            else if (e.getDay() == 18){
-                                numSaturday++;
-                            }
-                            else if (e.getDay() == 19){
-                                numSunday++;
+                        //for each location in the list of event locations
+                        for (HashMap map: eventList) {
+                            String date = (String) map.get("date");
+                            String location = (String) map.get("location");
+                            String startTime = (String) map.get("startTime");
+                            ArrayList<Long> roomNumbers = (ArrayList<Long>) map.get("roomNums");
+                            String endTime = (String) map.get("endTime");
+                            if (registeredEvents.contains(currentEventName) || eventisCompetition == 0){
+                                Event e = new Event(currentEventName, location, date, endTime, roomNumbers, startTime, eventisCompetition);
+                                eventArrayList.add(e);
+                                if (e.getDay() == 17){
+                                    numFriday++;
+                                }
+                                else if (e.getDay() == 18){
+                                    numSaturday++;
+                                }
+                                else if (e.getDay() == 19){
+                                    numSunday++;
+                                }
                             }
 
                         }
 
-
                     }
+
 
                     //add event list to cache
                     cacheHandler.cacheEvents(eventArrayList);

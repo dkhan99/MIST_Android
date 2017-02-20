@@ -19,17 +19,19 @@ public class Event implements Comparable<Event>{
     private String endTime; // eg: '12:00pm'
     private ArrayList<Long> roomNumbers;
     private String startTime; // '11:20am'
+    private long isCompetition;
 
     public Event(){
     }
 
-    public Event(String name, String location, String date, String endTime, ArrayList<Long> roomNumbers, String startTime){
+    public Event(String name, String location, String date, String endTime, ArrayList<Long> roomNumbers, String startTime, long isCompetition){
         this.name = name;
         this.location = location;
         this.date = date;
         this.endTime = endTime;
         this.roomNumbers = roomNumbers;
         this.startTime = startTime;
+        this.isCompetition = isCompetition;
     }
 
     //gets the time in minutes after midnight eg(1:00am would return 60)
@@ -55,6 +57,10 @@ public class Event implements Comparable<Event>{
         String[] dateArr = date.split("/");
         int day = Integer.parseInt(dateArr[1]);
         return day;
+    }
+
+    public long getIsCompetition(){
+        return isCompetition;
     }
 
     public String getName() {
