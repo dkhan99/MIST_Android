@@ -10,7 +10,9 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -104,9 +106,9 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         };
 
         // initialize views, which were declared earlier
-        mEmailView = (TextInputEditText) findViewById(R.id.email);
-        mPasswordView = (TextInputEditText) findViewById(R.id.password);
-        mMISTIdView = (TextInputEditText) findViewById(R.id.mist_id);
+        mEmailView = (EditText) findViewById(R.id.email);
+        mPasswordView = (EditText) findViewById(R.id.password);
+        mMISTIdView = (EditText) findViewById(R.id.mist_id);
         mRegisterText = (TextView) findViewById(R.id.email_register_text);
 
         mtextViewRegister = (TextView)findViewById(R.id.textViewSignin);
@@ -114,6 +116,18 @@ public class RegisterAuth extends AppCompatActivity implements View.OnClickListe
         //attaching listeners to button and link
         mRegisterText.setOnClickListener(this);
         mtextViewRegister.setOnClickListener(this);
+
+        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    Log.i(TAG,"Enter pressed");
+                    attemptRegister();
+                }
+                return false;
+            }
+
+        });
     }
 
     /**

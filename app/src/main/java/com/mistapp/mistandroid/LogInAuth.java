@@ -9,8 +9,10 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -106,14 +108,25 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         };
 
         //Initialize views
-        mEmailView = (TextInputEditText) findViewById(R.id.log_in_email);
-        mPasswordView = (TextInputEditText) findViewById(R.id.log_in_password);
+        mEmailView = (EditText) findViewById(R.id.log_in_email);
+        mPasswordView = (EditText) findViewById(R.id.log_in_password);
         mLogInText = (TextView) findViewById(R.id.email_sign_in_text);
         mtextView = (TextView) findViewById(R.id.textViewSignin);
 
         //Listen for user clicks on the button and hyperlink
         mLogInText.setOnClickListener(this);
         mtextView.setOnClickListener(this);
+        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    Log.i(TAG,"Enter pressed");
+                    attemptSignIn();
+                }
+                return false;
+            }
+
+        });
     }
 
     /**

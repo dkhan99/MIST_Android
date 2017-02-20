@@ -50,10 +50,11 @@
             android:layout_centerHorizontal = "true"
             android:layout_centerVertical = "true" >
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 style="@style/login_register_text_input_layout">
 
-            <android.support.design.widget.TextInputEditText
+            <EditText
+                    android:paddingLeft="4dp"
                     android:id="@+id/log_in_email"
                     android:background="@drawable/edit_text"
                     android:layout_width="match_parent"
@@ -65,29 +66,37 @@
                     android:ellipsize="start"
                     android:singleLine="true" />
 
-            </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
                 style="@style/login_register_text_input_layout">
 
-            <android.support.design.widget.TextInputEditText
+            <EditText
+                android:paddingLeft="4dp"
                 android:id="@+id/log_in_password"
                 android:background="@drawable/edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/prompt_password"
-                android:textColorHint="@color/white"
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified"
+                android:fontFamily="sans-serif"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:layout_centerVertical="true"
                 android:ellipsize="start"
                 android:singleLine="true"
                 />
-            </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
 
+            <!--<Button-->
+                <!--style="@style/login_register_submit_text"-->
+                <!--android:text="@string/action_login"-->
+                <!--android:id="@+id/email_sign_in_button"-->
+                <!--android:textColor="@color/mistRed"-->
+                <!--android:shadowColor="@color/black"-->
+                <!--android:background="@drawable/login_register_button"/>-->
 
             <TextView
                 android:id="@+id/email_sign_in_text"
