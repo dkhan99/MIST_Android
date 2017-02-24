@@ -1,20 +1,31 @@
 package com.mistapp.mistandroid;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +59,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
     private boolean exists;
 
     private TextView mLogInText;
+    private TextView mForgotPasswordText;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -73,6 +85,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
 
         progressBar = (ProgressBar) findViewById(R.id.login_progress);
 
+        mForgotPasswordText = (TextView) findViewById(R.id.text_forgot_password);
 
         Intent intent = getIntent();
         context = getApplication();
@@ -116,6 +129,7 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
         //Listen for user clicks on the button and hyperlink
         mLogInText.setOnClickListener(this);
         mtextView.setOnClickListener(this);
+        mForgotPasswordText.setOnClickListener(this);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -127,6 +141,11 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
             }
 
         });
+    }
+
+    //Checks if email is valid, we can add more logic here
+    private boolean isEmailValid(String email) {
+        return email.contains("@");
     }
 
     /**
@@ -143,6 +162,63 @@ public class LogInAuth extends AppCompatActivity implements View.OnClickListener
             finish();
             Intent intent = new Intent(this, RegisterAuth.class);
             startActivity(intent);
+        }
+
+        if (view == mForgotPasswordText){
+            createPasswordResetDialog();
+        }
+    }
+
+    public void createPasswordResetDialog(){
+
+
+        try {
+// We need to get the instance of the LayoutInflater
+            LayoutInflater inflater = (LayoutInflater) this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            //Inflate the view from a predefined XML layout
+            View layout = inflater.inflate(R.layout.forgot_password_popup, null, false);
+            final Dialog dialog = new Dialog(LogInAuth.this);
+            dialog.setContentView(layout);
+            dialog.setTitle("Title...");
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.show();
+
+
+            Button btnClosePopup = (Button) layout.findViewById(R.id.forgot_pass_dismiss);
+            Button btnSendPopup = (Button) layout.findViewById(R.id.send_password_reset_email);
+            final EditText emailView = (EditText)layout.findViewById(R.id.forgotten_email);
+
+            btnSendPopup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "Sending password Reset Email!");
+                    String email = emailView.getText().toString();
+                    if (TextUtils.isEmpty(email)) {
+                        emailView.setError(getString(R.string.error_field_required));
+                        return;
+                    } else if (!isEmailValid(email)) {
+                        emailView.setError(getString(R.string.error_invalid_email));
+                        return;
+                    }
+                    else{
+                        Log.d(TAG, "sending password reset email to " + email);
+                        mAuth.sendPasswordResetEmail(email);
+                        Toast.makeText(LogInAuth.this, "Please check your email("+email+") for password reset instructions", Toast.LENGTH_LONG).show();
+                        dialog.dismiss();
+                    }
+                }
+            });
+            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "dismissing notification detail");
+                    dialog.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

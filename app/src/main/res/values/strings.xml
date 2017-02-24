@@ -26,7 +26,12 @@
     <string name="error_invalid3_mistId">This MIST Id does not exist</string>
 
 
+
+    <string name="forgot_password_text_click">Forgot your password?\n\n</string>
+    <string name="forgot_password_text">Enter the email associated with your account to receive instructions on resetting your password</string>
+
     <string name="error_field_required">This field is required</string>
+    <string name="error_field_required_forgot_password">What email address would you like to reset the password for?</string>
 
     <string name="text_mist_hotline">MIST Atlanta Help Line \n (678)-900-4806</string>
     <string name="text_campus_police">Campus Police \n (678)-900-4805</string>

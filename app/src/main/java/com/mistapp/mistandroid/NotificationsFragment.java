@@ -4,9 +4,11 @@ package com.mistapp.mistandroid;
  * Created by aadil on 1/13/17.
  */
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
@@ -162,13 +164,11 @@ public class NotificationsFragment extends Fragment {
 // We need to get the instance of the LayoutInflater
             View layout = currentInflater.inflate(R.layout.notification_detail,null, false);
 
-            int widthDimen = (int)(layoutWidth * 8.0 / 10.0);
-            int heightDimen = (int)(layoutHeight * 5.1 / 10.0);
-            Log.d(TAG, "DIMEN WIDTH: "+widthDimen);
-            Log.d(TAG, "DIMEN HAIGHT: "+heightDimen);
-            final PopupWindow pwindo = new PopupWindow(layout, widthDimen, heightDimen, true);
-
-            pwindo.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            final Dialog dialog = new Dialog(getActivity());
+            dialog.setContentView(layout);
+            dialog.setTitle("Title...");
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.show();
 
             Button btnClosePopup = (Button) layout.findViewById(R.id.dismiss);
             TextView titleTextView = (TextView)layout.findViewById(R.id.popup_title);
@@ -183,7 +183,7 @@ public class NotificationsFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Log.d(TAG, "dismissing notification detail");
-                    pwindo.dismiss();
+                    dialog.dismiss();
                 }
             });
 

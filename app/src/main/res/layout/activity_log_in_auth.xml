@@ -111,6 +111,13 @@
                 android:id = "@+id/textViewSignin"
                 style="@style/switch_login_register_text"
                 />
+
+            <TextView
+                android:textAlignment ="center"
+                android:text = "@string/forgot_password_text_click"
+                android:id = "@+id/text_forgot_password"
+                style="@style/switch_login_register_text"
+                />
             
         </LinearLayout>
     </RelativeLayout>
