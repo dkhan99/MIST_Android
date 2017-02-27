@@ -57,11 +57,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     private LatLng latLng;
     private Marker NorthCampusGreenMarker;
     private Marker currLocationMarker;
-    private Marker heartyMarker;
+    private Marker hertyMarker;
     private Marker sanfordMarker;
     private Marker chapelMarker;
-    private Marker northHallMarker;
+    private Marker northDeckMarker;
     private Marker caldwellMarker;
+    private Marker eastDeckMarker;
+    private Marker classicCenterMarker;
+    private Marker ramseyMarker;
+
+
     private Location mBestReading;
     private ArrayList<LatLng> arrayPoints = null;
 
@@ -203,8 +208,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
 
         double CaldwellLat = 33.954921;
         double CaldwellLng = -83.375290;
-        double HeartyLat = 33.955946;
-        double HeartyLng = -83.375683;
+        double HertyLat = 33.955946;
+        double HertyLng = -83.375683;
         double ChapelLat = 33.956663;
         double ChapelLng = -83.375181;
         double sanfordLat = 33.953768;
@@ -213,20 +218,32 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         double NorthDeckLng = -83.372517;
         double NorthCampusGreenLat = 33.956681;
         double NorthCampusGreenLng = -83.374673;
+        double eastParkingDeckLat = 33.938125;
+        double eastParkingDeckLng = -83.369314;
+        double classicCenterLat = 33.960552;
+        double classicCenterLng = -83.372337;
+        double ramseyCenterLat = 33.937612;
+        double ramseyCenterLng = -83.370851;
 
         MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
         MarkerOptions Sanford= new MarkerOptions().title("Sanford Hall").position(new LatLng(sanfordLat,sanfordLng));
-        MarkerOptions Hearty= new MarkerOptions().title("Hearty Field").position(new LatLng(HeartyLat,HeartyLng));
+        MarkerOptions Herty= new MarkerOptions().title("Herty Field").position(new LatLng(HertyLat,HertyLng));
         MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
         MarkerOptions NorthCampusGreen = new MarkerOptions().title("N. Campus Green").position(new LatLng(NorthCampusGreenLat,NorthCampusGreenLng));
         MarkerOptions NorthHall = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
+        MarkerOptions EastDeck = new MarkerOptions().title("East Deck").position(new LatLng(eastParkingDeckLat,eastParkingDeckLng));
+        MarkerOptions ClassicCenter = new MarkerOptions().title("Classic Center").position(new LatLng(classicCenterLat,classicCenterLng));
+        MarkerOptions Ramsey = new MarkerOptions().title("Ramsey Student Center").position(new LatLng(ramseyCenterLat,ramseyCenterLng));
 
-        heartyMarker = mGoogleMap.addMarker(Hearty);
+        hertyMarker = mGoogleMap.addMarker(Herty);
         chapelMarker = mGoogleMap.addMarker(Chapel);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
         sanfordMarker = mGoogleMap.addMarker(Sanford);
         NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
-        northHallMarker = mGoogleMap.addMarker(NorthHall);
+        northDeckMarker = mGoogleMap.addMarker(NorthHall);
+        eastDeckMarker = mGoogleMap.addMarker(EastDeck);
+        classicCenterMarker = mGoogleMap.addMarker(ClassicCenter);
+        ramseyMarker = mGoogleMap.addMarker(Ramsey);
     }
 
 
@@ -312,8 +329,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         //currLocationMarker.showInfoWindow();
         double CaldwellLat = 33.954921;
         double CaldwellLng = -83.375290;
-        double HeartyLat = 33.955946;
-        double HeartyLng = -83.375683;
+        double HertyLat = 33.955946;
+        double HertyLng = -83.375683;
         double ChapelLat = 33.956663;
         double ChapelLng = -83.375181;
         double sanfordLat = 33.953768;
@@ -322,20 +339,32 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         double NorthDeckLng = -83.372517;
         double NorthCampusGreenLat = 33.956681;
         double NorthCampusGreenLng = -83.374673;
+        double eastParkingDeckLat = 33.938125;
+        double eastParkingDeckLng = -83.369314;
+        double classicCenterLat = 33.960552;
+        double classicCenterLng = -83.372337;
+        double ramseyCenterLat = 33.937612;
+        double ramseyCenterLng = -83.370851;
 
         MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
         MarkerOptions Sanford= new MarkerOptions().title("Sanford Hall").position(new LatLng(sanfordLat,sanfordLng));
-        MarkerOptions Hearty= new MarkerOptions().title("Hearty Field").position(new LatLng(HeartyLat,HeartyLng));
+        MarkerOptions Herty= new MarkerOptions().title("Herty Field").position(new LatLng(HertyLat,HertyLng));
         MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
         MarkerOptions NorthCampusGreen = new MarkerOptions().title("N. Campus Green").position(new LatLng(NorthCampusGreenLat,NorthCampusGreenLng));
-        MarkerOptions NorthHall = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
+        MarkerOptions NorthDeck = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
+        MarkerOptions EastDeck = new MarkerOptions().title("East Deck").position(new LatLng(eastParkingDeckLat,eastParkingDeckLng));
+        MarkerOptions ClassicCenter = new MarkerOptions().title("Classic Center").position(new LatLng(classicCenterLat,classicCenterLng));
+        MarkerOptions Ramsey = new MarkerOptions().title("Ramsey Student Center").position(new LatLng(ramseyCenterLat,ramseyCenterLng));
 
-        heartyMarker = mGoogleMap.addMarker(Hearty);
+        hertyMarker = mGoogleMap.addMarker(Herty);
         chapelMarker = mGoogleMap.addMarker(Chapel);
         caldwellMarker = mGoogleMap.addMarker(Caldwell);
         sanfordMarker = mGoogleMap.addMarker(Sanford);
         NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
-        northHallMarker = mGoogleMap.addMarker(NorthHall);
+        northDeckMarker = mGoogleMap.addMarker(NorthDeck);
+        eastDeckMarker = mGoogleMap.addMarker(EastDeck);
+        classicCenterMarker = mGoogleMap.addMarker(ClassicCenter);
+        ramseyMarker = mGoogleMap.addMarker(Ramsey);
         // Toast.makeText(getActivity(),"Location Changed",Toast.LENGTH_SHORT).show();
         addLines();
         //zoom to current position:
