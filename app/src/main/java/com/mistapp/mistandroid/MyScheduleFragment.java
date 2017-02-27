@@ -142,7 +142,7 @@ public class MyScheduleFragment extends Fragment {
                             String date = (String) map.get("date");
                             String location = (String) map.get("location");
                             String startTime = (String) map.get("startTime");
-                            ArrayList<Long> roomNumbers = (ArrayList<Long>) map.get("roomNums");
+                            ArrayList<String> roomNumbers = (ArrayList<String>) map.get("roomNums");
                             String endTime = (String) map.get("endTime");
                             if (registeredEvents.contains(currentEventName) || eventisCompetition == 0){
                                 Event e = new Event(currentEventName, location, date, endTime, roomNumbers, startTime, eventisCompetition);
@@ -351,11 +351,17 @@ public class MyScheduleFragment extends Fragment {
                                 holder1.locationText.setText(((Event) myItem).getLocation());
                             }
                             if (holder1.roomNumText != null){
-                                ArrayList<Long> roomNumbers = ((Event) myItem).getRoomNumbers();
-                                String roomNumsString = roomNumbers.toString();
-                                roomNumsString = roomNumsString.substring(1,roomNumsString.length()-1);
+                                ArrayList<String> roomNumbers = ((Event) myItem).getRoomNumbers();
+                                //add roomnumbers text only if there are roomnumbers (north campus green, herty field have no room numbers)
+                                if (!(roomNumbers.size() == 1 && roomNumbers.get(0).equals(""))) {
+                                    String roomNumsString = roomNumbers.toString();
+                                    roomNumsString = roomNumsString.substring(1, roomNumsString.length() - 1);
 //                                String allLocations = (roomNumbers.toString().substring(1,roomNumbers.size()-1));
-                                holder1.roomNumText.setText("Rooms: " + roomNumsString);
+                                    holder1.roomNumText.setText("Rooms: " + roomNumsString);
+                                }
+                                else{
+                                    holder1.roomNumText.setText("");
+                                }
                             }
                         }
                     }

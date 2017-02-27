@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
     <TextView
-        android:text="11:20am - 5:00pm  :  Brother's Quran Level 2"
+        android:text=""
         android:textColor="@color/mistRed"
         android:ellipsize="end"
         android:maxLines="1"
@@ -32,13 +32,13 @@
         android:layout_below="@+id/event_top_row">
 
     <TextView
-        android:text="Boggs  Rooms: 210,234,235,402"
+        android:text=""
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/event_location" />
     <TextView
-        android:text="room num"
+        android:text=""
         android:textColor="@color/black"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

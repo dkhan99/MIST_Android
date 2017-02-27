@@ -17,14 +17,14 @@ public class Event implements Comparable<Event>{
     private String location; //building name
     private String date;     // eg: '03/17'
     private String endTime; // eg: '12:00pm'
-    private ArrayList<Long> roomNumbers;
+    private ArrayList<String> roomNumbers;
     private String startTime; // '11:20am'
     private long isCompetition;
 
     public Event(){
     }
 
-    public Event(String name, String location, String date, String endTime, ArrayList<Long> roomNumbers, String startTime, long isCompetition){
+    public Event(String name, String location, String date, String endTime, ArrayList<String> roomNumbers, String startTime, long isCompetition){
         this.name = name;
         this.location = location;
         this.date = date;
@@ -79,7 +79,7 @@ public class Event implements Comparable<Event>{
         return endTime;
     }
 
-    public ArrayList<Long> getRoomNumbers() {
+    public ArrayList<String> getRoomNumbers() {
         return roomNumbers;
     }
 
