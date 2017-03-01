@@ -81,22 +81,23 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
         }
         else if (view == fridayProgramButton) {
             Log.d(TAG, "friday program");
-            Toast.makeText(getActivity(), "need friday program", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Friday program still in the making", Toast.LENGTH_SHORT).show();
 //            String fridayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fridayProgramUri)));
         }
         else if (view == saturdayProgramButton) {
             Log.d(TAG, "saturday program");
-            Toast.makeText(getActivity(), "need saturday program", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Saturday program still in the making", Toast.LENGTH_SHORT).show();
 //            String saturdayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(saturdayProgramUri)));
         }
         else if (view == sundayProgramButton) {
             Log.d(TAG, "sunday program");
-            Toast.makeText(getActivity(), "need sunday program", Toast.LENGTH_SHORT);
+            Toast.makeText(getActivity(), "Sunday program still in the making", Toast.LENGTH_SHORT).show();
 //            String sundayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sundayProgramUri)));
         }
+
     }
 
     @Override
