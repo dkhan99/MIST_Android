@@ -28,35 +28,63 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
-            android:paddingTop="20dp"
+            android:paddingTop="15dp"
             android:id="@+id/user_profile_text_layout"
             android:layout_toRightOf="@id/user_icon">
 
             <TextView
-                style="@style/userDetails"
+                style="@style/userDetailsConstant"
                 android:id="@+id/user_name"
+                android:textSize="16dp"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="John Smith"/>
 
             <TextView
+                style="@style/userDetailsConstant"
+                android:layout_below="@id/user_name"
+                android:id="@+id/team_name_constant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Team: "/>
+
+            <TextView
+                android:layout_toRightOf="@id/team_name_constant"
                 android:id="@+id/team_name"
                 style="@style/userDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_name"
                 android:text="Peachtree Horners HS"/>
+
             <TextView
+                style="@style/userDetailsConstant"
+                android:id="@+id/email_constant"
+                android:layout_below="@id/team_name_constant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email: "/>
+            <TextView
+                android:layout_toRightOf="@id/email_constant"
                 android:id="@+id/email_address"
                 style="@style/userDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/team_name"
                 android:text="john.smith@gmail.com"/>
+
+            <TextView
+                style="@style/userDetailsConstant"
+                android:id="@+id/mist_id_constant"
+                android:layout_below="@id/email_constant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MIST ID: "/>
             <TextView
                 android:id="@+id/mist_id"
+                android:layout_toRightOf="@id/mist_id_constant"
                 style="@style/userDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -66,32 +94,54 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_height="1dp"
-        android:layout_marginLeft="45dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/user_profile_layout"
-        android:id="@+id/line"
-        android:background="@android:color/black"/>
-
-    <TextView
-        android:id="@+id/my_team_text"
-        android:text="My Team"
-        android:textColor="@color/black"
-        android:layout_below="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_marginLeft="5dp"
+    <LinearLayout
+        android:weightSum="40"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        />
+        android:layout_below="@+id/user_profile_layout"
+        android:id="@+id/my_team_view"
+        android:layout_marginTop="7dp"
+        >
+
+        <View
+            android:layout_weight="11"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/line"
+            android:background="@android:color/black"/>
+
+        <TextView
+            android:layout_weight="18"
+            android:id="@+id/my_team_text"
+            android:text="My Team"
+            android:textSize="26dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/black"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/line"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            />
+
+        <View
+            android:layout_weight="11"
+            android:layout_width="0dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="1dp"
+            android:id="@+id/line1"
+            android:background="@android:color/black"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/no_teammates_text"
         android:layout_marginTop="40dp"
-        android:layout_below="@+id/my_team_text"
+        android:layout_below="@+id/my_team_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No Teammates to Display"
@@ -101,11 +151,12 @@
         />
 
     <LinearLayout
-        android:layout_below="@+id/my_team_text"
+        android:layout_below="@+id/my_team_view"
         android:id="@+id/coach_team_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:orientation="vertical"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="3dp">
@@ -123,6 +174,8 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:dividerHeight="5dp"
+            android:divider="@null"
             android:id="@+id/my_team_list">
 
         </ListView>

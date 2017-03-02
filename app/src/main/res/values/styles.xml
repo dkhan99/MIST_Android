@@ -52,6 +52,9 @@
     </style>
 
     <style name="userDetails">
+        <item name="android:textColor">@color/mistRed</item>
+    </style>
+    <style name="userDetailsConstant">
         <item name="android:textColor">@color/black</item>
     </style>
 
