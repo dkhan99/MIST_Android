@@ -98,6 +98,8 @@ public class MyMistActivity extends AppCompatActivity {
             Log.d(TAG, "usertype was not passed in intent. getting from cache: " + currentUserType);
         }
 
+
+
         Log.d(TAG, "CURRENT USER IS A : " + currentUserType);
 
 
@@ -123,6 +125,8 @@ public class MyMistActivity extends AppCompatActivity {
             }
         };
 
+
+
         Bundle bundle = new Bundle();
         String myMessage = "Stackoverflow is cool!";
 
@@ -133,22 +137,13 @@ public class MyMistActivity extends AppCompatActivity {
         programFragment = new ProgramFragment();
         notificationsFragment = new NotificationsFragment();
 
-        args = new Bundle();
 
-        transaction = getSupportFragmentManager().beginTransaction();
-        // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
-        if (currentUserType.equals("guest")) {
-            transaction.replace(R.id.fragment_container, guestMistFragment, "mist");
-        } else {
-            transaction.replace(R.id.fragment_container, myMistFragment, "mist");
-        }
 
-        transaction.addToBackStack(null);
-        transaction.commit();
+        //if coming bc event was tapped in my schedule page ->
+
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setDefaultTabPosition(2);
-
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -225,6 +220,29 @@ public class MyMistActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        transaction = getSupportFragmentManager().beginTransaction();
+
+        if (getIntent().getExtras().containsKey("eventLocation")){
+            Log.d("11", "coming from event press");
+            Log.d("popopop", "OOOOOOOOOOMMMMMMMMMMMMGGGGGGGGGGGGGGGG");
+            bundle.putString("eventLocation", getIntent().getStringExtra("eventLocation"));
+            myMapFragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container, myMapFragment, "map");
+        }
+        //if coming bc my_mist tab was pressed
+        else {
+            Log.d("11", "coming normally");
+            // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
+            if (currentUserType.equals("guest")) {
+                transaction.replace(R.id.fragment_container, guestMistFragment, "mist");
+            } else {
+                transaction.replace(R.id.fragment_container, myMistFragment, "mist");
+            }
+        }
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 

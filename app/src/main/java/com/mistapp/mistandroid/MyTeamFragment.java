@@ -258,13 +258,13 @@ public class MyTeamFragment extends Fragment {
     public void addToAdapter(MyTeamFragment.TeamAdapter adapter, ArrayList<Teammate>teammateArrayList, ArrayList<Teammate>coachArrayList, int numTeammates, int numCoaches) {
         //sort array and add items and separator items to adapter
         for (int x = 0; x < teammateArrayList.size(); x++) {
-            Log.d("TAG", "NAME: " + teammateArrayList.get(x).toString());
+            Log.d("TAG", "ADDING NAME: " + teammateArrayList.get(x).getName().toString());
         }
 
         if (numCoaches != 0) {
             adapter.addSeparatorItem("Coaches", 0);
             for (int x = 0; x < coachArrayList.size(); x++) {
-                Log.d(TAG, "who coach am i adding?" + coachArrayList.get(x).getName());
+//                Log.d(TAG, "who coach am i adding?" + coachArrayList.get(x).getName());
                 adapter.addItem(coachArrayList.get(x));
             }
         }
@@ -275,7 +275,7 @@ public class MyTeamFragment extends Fragment {
             }
             adapter.addSeparatorItem("Teammates", indexToAdd);
             for (int x = 0; x < teammateArrayList.size(); x++) {
-                Log.d(TAG, "who teammate am i adding?" + teammateArrayList.get(x).getName());
+//                Log.d(TAG, "who teammate am i adding?" + teammateArrayList.get(x).getName());
                 adapter.addItem(teammateArrayList.get(x));
             }
         }

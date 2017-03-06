@@ -45,6 +45,10 @@ import com.google.android.gms.plus.Plus;
 import com.roughike.bottombar.BottomBar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class MyMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
@@ -65,10 +69,13 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     private Marker eastDeckMarker;
     private Marker classicCenterMarker;
     private Marker ramseyMarker;
-
+    private String locationToZoom;
 
     private Location mBestReading;
     private ArrayList<LatLng> arrayPoints = null;
+    private HashMap<String,MarkerOptions> markerOptionsMap;
+    private HashMap<String,Marker> markerMap;
+
 
     /**
      * Inflate map, calls google map fragment into existence
@@ -83,6 +90,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         getActivity().setTitle(getResources().getString(R.string.map_page_title));
         Log.i("TAG", " onmapcreate!");
 
+        createMarkerMap();
+        if (getArguments()!=null) {
+            if (getArguments().containsKey("eventLocation")) {
+                locationToZoom = getArguments().getString("eventLocation");
+                Log.d("LOCATION", locationToZoom);
+            }
+        }
+
         // Inflate the layout for this fragment
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
@@ -91,6 +106,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("TAG", "Oncreate did not have permission");
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},  MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
             // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
             // app-defined int constant. The callback method gets the
             // result of the request.
@@ -111,7 +127,13 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             googleMapFragment.getMapAsync(this);
             addMarkers();
             addLines();
-            goToLocationZoom(33.955655, -83.374050, 17);
+            if (locationToZoom != null){
+                LatLng coordinates = findZoomCoordinates();
+                goToLocationZoom(coordinates.latitude, coordinates.longitude, 17);
+            }
+            else{
+                goToLocationZoom(33.955655, -83.374050, 17);
+            }
 
 
         } catch (Exception e) {
@@ -161,12 +183,26 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
             }
             addMarkers();
             addLines();
-            goToLocationZoom(33.955655, -83.374050, 17);
+            createMarkerMap();
+            if (locationToZoom != null){
+                LatLng coordinates = findZoomCoordinates();
+                goToLocationZoom(coordinates.latitude, coordinates.longitude, 17);
+            }
+            else {
+                goToLocationZoom(33.955655, -83.374050, 17);
+            }
 
         } else {
             addMarkers();
             addLines();
-            goToLocationZoom(33.955655, -83.374050, 17);
+            if (locationToZoom != null){
+                LatLng coordinates = findZoomCoordinates();
+                goToLocationZoom(coordinates.latitude, coordinates.longitude, 17);
+
+            }
+            else {
+                goToLocationZoom(33.955655, -83.374050, 17);
+            }
 
         }
 
@@ -175,6 +211,76 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
         LatLng ll = new LatLng(lat, lng);
         CameraUpdate update = CameraUpdateFactory.newLatLngZoom(ll, zoom);
         mGoogleMap.moveCamera(update);
+    }
+
+    private LatLng findZoomCoordinates(){
+        //coordinate of center of campus
+        LatLng defaultCoordinate = new LatLng(33.955655, -83.374050);
+        //go through all locations - if the key matches the location -> return that location's coordinate
+        for (Map.Entry<String, Marker> entry : markerMap.entrySet()){
+            if (locationToZoom.toLowerCase().contains(entry.getKey().toLowerCase())){
+                Log.d("11","Zooming into "+entry.getKey());
+                entry.getValue().showInfoWindow();
+                return entry.getValue().getPosition();
+            }
+        }
+        return defaultCoordinate;
+    }
+
+    private void createMarkerMap(){
+
+        markerMap = new HashMap<>();
+        markerOptionsMap = new HashMap<>();
+        double CaldwellLat = 33.954921;
+        double CaldwellLng = -83.375290;
+        double HertyLat = 33.955946;
+        double HertyLng = -83.375683;
+        double ChapelLat = 33.956663;
+        double ChapelLng = -83.375181;
+        double sanfordLat = 33.953768;
+        double sanfordLng = -83.374784;
+        double NorthDeckLat = 33.956169;
+        double NorthDeckLng = -83.372517;
+        double NorthCampusGreenLat = 33.956681;
+        double NorthCampusGreenLng = -83.374673;
+        double eastParkingDeckLat = 33.938125;
+        double eastParkingDeckLng = -83.369314;
+        double classicCenterLat = 33.960552;
+        double classicCenterLng = -83.372337;
+        double ramseyCenterLat = 33.937612;
+        double ramseyCenterLng = -83.370851;
+
+        MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
+        MarkerOptions Sanford= new MarkerOptions().title("Sanford Hall").position(new LatLng(sanfordLat,sanfordLng));
+        MarkerOptions Herty= new MarkerOptions().title("Herty Field").position(new LatLng(HertyLat,HertyLng));
+        MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
+        MarkerOptions NorthCampusGreen = new MarkerOptions().title("N. Campus Green").position(new LatLng(NorthCampusGreenLat,NorthCampusGreenLng));
+        MarkerOptions NorthDeck = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
+        MarkerOptions EastDeck = new MarkerOptions().title("East Deck").position(new LatLng(eastParkingDeckLat,eastParkingDeckLng));
+        MarkerOptions ClassicCenter = new MarkerOptions().title("Classic Center").position(new LatLng(classicCenterLat,classicCenterLng));
+        MarkerOptions Ramsey = new MarkerOptions().title("Ramsey Student Center").position(new LatLng(ramseyCenterLat,ramseyCenterLng));
+
+        markerOptionsMap.put("Caldwell Hall",Caldwell);
+        markerOptionsMap.put("Sanford Hall",Sanford);
+        markerOptionsMap.put("Herty Field",Herty);
+        markerOptionsMap.put("Chapel",Chapel);
+        markerOptionsMap.put("North Campus Green",NorthCampusGreen);
+        markerOptionsMap.put("North Deck",NorthDeck);
+        markerOptionsMap.put("East Deck",EastDeck);
+        markerOptionsMap.put("Classic Center",ClassicCenter);
+        markerOptionsMap.put("Ramsey Center",Ramsey);
+
+        if (mGoogleMap != null) {
+            markerMap.put("Caldwell Hall", mGoogleMap.addMarker(Caldwell));
+            markerMap.put("Sanford Hall", mGoogleMap.addMarker(Sanford));
+            markerMap.put("Herty Field", mGoogleMap.addMarker(Herty));
+            markerMap.put("Chapel", mGoogleMap.addMarker(Chapel));
+            markerMap.put("North Campus Green", mGoogleMap.addMarker(NorthCampusGreen));
+            markerMap.put("North Deck", mGoogleMap.addMarker(NorthDeck));
+            markerMap.put("East Deck", mGoogleMap.addMarker(EastDeck));
+            markerMap.put("Classic Center", mGoogleMap.addMarker(ClassicCenter));
+            markerMap.put("Ramsey Center", mGoogleMap.addMarker(Ramsey));
+        }
     }
 
 
@@ -202,48 +308,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
 
     }
 
+
+    //adding marker options to mgoogle map - called on update_location
     private void addMarkers() {
-        //double longitude = location.getLongitude();
-        //double latitude = location.getLatitude();
+        //going through each marker and adding it to googleMap
+        for (Map.Entry<String, MarkerOptions> entry : markerOptionsMap.entrySet()) {
+            mGoogleMap.addMarker(entry.getValue());
+        }
 
-        double CaldwellLat = 33.954921;
-        double CaldwellLng = -83.375290;
-        double HertyLat = 33.955946;
-        double HertyLng = -83.375683;
-        double ChapelLat = 33.956663;
-        double ChapelLng = -83.375181;
-        double sanfordLat = 33.953768;
-        double sanfordLng = -83.374784;
-        double NorthDeckLat = 33.956169;
-        double NorthDeckLng = -83.372517;
-        double NorthCampusGreenLat = 33.956681;
-        double NorthCampusGreenLng = -83.374673;
-        double eastParkingDeckLat = 33.938125;
-        double eastParkingDeckLng = -83.369314;
-        double classicCenterLat = 33.960552;
-        double classicCenterLng = -83.372337;
-        double ramseyCenterLat = 33.937612;
-        double ramseyCenterLng = -83.370851;
-
-        MarkerOptions Caldwell= new MarkerOptions().title("Caldwell Hall").position(new LatLng(CaldwellLat,CaldwellLng));
-        MarkerOptions Sanford= new MarkerOptions().title("Sanford Hall").position(new LatLng(sanfordLat,sanfordLng));
-        MarkerOptions Herty= new MarkerOptions().title("Herty Field").position(new LatLng(HertyLat,HertyLng));
-        MarkerOptions Chapel = new MarkerOptions().title("Chapel").position(new LatLng(ChapelLat,ChapelLng));
-        MarkerOptions NorthCampusGreen = new MarkerOptions().title("N. Campus Green").position(new LatLng(NorthCampusGreenLat,NorthCampusGreenLng));
-        MarkerOptions NorthHall = new MarkerOptions().title("North Deck").position(new LatLng(NorthDeckLat,NorthDeckLng));
-        MarkerOptions EastDeck = new MarkerOptions().title("East Deck").position(new LatLng(eastParkingDeckLat,eastParkingDeckLng));
-        MarkerOptions ClassicCenter = new MarkerOptions().title("Classic Center").position(new LatLng(classicCenterLat,classicCenterLng));
-        MarkerOptions Ramsey = new MarkerOptions().title("Ramsey Student Center").position(new LatLng(ramseyCenterLat,ramseyCenterLng));
-
-        hertyMarker = mGoogleMap.addMarker(Herty);
-        chapelMarker = mGoogleMap.addMarker(Chapel);
-        caldwellMarker = mGoogleMap.addMarker(Caldwell);
-        sanfordMarker = mGoogleMap.addMarker(Sanford);
-        NorthCampusGreenMarker = mGoogleMap.addMarker(NorthCampusGreen);
-        northDeckMarker = mGoogleMap.addMarker(NorthHall);
-        eastDeckMarker = mGoogleMap.addMarker(EastDeck);
-        classicCenterMarker = mGoogleMap.addMarker(ClassicCenter);
-        ramseyMarker = mGoogleMap.addMarker(Ramsey);
     }
 
 

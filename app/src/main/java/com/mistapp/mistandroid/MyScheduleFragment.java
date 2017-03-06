@@ -1,13 +1,17 @@
 package com.mistapp.mistandroid;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -181,7 +185,11 @@ public class MyScheduleFragment extends Fragment {
             });
 
             ListView events_lv = (ListView)view.findViewById(R.id.my_schedule_list);
+            AdapterView.OnItemClickListener listener = createItemClickListener();
+            events_lv.setOnItemClickListener(listener);
             events_lv.setAdapter(adapter);
+
+
         }
         //Events were cached - need to retreive
         else{
@@ -205,13 +213,36 @@ public class MyScheduleFragment extends Fragment {
             addToAdapter(adapter, allEvents, numFriday, numSaturday, numSunday);
             ListView events_lv = (ListView)view.findViewById(R.id.my_schedule_list);
             progressBar.setVisibility(View.GONE);
+            AdapterView.OnItemClickListener listener = createItemClickListener();
+            events_lv.setOnItemClickListener(listener);
             events_lv.setAdapter(adapter);
         }
 
         return view;
     }
 
+    public AdapterView.OnItemClickListener createItemClickListener(){
+        AdapterView.OnItemClickListener listener = new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                String eventLocation = ((TextView)view.findViewById(R.id.event_location)).getText().toString();
+                //add code to open map fragment and zoom
+                Log.d("WQER", "QPQPPQPQP" + eventLocation);
+                MyMapFragment myMap = new MyMapFragment();
+//                    getFragmentManager().beginTransaction()
+//                            .replace(R.id.fragment_container, myMap, "map")
+//                            .addToBackStack(null)
+//                            .commit();
+
+                Intent intent = new Intent(getActivity().getBaseContext(),MyMistActivity.class);
+                intent.putExtra("eventLocation", eventLocation);
+                Log.d("WQER", "wqerwqerqa" + eventLocation);
+                getActivity().startActivity(intent);
+            }
+        };
+        return listener;
+    }
     //adds event items and separater items to the adapter
     public void addToAdapter(EventAdapter adapter, ArrayList<Event>eventArrayList, int numFriday, int numSaturday, int numSunday){
         //sort array and add items and separator items to adapter
