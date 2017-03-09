@@ -137,11 +137,6 @@ public class MyMistActivity extends AppCompatActivity {
         programFragment = new ProgramFragment();
         notificationsFragment = new NotificationsFragment();
 
-
-
-        //if coming bc event was tapped in my schedule page ->
-
-
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setDefaultTabPosition(2);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -224,16 +219,21 @@ public class MyMistActivity extends AppCompatActivity {
 
         transaction = getSupportFragmentManager().beginTransaction();
 
+        //if coming bc event was clicked
         if (getIntent().getExtras().containsKey("eventLocation")){
-            Log.d("11", "coming from event press");
-            Log.d("popopop", "OOOOOOOOOOMMMMMMMMMMMMGGGGGGGGGGGGGGGG");
+            Log.d(TAG, "coming from event click");
             bundle.putString("eventLocation", getIntent().getStringExtra("eventLocation"));
             myMapFragment.setArguments(bundle);
             transaction.replace(R.id.fragment_container, myMapFragment, "map");
         }
+        //if coming through a notification
+        else if (getIntent().getExtras().containsKey(getString(R.string.received_notification))){
+            Log.d(TAG, "coming from notification");
+            transaction.replace(R.id.fragment_container, notificationsFragment, "notifications");
+        }
         //if coming bc my_mist tab was pressed
         else {
-            Log.d("11", "coming normally");
+            Log.d(TAG, "coming through mist-tab click");
             // Replace whatever is in the fragment_container view with this fragment and add the transaction to the back stack so the user can navigate back
             if (currentUserType.equals("guest")) {
                 transaction.replace(R.id.fragment_container, guestMistFragment, "mist");

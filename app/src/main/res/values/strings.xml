@@ -25,6 +25,8 @@
     <string name="error_invalid2_mistId">This MIST Id is already registered</string>
     <string name="error_invalid3_mistId">This MIST Id does not exist</string>
 
+    <string name="received_notification">received_notification</string>
+
 
 
     <string name="forgot_password_text_click">Forgot your password?\n\n</string>

@@ -43,6 +43,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
+
+
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         cacheHandler = CacheHandler.getInstance(getApplication(), sharedPref, editor);
@@ -65,6 +67,17 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                //set to true if intent extra contains key=title (happens when a notification is received)
+                boolean arrivingFromNotificaiton = false;
+                Intent prevIntent = getIntent();
+                Bundle bundle = prevIntent.getExtras();
+                if (bundle != null) {
+                    if (bundle.containsKey("title")){
+                        arrivingFromNotificaiton = true;
+                    }
+                }
+
                 if (user != null) {
 
                     String json = cacheHandler.getUserJson();
@@ -88,6 +101,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                     cacheHandler.commitToCache();
                     Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                     intent.putExtra(getString(R.string.user_uid_key), user.getUid());
+                    if (arrivingFromNotificaiton){
+                        intent.putExtra(getString(R.string.received_notification), getString(R.string.received_notification));
+                    }
                     startActivity(intent);
                 } else {
                     Log.d(TAG, "NOT FAIL");
@@ -103,6 +119,9 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
                         else{
                             Intent intent = new Intent(getApplicationContext(), MyMistActivity.class);
                             intent.putExtra(getString(R.string.current_user_type), "guest");
+                            if (arrivingFromNotificaiton){
+                                intent.putExtra(getString(R.string.received_notification), getString(R.string.received_notification));
+                            }
                             startActivity(intent);
                         }
 
