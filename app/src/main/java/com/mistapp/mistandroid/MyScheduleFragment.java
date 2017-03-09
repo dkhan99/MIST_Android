@@ -226,6 +226,11 @@ public class MyScheduleFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                //if item is a Day separator item, nothing happens on click
+                if (parent.getItemAtPosition(position) instanceof String){
+                    return;
+                }
+
                 String eventLocation = ((TextView)view.findViewById(R.id.event_location)).getText().toString();
                 //add code to open map fragment and zoom
                 Log.d("WQER", "QPQPPQPQP" + eventLocation);

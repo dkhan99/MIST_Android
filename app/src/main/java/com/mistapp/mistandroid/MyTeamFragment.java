@@ -235,9 +235,17 @@ public class MyTeamFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                Log.d(TAG, "PARENT:" + parent.getItemAtPosition(position).toString());
+
+                //if item is a teamamateType separator item, nothing happens on click
+                if (parent.getItemAtPosition(position) instanceof String){
+                    return;
+                }
+                //makes teammates unclickable
                 if (cacheHandler.getUserType().equals("competitor") && ((Teammate)parent.getItemAtPosition(position)).getIsCompetitor() == 1){
                     return;
                 }
+
                 ProgressDialog progress = new ProgressDialog(getActivity());
                 progress.setMessage("Opening call :) ");
                 progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
