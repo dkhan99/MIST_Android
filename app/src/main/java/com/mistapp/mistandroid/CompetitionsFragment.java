@@ -107,7 +107,7 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
             Bundle args = new Bundle();
             args.putString("PARAM", url);
             fragment.setArguments(args);
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
+            fragmentTransaction.replace(R.id.fragment_container, fragment, "brackets");
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         }

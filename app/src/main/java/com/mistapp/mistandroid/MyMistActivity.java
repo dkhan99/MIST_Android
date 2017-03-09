@@ -291,10 +291,18 @@ public class MyMistActivity extends AppCompatActivity {
         Log.d("~~~~~~~~~~~`", "back, has been pressed!");
 
         Fragment mainFragment = getSupportFragmentManager().findFragmentByTag("mist");
+        Fragment bracketFragment = getSupportFragmentManager().findFragmentByTag("brackets");
 
         //if current fragment was main fragment (myMistFragment or GuestMistFragment), do nothing if back is hit
         if (mainFragment != null && mainFragment.isVisible()){
             Log.d(TAG,"current fragment was already main fragment... doing nother");
+        }
+        else if (bracketFragment != null && bracketFragment.isVisible()){
+            Log.d(TAG,"current fragment is bracket fragment... going back to cop page");
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, competitionsFragment, "competitions");
+
+            transaction.commit();
         }
         //if current fragment was any other fragment besides main fragment, show main fragment
         else{
