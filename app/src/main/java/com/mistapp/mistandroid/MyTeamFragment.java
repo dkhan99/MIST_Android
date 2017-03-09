@@ -6,23 +6,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,24 +28,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mistapp.mistandroid.model.Coach;
 import com.mistapp.mistandroid.model.Competitor;
-import com.mistapp.mistandroid.model.Event;
-import com.mistapp.mistandroid.model.Notification;
 import com.mistapp.mistandroid.model.Teammate;
-import com.mistapp.mistandroid.model.User;
-import com.roughike.bottombar.BottomBar;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
-import static com.mistapp.mistandroid.R.id.uid;
 
 public class MyTeamFragment extends Fragment {
 
@@ -269,25 +254,21 @@ public class MyTeamFragment extends Fragment {
             Log.d("TAG", "ADDING NAME: " + teammateArrayList.get(x).getName().toString());
         }
 
-        if (numCoaches != 0) {
-            adapter.addSeparatorItem("Coaches", 0);
-            for (int x = 0; x < coachArrayList.size(); x++) {
-//                Log.d(TAG, "who coach am i adding?" + coachArrayList.get(x).getName());
-                adapter.addItem(coachArrayList.get(x));
-            }
-        }
-        if (numTeammates != 0) {
-            int indexToAdd = 0;
-            if (numCoaches!=0){
-                indexToAdd += coachArrayList.size() + 1;
-            }
-            adapter.addSeparatorItem("Teammates", indexToAdd);
-            for (int x = 0; x < teammateArrayList.size(); x++) {
-//                Log.d(TAG, "who teammate am i adding?" + teammateArrayList.get(x).getName());
-                adapter.addItem(teammateArrayList.get(x));
-            }
+        int indexToAdd = 0;
+        adapter.addSeparatorItem("Coaches", indexToAdd);
+        indexToAdd++;
+        for (int x = 0; x < coachArrayList.size(); x++) {
+            adapter.addCoachItem(coachArrayList.get(x), indexToAdd);
+            indexToAdd++;
         }
 
+        adapter.addSeparatorItem("Teammates", indexToAdd);
+        indexToAdd++;
+        for (int x = 0; x < teammateArrayList.size(); x++) {
+            adapter.addTeammateItem(teammateArrayList.get(x), indexToAdd);
+            indexToAdd++;
+
+        }
         if (numCoaches == 0 && numTeammates == 0) {
             noTeammatesText.setVisibility(View.VISIBLE);
         }
@@ -382,24 +363,40 @@ public class MyTeamFragment extends Fragment {
 
     private class TeamAdapter extends BaseAdapter {
 
-        private static final int TYPE_ITEM = 0;
-        private static final int TYPE_SEPARATOR = 1;
+        private static final int TYPE_COACH = 0;
+        private static final int TYPE_TEAMMATE = 1;
+        private static final int TYPE_SEPARATOR = 2;
         private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
 
         private ArrayList<Object> mData = new ArrayList<Object>();
         private LayoutInflater mInflater;
 
         private TreeSet mSeparatorsSet = new TreeSet();
+        private TreeSet mTeammateSet = new TreeSet();
+        private TreeSet mCoachSet = new TreeSet();
 
         public TeamAdapter() {
             mInflater = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
-        public void addItem(final Teammate teammate) {
-            Log.d("123123", "adding item" + teammate.getName());
-            mData.add(teammate);
+        public void addTeammateItem(final Teammate teammate, int indexOfAddition){
+            mData.add(indexOfAddition, teammate);
+            // save separator position
+            mTeammateSet.add(indexOfAddition);
             notifyDataSetChanged();
         }
+        public void addCoachItem(final Teammate coach, int indexOfAddition){
+            mData.add(indexOfAddition, coach);
+            // save separator position
+            mCoachSet.add(indexOfAddition);
+            notifyDataSetChanged();
+        }
+
+//        public void addItem(final Teammate teammate) {
+//            Log.d("123123", "adding item" + teammate.getName());
+//            mData.add(teammate);
+//            notifyDataSetChanged();
+//        }
 
         public void addSeparatorItem(final String item, int indexOfAddition) {
             mData.add(indexOfAddition, item);
@@ -410,7 +407,16 @@ public class MyTeamFragment extends Fragment {
 
         @Override
         public int getItemViewType(int position) {
-            return mSeparatorsSet.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
+            if (mSeparatorsSet.contains(position)){
+                return TYPE_SEPARATOR;
+            }
+            else if (mTeammateSet.contains(position)){
+                return TYPE_TEAMMATE;
+            }
+            else{
+                return TYPE_COACH;
+            }
+//            return mSeparatorsSet.contains(position) ? TYPE_SEPARATOR : TYPE_ITEM;
         }
 
         @Override
@@ -439,12 +445,19 @@ public class MyTeamFragment extends Fragment {
             int type = getItemViewType(position);
 
             switch(type){
-                case TYPE_ITEM:
+                case TYPE_TEAMMATE:
+                case TYPE_COACH:
                     TeamViewHolder holder1;
-
                     if (convertView == null) {
                         LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        convertView = vi.inflate(R.layout.item_team_member, parent, false);
+                        if (type == TYPE_TEAMMATE){
+                            convertView = vi.inflate(R.layout.item_team_member_teammate, parent, false);
+
+                        }
+                        else{
+                            convertView = vi.inflate(R.layout.item_team_member_coach, parent, false);
+
+                        }
                         holder1 = new TeamViewHolder();
                         holder1.nameText = (TextView) convertView.findViewById(R.id.teammember_name);
                         holder1.phoneNumberText = (TextView) convertView.findViewById(R.id.teammember_phone);
