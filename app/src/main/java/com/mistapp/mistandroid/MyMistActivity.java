@@ -231,6 +231,15 @@ public class MyMistActivity extends AppCompatActivity {
             Log.d(TAG, "coming from notification");
             transaction.replace(R.id.fragment_container, notificationsFragment, "notifications");
         }
+        else if ((getIntent().getExtras().containsKey(getString(R.string.program_image)))){
+            ProgramImageViewFragment fragment = new ProgramImageViewFragment();
+            String day = getIntent().getExtras().getString(getString(R.string.program_image));
+            Log.d("printing dat!", "printing day "+ day);
+
+            bundle.putString(getString(R.string.program_image), day);
+            fragment.setArguments(bundle);
+            transaction.replace(R.id.fragment_container, fragment, "program_image");
+        }
         //if coming bc my_mist tab was pressed
         else {
             Log.d(TAG, "coming through mist-tab click");
@@ -292,7 +301,7 @@ public class MyMistActivity extends AppCompatActivity {
 
         Fragment mainFragment = getSupportFragmentManager().findFragmentByTag("mist");
         Fragment bracketFragment = getSupportFragmentManager().findFragmentByTag("brackets");
-
+        Fragment programImageFragment = getSupportFragmentManager().findFragmentByTag("program_image");
         //if current fragment was main fragment (myMistFragment or GuestMistFragment), do nothing if back is hit
         if (mainFragment != null && mainFragment.isVisible()){
             Log.d(TAG,"current fragment was already main fragment... doing nother");
@@ -302,6 +311,12 @@ public class MyMistActivity extends AppCompatActivity {
             transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, competitionsFragment, "competitions");
 
+            transaction.commit();
+        }
+        else if (programImageFragment != null && programImageFragment.isVisible()){
+            Log.d(TAG,"current fragment is programimage fragment... going back to program page");
+            transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, programFragment, "program");
             transaction.commit();
         }
         //if current fragment was any other fragment besides main fragment, show main fragment

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,23 +81,51 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
             startActivity(callIntent);
 
         }
+//        else{
+//
+//
+////
+////            Fragment fragment = new ProgramImageViewFragment();
+////
+////            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+////            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+////            Bundle args = new Bundle();
+////            fragmentTransaction.replace(R.id.fragment_container, fragment, "programimage");
+////            fragmentTransaction.addToBackStack(null);
+////            fragmentTransaction.commit();
+//        }
+//        if (true){
+//
+//        }
         else if (view == fridayProgramButton) {
-            Log.d(TAG, "friday program");
-            Toast.makeText(getActivity(), "Friday program still in the making", Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "friday program");
+//            Toast.makeText(getActivity(), "Friday program still in the making", Toast.LENGTH_SHORT).show();
 //            String fridayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fridayProgramUri)));
+            Intent intent = new Intent(getActivity().getBaseContext(),
+                    MyMistActivity.class);
+            intent.putExtra(getString(R.string.program_image), "friday");
+            getActivity().startActivity(intent);
         }
         else if (view == saturdayProgramButton) {
-            Log.d(TAG, "saturday program");
-            Toast.makeText(getActivity(), "Saturday program still in the making", Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "saturday program");
+//            Toast.makeText(getActivity(), "Saturday program still in the making", Toast.LENGTH_SHORT).show();
 //            String saturdayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(saturdayProgramUri)));
+            Intent intent = new Intent(getActivity().getBaseContext(),
+                    MyMistActivity.class);
+            intent.putExtra(getString(R.string.program_image), "saturday");
+            getActivity().startActivity(intent);
         }
         else if (view == sundayProgramButton) {
-            Log.d(TAG, "sunday program");
-            Toast.makeText(getActivity(), "Sunday program still in the making", Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "sunday program");
+//            Toast.makeText(getActivity(), "Sunday program still in the making", Toast.LENGTH_SHORT).show();
 //            String sundayProgramUri = "";
 //            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sundayProgramUri)));
+            Intent intent = new Intent(getActivity().getBaseContext(),
+                    MyMistActivity.class);
+            intent.putExtra(getString(R.string.program_image), "sunday");
+            getActivity().startActivity(intent);
         }
 
     }

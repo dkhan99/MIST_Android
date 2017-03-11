@@ -27,7 +27,7 @@
 
     <string name="received_notification">received_notification</string>
 
-
+    <string name="program_image">program_image</string>
 
     <string name="forgot_password_text_click">Forgot your password?\n\n</string>
     <string name="forgot_password_text">Enter the email associated with your account to receive instructions on resetting your password</string>
