@@ -138,7 +138,12 @@ public class MyMistActivity extends AppCompatActivity {
         notificationsFragment = new NotificationsFragment();
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setDefaultTabPosition(2);
+        if ((getIntent().getExtras().containsKey(getString(R.string.program_image)))){
+            bottomBar.setDefaultTabPosition(3);
+        }
+        else{
+            bottomBar.setDefaultTabPosition(2);
+        }
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -235,7 +240,6 @@ public class MyMistActivity extends AppCompatActivity {
             ProgramImageViewFragment fragment = new ProgramImageViewFragment();
             String day = getIntent().getExtras().getString(getString(R.string.program_image));
             Log.d("printing dat!", "printing day "+ day);
-
             bundle.putString(getString(R.string.program_image), day);
             fragment.setArguments(bundle);
             transaction.replace(R.id.fragment_container, fragment, "program_image");
@@ -302,6 +306,7 @@ public class MyMistActivity extends AppCompatActivity {
         Fragment mainFragment = getSupportFragmentManager().findFragmentByTag("mist");
         Fragment bracketFragment = getSupportFragmentManager().findFragmentByTag("brackets");
         Fragment programImageFragment = getSupportFragmentManager().findFragmentByTag("program_image");
+
         //if current fragment was main fragment (myMistFragment or GuestMistFragment), do nothing if back is hit
         if (mainFragment != null && mainFragment.isVisible()){
             Log.d(TAG,"current fragment was already main fragment... doing nother");
