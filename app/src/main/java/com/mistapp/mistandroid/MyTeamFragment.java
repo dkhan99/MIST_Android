@@ -367,6 +367,11 @@ public class MyTeamFragment extends Fragment {
         private static final int TYPE_TEAMMATE = 1;
         private static final int TYPE_SEPARATOR = 2;
         private static final int TYPE_MAX_COUNT = TYPE_SEPARATOR + 1;
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        private CacheHandler cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
+
+        final String userType = cacheHandler.getUserType();
 
         private ArrayList<Object> mData = new ArrayList<Object>();
         private LayoutInflater mInflater;
@@ -450,13 +455,11 @@ public class MyTeamFragment extends Fragment {
                     TeamViewHolder holder1;
                     if (convertView == null) {
                         LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        if (type == TYPE_TEAMMATE){
-                            convertView = vi.inflate(R.layout.item_team_member_teammate, parent, false);
-
+                        if (type == TYPE_TEAMMATE && userType.equals("competitor")){
+                            convertView = vi.inflate(R.layout.item_team_member_no_number, parent, false);
                         }
                         else{
-                            convertView = vi.inflate(R.layout.item_team_member_coach, parent, false);
-
+                            convertView = vi.inflate(R.layout.item_team_member_with_number, parent, false);
                         }
                         holder1 = new TeamViewHolder();
                         holder1.nameText = (TextView) convertView.findViewById(R.id.teammember_name);
