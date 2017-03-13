@@ -39,7 +39,7 @@ public class Event implements Comparable<Event>{
         String amPm = startTime.substring(startTime.length()-2, startTime.length());
         String [] t = startTime.substring(0,startTime.length()-2).split(":");
         int hour = Integer.parseInt(t[0]);
-        if (amPm.equals("pm")){
+        if (amPm.equals("pm") && hour<12){
             hour += 12;
         }
         int minutes = Integer.parseInt(t[1]);
