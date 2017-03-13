@@ -351,10 +351,10 @@ public class MyTeamFragment extends Fragment {
             phoneNumber = "";
         }
         if (phoneNumber.length() == 10){
-            phoneNumber = ( "(" + phoneNumber.substring(0,3) + ")-" + phoneNumber.substring(3,6) + "-" + phoneNumber.substring(6,9));
+            phoneNumber = ( "(" + phoneNumber.substring(0,3) + ")-" + phoneNumber.substring(3,6) + "-" + phoneNumber.substring(6,10));
         }
         else if (phoneNumber.length() == 11){
-            phoneNumber = ( "+" + phoneNumber.charAt(0) + "(" + phoneNumber.substring(1,4) + ")-" + phoneNumber.substring(4,7) + "-" + phoneNumber.substring(7,10));
+            phoneNumber = ( "+" + phoneNumber.charAt(0) + "(" + phoneNumber.substring(1,4) + ")-" + phoneNumber.substring(4,7) + "-" + phoneNumber.substring(7,11));
         }
         //else ->  keep phone number as is
         return phoneNumber;
