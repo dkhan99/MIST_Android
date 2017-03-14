@@ -350,7 +350,10 @@ public class MyTeamFragment extends Fragment {
             //shouldn't display phone number
             phoneNumber = "";
         }
-        if (phoneNumber.length() == 10){
+        if (phoneNumber.equals("9999999999")){
+            phoneNumber = "Phone number unavailable";
+        }
+        else if (phoneNumber.length() == 10){
             phoneNumber = ( "(" + phoneNumber.substring(0,3) + ")-" + phoneNumber.substring(3,6) + "-" + phoneNumber.substring(6,10));
         }
         else if (phoneNumber.length() == 11){
