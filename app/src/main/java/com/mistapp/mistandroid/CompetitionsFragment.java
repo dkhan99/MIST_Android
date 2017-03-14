@@ -140,8 +140,8 @@ public class CompetitionsFragment extends Fragment implements View.OnClickListen
         rulebookUrls.put("Quran Level 1-4","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d816303596e0fcbc10050/1485668708157/Quran.pdf");
         rulebookUrls.put("2D Art","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7db9bebafb21325bd50f/1485667770165/2D+Art.pdf");
         rulebookUrls.put("3D Art","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dbfff7c501134731a67/1485667775113/3D+Art.pdf");
-        rulebookUrls.put("Fashion","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1146c3c4023d82d555/1485667858578/Fashion+Design.pdf");
-        rulebookUrls.put("Graphic","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e183a0411d31b4498f9/1485667864863/Graphic+Design.pdf");
+        rulebookUrls.put("Fashion Design","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e1146c3c4023d82d555/1485667858578/Fashion+Design.pdf");
+        rulebookUrls.put("Graphic Design","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7e183a0411d31b4498f9/1485667864863/Graphic+Design.pdf");
         rulebookUrls.put("Photography","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d808bb3db2b428d8c3015/1485668492248/Photography.pdf");
         rulebookUrls.put("Culinary Arts","http://docs.google.com/viewerng/viewer?&url=static1.squarespace.com/static/5670ede7a976af3e2f3af0af/t/588d7dee579fb35be4f27176/1485667822428/Culinary+Arts.pdf");
 
