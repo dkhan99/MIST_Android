@@ -36,22 +36,22 @@ public class ProgramImageViewFragment extends Fragment {
         TouchImageView image = (TouchImageView) view.findViewById(R.id.image_friday);
         image.setMaxZoom(4f);
         String dayToShow = "saturday";
-        image.setImageDrawable(getActivity().getDrawable(R.drawable.saturday));
+        image.setImageDrawable(getActivity().getDrawable(R.drawable.saturday25dp));
         if (getArguments().containsKey(getString(R.string.program_image))){
             dayToShow = getArguments().getString(getString(R.string.program_image));
         }
 
         if (dayToShow.equals("friday")){
-            image.setImageDrawable(getActivity().getDrawable(R.drawable.friday));
+            image.setImageDrawable(getActivity().getDrawable(R.drawable.friday25dp));
         }
         else if (dayToShow.equals("saturday")){
-            image.setImageDrawable(getActivity().getDrawable(R.drawable.saturday));
+            image.setImageDrawable(getActivity().getDrawable(R.drawable.saturday25dp));
         }
         else if(dayToShow.equals("sunday")){
-            image.setImageDrawable(getActivity().getDrawable(R.drawable.sunday));
+            image.setImageDrawable(getActivity().getDrawable(R.drawable.sunday25dp));
         }
         else{
-            image.setImageDrawable(getActivity().getDrawable(R.drawable.saturday));
+            image.setImageDrawable(getActivity().getDrawable(R.drawable.saturday25dp));
         }
         return view;
     }
