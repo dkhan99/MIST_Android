@@ -57,7 +57,8 @@ public class WelcomeActivity extends AppCompatActivity implements View.OnTouchLi
 
         //NOTIFICATION SUBSCRIPTION: everyone gets subscribed to "user"
         FirebaseMessaging.getInstance().subscribeToTopic("user");
-
+        FirebaseMessaging.getInstance().subscribeToTopic("android");
+        Log.d(TAG, "Subscribing to android as well");
         //gets the user's token
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "User's token: " + token);
