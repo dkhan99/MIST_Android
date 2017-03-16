@@ -2,7 +2,6 @@ package com.mistapp.mistandroid;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mistapp.mistandroid.model.Notification;
-import com.mistapp.mistandroid.model.Teammate;
 
 import java.util.ArrayList;
 

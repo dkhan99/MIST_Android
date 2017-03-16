@@ -1,11 +1,8 @@
 package com.mistapp.mistandroid.model;
 
-import android.content.Intent;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Created by aadil on 1/27/17.

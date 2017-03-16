@@ -1,9 +1,7 @@
 package com.mistapp.mistandroid;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 

@@ -1,6 +1,5 @@
 package com.mistapp.mistandroid.model;
 
-import com.mistapp.mistandroid.Team;
 
 import java.lang.reflect.Field;
 import java.util.Comparator;

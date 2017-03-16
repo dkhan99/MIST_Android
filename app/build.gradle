@@ -19,7 +19,7 @@ android {
         targetSdkVersion 25
         versionCode 11
         multiDexEnabled true
-        versionName "2.0"
+        versionName "2.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
     }

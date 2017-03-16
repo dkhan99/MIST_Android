@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static com.mistapp.mistandroid.R.id.brackets;
-
 public class CompetitionsFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = RegisterAuth.class.getSimpleName();

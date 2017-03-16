@@ -83,11 +83,9 @@
         <activity
             android:name=".Rulebook"
             android:label="@string/title_activity_rulebook" />
-        <activity android:name=".WeekendSched" />
         <activity
             android:name=".RegisterAuth"
             android:theme="@style/MyTheme.Base" />
-        <activity android:name=".DashboardActivity" />
         <activity android:name=".MyMistActivity" />
 
         <meta-data
