@@ -17,9 +17,9 @@ android {
         applicationId "com.mistapp.mistandroid"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 9
+        versionCode 11
         multiDexEnabled true
-        versionName "1.8"
+        versionName "2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.config
     }

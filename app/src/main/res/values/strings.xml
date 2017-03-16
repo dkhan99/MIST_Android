@@ -37,6 +37,7 @@
 
     <string name="text_mist_hotline">MIST Atlanta Help Line \n (678)-561-6478</string>
     <string name="text_campus_police">Campus Police \n (706)-542-5813</string>
+    <string name="text_nurse">On-duty Nurse \n (404)-317-1431</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>

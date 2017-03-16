@@ -476,8 +476,12 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Googl
     public void onDestroy() {
         super.onDestroy();
         if (mGoogleApiClient!=null) {
-            mGoogleApiClient.stopAutoManage(getActivity());
-            mGoogleApiClient.disconnect();
+            try {
+                mGoogleApiClient.stopAutoManage(getActivity());
+                mGoogleApiClient.disconnect();
+            }catch(IllegalStateException e){
+
+            }
         }
     }
     @Override

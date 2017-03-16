@@ -1,7 +1,10 @@
 package com.mistapp.mistandroid;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,15 +19,22 @@ import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class ProgramFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = "DEBUG";
     private Button mHelpButton;
     private Button mCampusButton;
+    private Button mNurseButton;
     private Button fridayProgramButton;
     private Button saturdayProgramButton;
     private Button sundayProgramButton;
+    private CacheHandler cacheHandler;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +48,14 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
 //        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.app_package_name), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        cacheHandler = CacheHandler.getInstance(getActivity().getApplication(), sharedPref, editor);
+
+
         mHelpButton = (Button) view.findViewById(R.id.helpLine);
         mCampusButton = (Button) view.findViewById(R.id.campusPolice);
+        mNurseButton = (Button) view.findViewById(R.id.nurse);
         fridayProgramButton = (Button) view.findViewById(R.id.friday_schedule_button);
         saturdayProgramButton = (Button) view.findViewById(R.id.saturday_schedule_button);
         sundayProgramButton = (Button) view.findViewById(R.id.sunday_schedule_button);
@@ -47,9 +63,12 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
         //attaching listeners to button and link
         mHelpButton.setOnClickListener(this);
         mCampusButton.setOnClickListener(this);
+        mNurseButton.setOnClickListener(this);
         fridayProgramButton.setOnClickListener(this);
         saturdayProgramButton.setOnClickListener(this);
         sundayProgramButton.setOnClickListener(this);
+
+        showNurseButton();
 
         return view;
 
@@ -69,65 +88,88 @@ public class ProgramFragment extends Fragment implements View.OnClickListener {
         if (view == mHelpButton) {
             Log.d(TAG, "help");
 
-            Uri number = Uri.parse("tel:6783083161");
+            Uri number = Uri.parse("tel:6785616478");
             Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
             startActivity(callIntent);
 
         } else if (view == mCampusButton) {
-            Log.d(TAG, "campus");
+            Log.d(TAG, "campus police");
 
-            Uri number = Uri.parse("tel:4703433248");
+            Uri number = Uri.parse("tel:7065425813");
             Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
             startActivity(callIntent);
 
+        } else if (view == mNurseButton) {
+            Log.d(TAG, "nurse");
+            Uri number = Uri.parse("tel:4043171431");
+            Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+            startActivity(callIntent);
         }
-//        else{
-//
-//
-////
-////            Fragment fragment = new ProgramImageViewFragment();
-////
-////            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-////            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-////            Bundle args = new Bundle();
-////            fragmentTransaction.replace(R.id.fragment_container, fragment, "programimage");
-////            fragmentTransaction.addToBackStack(null);
-////            fragmentTransaction.commit();
-//        }
-//        if (true){
-//
-//        }
+
         else if (view == fridayProgramButton) {
-//            Log.d(TAG, "friday program");
-//            Toast.makeText(getActivity(), "Friday program still in the making", Toast.LENGTH_SHORT).show();
-//            String fridayProgramUri = "";
-//            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(fridayProgramUri)));
+            Log.d(TAG, "friday program");
             Intent intent = new Intent(getActivity().getBaseContext(),
                     MyMistActivity.class);
             intent.putExtra(getString(R.string.program_image), "friday");
             getActivity().startActivity(intent);
         }
         else if (view == saturdayProgramButton) {
-//            Log.d(TAG, "saturday program");
-//            Toast.makeText(getActivity(), "Saturday program still in the making", Toast.LENGTH_SHORT).show();
-//            String saturdayProgramUri = "";
-//            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(saturdayProgramUri)));
+            Log.d(TAG, "saturday program");
             Intent intent = new Intent(getActivity().getBaseContext(),
                     MyMistActivity.class);
             intent.putExtra(getString(R.string.program_image), "saturday");
             getActivity().startActivity(intent);
         }
         else if (view == sundayProgramButton) {
-//            Log.d(TAG, "sunday program");
-//            Toast.makeText(getActivity(), "Sunday program still in the making", Toast.LENGTH_SHORT).show();
-//            String sundayProgramUri = "";
-//            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(sundayProgramUri)));
+            Log.d(TAG, "sunday program");
             Intent intent = new Intent(getActivity().getBaseContext(),
                     MyMistActivity.class);
             intent.putExtra(getString(R.string.program_image), "sunday");
             getActivity().startActivity(intent);
         }
 
+    }
+
+    private void showNurseButton(){
+        if (cacheHandler.cacheContains(getString(R.string.current_user_type))){
+            if (cacheHandler.getUserType().equals("coach") && isCurrentDateDuringMistWeekend()){
+                mNurseButton.setVisibility(View.VISIBLE);
+            } else{
+                mNurseButton.setVisibility(View.GONE);
+            }
+
+        }
+
+    }
+
+    public static boolean isCurrentDateDuringMistWeekend() {
+
+        String fromString = "March 18, 2017"; //Sat Mar 18 00:00:00 EDT 2017
+        String toString = "March 20, 2017"; //Mon Mar 20 00:00:00 EDT 2017
+
+        // SimpleDateFormat parser = new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy");
+        DateFormat parser = DateFormat.getDateInstance(DateFormat.LONG, Locale.US);
+
+        Date fromDate = new Date();
+        Date toDate = new Date();
+        Date currentDate = new Date();
+
+        try{
+            fromDate = parser.parse(fromString);
+            toDate = parser.parse(toString);
+            currentDate = new Date();
+
+        } catch(Exception e){
+            System.out.println(e);
+            return false;
+        }
+
+        //if current date is during mist weekend, return true
+        if (currentDate.after(fromDate) && currentDate.before(toDate)){
+            return true;
+        }
+
+        return false;
     }
 
     @Override
